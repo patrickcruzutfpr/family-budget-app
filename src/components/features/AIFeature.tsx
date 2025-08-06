@@ -1,8 +1,8 @@
 import React, { useState, useCallback } from 'react';
-import { getBudgetSuggestions } from '../services/geminiService';
-import { AISuggestion, BudgetState } from '../types';
-import { SparklesIcon } from './icons/SparklesIcon';
-import { LightbulbIcon } from './icons/LightbulbIcon';
+import { getBudgetSuggestions } from '@/services/geminiService';
+import { AISuggestion, BudgetState } from '@/types';
+import { SparklesIcon } from '@/assets/icons/SparklesIcon';
+import { LightbulbIcon } from '@/assets/icons/LightbulbIcon';
 
 interface AIFeatureProps {
   budget: BudgetState;

@@ -1,6 +1,6 @@
 import { useState, useEffect, useCallback } from 'react';
-import { BudgetState, CategoryType } from '../types';
-import { loadBudget, saveBudget, resetBudgetToDefault } from '../services/budgetService';
+import { BudgetState, CategoryType } from '@/types';
+import { loadBudget, saveBudget, resetBudgetToDefault } from '@/services/budgetService';
 
 export const useBudget = () => {
   const [budget, setBudget] = useState<BudgetState>([]);

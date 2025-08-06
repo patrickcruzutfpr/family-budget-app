@@ -1,7 +1,7 @@
 import React, { useMemo } from 'react';
-import { Category } from '../types';
+import { Category } from '@/types';
 import { BudgetRow } from './BudgetRow';
-import { PlusCircleIcon } from './icons/PlusCircleIcon';
+import { PlusCircleIcon } from '@/assets/icons/PlusCircleIcon';
 
 interface BudgetTableProps {
   categories: Category[];

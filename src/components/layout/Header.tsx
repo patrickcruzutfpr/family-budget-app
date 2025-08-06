@@ -1,5 +1,5 @@
 import React from 'react';
-import { RefreshCwIcon } from './icons/RefreshCwIcon';
+import { RefreshCwIcon } from '@/assets/icons/RefreshCwIcon';
 
 interface HeaderProps {
     onReset: () => void;
@@ -12,7 +12,7 @@ export const Header: React.FC<HeaderProps> = ({ onReset }) => {
                 <div className="flex justify-between items-center h-20">
                     <div className="flex-shrink-0">
                         <h1 className="text-3xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-primary to-accent">
-                            Family Budget Workbook
+                            Familia Motin Orcamento 
                         </h1>
                     </div>
                     <div className="flex items-center">

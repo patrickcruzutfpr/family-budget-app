@@ -1,7 +1,7 @@
 import React from 'react';
-import { ArrowDownIcon } from './icons/ArrowDownIcon';
-import { ArrowUpIcon } from './icons/ArrowUpIcon';
-import { ScaleIcon } from './icons/ScaleIcon';
+import { ArrowDownIcon } from '@/assets/icons/ArrowDownIcon';
+import { ArrowUpIcon } from '@/assets/icons/ArrowUpIcon';
+import { ScaleIcon } from '@/assets/icons/ScaleIcon';
 
 interface SummaryProps {
   totalIncome: number;

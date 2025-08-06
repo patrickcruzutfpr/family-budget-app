@@ -1,4 +1,4 @@
-import { BudgetState, Category, CategoryType } from '../types';
+import { BudgetState, Category, CategoryType } from '@/types';
 
 const STORAGE_KEY = 'familyBudget';
 

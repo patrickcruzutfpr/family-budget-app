@@ -1,6 +1,6 @@
 import React from 'react';
 import { PieChart, Pie, Cell, Tooltip, Legend, ResponsiveContainer } from 'recharts';
-import { Category } from '../types';
+import { Category } from '@/types';
 
 interface BudgetChartProps {
   data: Category[];

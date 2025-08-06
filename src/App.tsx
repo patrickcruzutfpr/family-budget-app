@@ -1,11 +1,7 @@
 import React, { useMemo } from 'react';
-import { useBudget } from './hooks/useBudget';
-import { BudgetTable } from './components/BudgetTable';
-import { Summary } from './components/Summary';
-import { BudgetChart } from './components/BudgetChart';
-import { AIFeature } from './components/AIFeature';
-import { CategoryType } from './types';
-import { Header } from './components/Header';
+import { useBudget } from '@/hooks';
+import { BudgetTable, Summary, BudgetChart, AIFeature, Header } from '@/components';
+import { CategoryType } from '@/types';
 
 function App(): React.ReactNode {
   const {

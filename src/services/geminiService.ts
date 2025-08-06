@@ -1,18 +1,19 @@
 import { GoogleGenAI, Type } from "@google/genai";
-import { BudgetState, AISuggestion, CategoryType } from "../types";
+import { BudgetState, AISuggestion, CategoryType } from "@/types";
+import { getBudgetSuggestionsMock } from "./geminiServiceMock";
 
-const API_KEY = process.env.API_KEY;
+const API_KEY = process.env.GEMINI_API_KEY;
 
 if (!API_KEY) {
   // This is a fallback for development; in a real deployment, the key should be set.
-  console.warn("API_KEY environment variable not set. AI features will be disabled.");
+  console.warn("GEMINI_API_KEY environment variable not set. AI features will be disabled.");
 }
 
 const ai = new GoogleGenAI({ apiKey: API_KEY || "" });
 
 export const getBudgetSuggestions = async (budget: BudgetState): Promise<AISuggestion[]> => {
   if (!API_KEY) {
-    throw new Error("API key is not configured.");
+    throw new Error("Gemini API key is not configured.");
   }
   
   const model = "gemini-2.5-flash";
@@ -84,6 +85,13 @@ export const getBudgetSuggestions = async (budget: BudgetState): Promise<AISugge
     return [];
   } catch (error) {
     console.error("Error fetching suggestions from Gemini API:", error);
+    
+    // Check if it's an API key suspension error
+    if (error.message && error.message.includes("suspended")) {
+      console.warn("API key suspended, falling back to mock suggestions");
+      return await getBudgetSuggestionsMock(budget);
+    }
+    
     throw new Error("Failed to get AI-powered suggestions. Please try again later.");
   }
 };

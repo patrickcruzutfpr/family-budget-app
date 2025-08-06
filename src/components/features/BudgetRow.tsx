@@ -1,7 +1,7 @@
 import React from 'react';
-import { BudgetItem } from '../types';
-import { EditableCell } from './EditableCell';
-import { Trash2Icon } from './icons/Trash2Icon';
+import { BudgetItem } from '@/types';
+import { EditableCell } from '@/components/ui/EditableCell';
+import { Trash2Icon } from '@/assets/icons/Trash2Icon';
 
 interface BudgetRowProps {
   item: BudgetItem;
