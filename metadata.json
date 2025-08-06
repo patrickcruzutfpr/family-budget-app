@@ -1,0 +1,5 @@
+{
+  "name": "Family Budget Workbook",
+  "description": "An advanced, interactive workbook to manage your family's monthly budget, inspired by Google Sheets. It features editable cells, automatic calculations, visual charts, and AI-powered suggestions to help you save money.",
+  "requestFramePermissions": []
+}
