@@ -16,7 +16,8 @@ export default defineConfig(({ mode }) => {
           '@/services': path.resolve(__dirname, './src/services'),
           '@/types': path.resolve(__dirname, './src/types'),
           '@/utils': path.resolve(__dirname, './src/utils'),
-          '@/assets': path.resolve(__dirname, './src/assets')
+          '@/assets': path.resolve(__dirname, './src/assets'),
+          '@/i18n': path.resolve(__dirname, './src/i18n')
         }
       }
     };

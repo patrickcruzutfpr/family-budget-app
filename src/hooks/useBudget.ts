@@ -3,9 +3,11 @@ import { BudgetState, CategoryType } from '@/types';
 import { loadBudget, saveBudget, resetBudgetToDefault } from '@/services/budgetService';
 import { getCurrentProfile, updateCurrentProfileBudget } from '@/services/profileService';
 import { generateId } from '@/utils';
+import { useBudgetMessages } from './useBudgetMessages';
 
 export const useBudget = () => {
   const [budget, setBudget] = useState<BudgetState>([]);
+  const { promptItemName, confirmDelete, confirmReset } = useBudgetMessages();
 
   // Load budget from current profile
   useEffect(() => {
@@ -56,7 +58,7 @@ export const useBudget = () => {
       const category = prevBudget.find(c => c.id === categoryId);
       if (!category) return prevBudget;
 
-      const newItemName = prompt('Enter the name for the new item:');
+      const newItemName = prompt(promptItemName());
       if (!newItemName) return prevBudget;
       
       const newItem = {
@@ -73,10 +75,10 @@ export const useBudget = () => {
         return cat;
       });
     });
-  }, []);
+  }, [promptItemName]);
 
   const deleteItem = useCallback((categoryId: string, itemId: string) => {
-    if (!window.confirm('Are you sure you want to delete this item?')) return;
+    if (!window.confirm(confirmDelete())) return;
     setBudget(prevBudget => {
       return prevBudget.map(category => {
         if (category.id === categoryId) {
@@ -85,13 +87,13 @@ export const useBudget = () => {
         return category;
       });
     });
-  }, []);
+  }, [confirmDelete]);
 
   const resetBudget = useCallback(() => {
-    if (!window.confirm('Are you sure you want to reset all data to the default budget? This cannot be undone.')) return;
+    if (!window.confirm(confirmReset())) return;
     const newBudget = resetBudgetToDefault();
     setBudget(newBudget);
-  }, []);
+  }, [confirmReset]);
 
   // Reload budget from current profile (useful after profile switch)
   const reloadBudget = useCallback(() => {

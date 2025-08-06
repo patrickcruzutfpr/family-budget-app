@@ -1,4 +1,6 @@
 import React, { useState, useEffect } from 'react';
+import { useFormatters } from '../../hooks';
+import { useI18n } from '../../i18n';
 
 interface EditableCellProps {
   value: number;
@@ -7,22 +9,28 @@ interface EditableCellProps {
 
 export const EditableCell: React.FC<EditableCellProps> = ({ value, onSave }) => {
   const [isEditing, setIsEditing] = useState(false);
-  const [currentValue, setCurrentValue] = useState(value.toString());
+  const [currentValue, setCurrentValue] = useState('');
+  const { formatCurrency, parseCurrency, getCurrencySymbol, isValidCurrencyFormat } = useFormatters();
+  const { t } = useI18n();
 
   useEffect(() => {
     if (!isEditing) {
-      setCurrentValue(value.toString());
+      setCurrentValue(formatCurrency(value));
     }
-  }, [value, isEditing]);
+  }, [value, isEditing, formatCurrency]);
 
   const handleSave = () => {
-    const numericValue = parseFloat(currentValue);
-    if (!isNaN(numericValue)) {
-      onSave(numericValue);
-    } else {
-      // Revert if input is not a valid number
-      setCurrentValue(value.toString());
+    if (isValidCurrencyFormat(currentValue)) {
+      const numericValue = parseCurrency(currentValue);
+      if (numericValue >= 0) {
+        onSave(numericValue);
+        setIsEditing(false);
+        return;
+      }
     }
+    
+    // Revert if input is not valid
+    setCurrentValue(formatCurrency(value));
     setIsEditing(false);
   };
 
@@ -30,25 +38,25 @@ export const EditableCell: React.FC<EditableCellProps> = ({ value, onSave }) => 
     if (e.key === 'Enter') {
       handleSave();
     } else if (e.key === 'Escape') {
-      setCurrentValue(value.toString());
+      setCurrentValue(formatCurrency(value));
       setIsEditing(false);
     }
   };
-  
-  const formatCurrency = (val: number) => {
-    return new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD' }).format(val);
-  }
+
+  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setCurrentValue(e.target.value);
+  };
 
   if (isEditing) {
     return (
       <input
-        type="number"
-        step="0.01"
+        type="text"
         value={currentValue}
-        onChange={(e) => setCurrentValue(e.target.value)}
+        onChange={handleInputChange}
         onBlur={handleSave}
         onKeyDown={handleKeyDown}
-        className="w-28 py-1 px-2 text-right bg-white border border-secondary rounded-md shadow-sm focus:ring-primary focus:border-primary"
+        placeholder={t('formats.currency.placeholder')}
+        className="w-32 py-1 px-2 text-right bg-white border border-secondary rounded-md shadow-sm focus:ring-primary focus:border-primary text-sm"
         autoFocus
       />
     );
@@ -57,7 +65,8 @@ export const EditableCell: React.FC<EditableCellProps> = ({ value, onSave }) => 
   return (
     <div
       onClick={() => setIsEditing(true)}
-      className="cursor-pointer w-28 py-1 px-2 text-right rounded-md hover:bg-gray-200 transition-colors"
+      className="cursor-pointer w-32 py-1 px-2 text-right rounded-md hover:bg-gray-200 transition-colors text-sm"
+      title={t('validation.invalidCurrency')}
     >
       {formatCurrency(value)}
     </div>

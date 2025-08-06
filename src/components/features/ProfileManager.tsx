@@ -1,5 +1,7 @@
 import React, { useState, useRef } from 'react';
 import { useProfileManager } from '@/hooks';
+import { useNotification } from '@/components/ui/Notification';
+import { useFormatters } from '@/hooks';
 import { ProfileSummary } from '@/types';
 import { 
   UserIcon, 
@@ -30,6 +32,8 @@ export const ProfileManager: React.FC<ProfileManagerProps> = ({ onProfileChange 
     importProfileData,
     clearError,
   } = useProfileManager();
+  const { showNotification } = useNotification();
+  const { formatCurrency, formatDate } = useFormatters();
 
   const [showCreateForm, setShowCreateForm] = useState(false);
   const [showImportForm, setShowImportForm] = useState(false);
@@ -41,7 +45,10 @@ export const ProfileManager: React.FC<ProfileManagerProps> = ({ onProfileChange 
   const fileInputRef = useRef<HTMLInputElement>(null);
 
   const handleCreateProfile = async () => {
-    if (!newProfileName.trim()) return;
+    if (!newProfileName.trim()) {
+      showNotification('error', 'validation.required');
+      return;
+    }
     
     try {
       await createNewProfile(newProfileName, newProfileDescription || undefined, basedOnCurrent);
@@ -49,9 +56,10 @@ export const ProfileManager: React.FC<ProfileManagerProps> = ({ onProfileChange 
       setNewProfileName('');
       setNewProfileDescription('');
       setBasedOnCurrent(false);
+      showNotification('success', 'messages.saveSuccess');
       onProfileChange?.();
     } catch (err) {
-      // Error is handled by the hook
+      showNotification('error', 'messages.saveError');
     }
   };
 
@@ -148,21 +156,6 @@ export const ProfileManager: React.FC<ProfileManagerProps> = ({ onProfileChange 
       };
       reader.readAsText(file);
     }
-  };
-
-  const formatCurrency = (amount: number) => {
-    return new Intl.NumberFormat('en-US', {
-      style: 'currency',
-      currency: 'USD',
-    }).format(amount);
-  };
-
-  const formatDate = (date: Date) => {
-    return new Intl.DateTimeFormat('en-US', {
-      year: 'numeric',
-      month: 'short',
-      day: 'numeric',
-    }).format(date);
   };
 
   if (isLoading) {

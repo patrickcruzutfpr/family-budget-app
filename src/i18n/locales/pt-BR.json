@@ -1,0 +1,177 @@
+{
+  "app": {
+    "title": "Aplicativo de Orçamento Familiar",
+    "subtitle": "Gerencie suas finanças familiares"
+  },
+  "header": {
+    "profiles": "Perfis",
+    "reset": "Resetar"
+  },
+  "summary": {
+    "totalIncome": "Renda Total",
+    "totalExpenses": "Gastos Totais",
+    "balance": "Saldo",
+    "surplus": "Superávit",
+    "deficit": "Déficit"
+  },
+  "budget": {
+    "breakdown": "Detalhamento do Orçamento",
+    "income": "Renda",
+    "expenses": "Gastos",
+    "projected": "Projetado",
+    "actual": "Real",
+    "difference": "Diferença",
+    "addItem": "Adicionar Item",
+    "deleteItem": "Excluir Item",
+    "itemName": "Digite o nome do novo item:",
+    "confirmDelete": "Tem certeza que deseja excluir este item?",
+    "confirmReset": "Tem certeza que deseja resetar todos os dados para o orçamento padrão? Esta ação não pode ser desfeita.",
+    "expenseDistribution": "Distribuição de Gastos",
+    "noExpenseData": "Nenhum dado de gastos para exibir.",
+    "name": "Item"
+  },
+  "profiles": {
+    "title": "Gerenciamento de Perfis",
+    "close": "Fechar",
+    "createNew": "Criar Novo Perfil",
+    "import": "Importar Perfil",
+    "export": "Exportar Perfil",
+    "switchTo": "Alternar Para",
+    "edit": "Editar",
+    "duplicate": "Duplicar",
+    "delete": "Excluir",
+    "name": "Nome",
+    "description": "Descrição",
+    "created": "Criado",
+    "updated": "Atualizado",
+    "items": "itens",
+    "currentProfile": "Perfil Atual",
+    "profileName": "Nome do Perfil",
+    "profileDescription": "Descrição do Perfil (opcional)",
+    "basedOnCurrent": "Baseado no orçamento atual",
+    "create": "Criar",
+    "cancel": "Cancelar",
+    "save": "Salvar",
+    "update": "Atualizar",
+    "importData": "Cole os dados JSON do perfil aqui...",
+    "selectFile": "Selecionar Arquivo",
+    "noProfiles": "Nenhum perfil encontrado",
+    "createFirst": "Crie seu primeiro perfil para começar",
+    "confirmDeleteProfile": "Tem certeza que deseja excluir este perfil? Esta ação não pode ser desfeita.",
+    "errors": {
+      "nameRequired": "Nome do perfil é obrigatório",
+      "importFailed": "Falha ao importar perfil. Verifique o formato do arquivo.",
+      "exportFailed": "Falha ao exportar perfil",
+      "deleteFailed": "Falha ao excluir perfil",
+      "switchFailed": "Falha ao alternar perfil"
+    }
+  },
+  "ai": {
+    "title": "Sugestões Inteligentes",
+    "description": "Obtenha dicas personalizadas da nossa IA para ajudá-lo a economizar dinheiro e alcançar seus objetivos financeiros.",
+    "getSuggestions": "Obter Sugestões Inteligentes",
+    "loading": "Analisando seu orçamento...",
+    "error": "Falha ao obter sugestões inteligentes. Tente novamente mais tarde.",
+    "retry": "Tentar Novamente"
+  },
+  "categories": {
+    "income": "Renda",
+    "housing": "Habitação",
+    "transportation": "Transporte",
+    "food": "Alimentação",
+    "personalFamily": "Pessoal e Família",
+    "utilities": "Utilidades",
+    "entertainment": "Entretenimento",
+    "healthcare": "Saúde",
+    "insurance": "Seguro",
+    "debtPayments": "Pagamento de Dívidas",
+    "savings": "Poupança",
+    "savingsInvestments": "Poupança e Investimentos",
+    "personalCare": "Cuidados Pessoais",
+    "miscellaneous": "Diversos",
+    "salary": "Salário",
+    "freelance": "Freelance",
+    "investments": "Investimentos",
+    "other": "Outros"
+  },
+  "items": {
+    "netPay": "Salário Líquido",
+    "otherIncome": "Outras Rendas",
+    "mortgageRent": "Aluguel/Financiamento",
+    "utilities": "Contas Básicas",
+    "internet": "Internet",
+    "carPayment": "Financiamento do Carro",
+    "gasFuel": "Gasolina",
+    "insurance": "Seguro do Veículo",
+    "groceries": "Supermercado",
+    "restaurants": "Restaurantes",
+    "childcare": "Cuidados Infantis",
+    "entertainment": "Entretenimento",
+    "shopping": "Compras",
+    "retirement": "Previdência Privada",
+    "investments": "Investimentos"
+  },
+  "common": {
+    "loading": "Carregando...",
+    "error": "Erro",
+    "success": "Sucesso",
+    "warning": "Aviso",
+    "info": "Informação",
+    "yes": "Sim",
+    "no": "Não",
+    "ok": "OK",
+    "demo": "Demonstração de Localização",
+    "currency": "Formatação de Moeda",
+    "date": "Formatação de Data",
+    "percentage": "Porcentagem",
+    "notifications": "Notificações",
+    "test": "Testar Notificação"
+  },
+  "validation": {
+    "required": "Este campo é obrigatório",
+    "invalidNumber": "Por favor, insira um número válido",
+    "invalidCurrency": "Por favor, insira um valor monetário válido (ex: R$ 100,00)",
+    "invalidDate": "Por favor, insira uma data válida no formato dd/mm/aaaa",
+    "negativeValue": "O valor não pode ser negativo",
+    "maxLength": "Máximo de {max} caracteres permitidos",
+    "minLength": "Mínimo de {min} caracteres necessários",
+    "invalidEmail": "Por favor, insira um email válido",
+    "passwordTooWeak": "A senha deve ter pelo menos 8 caracteres",
+    "confirmPassword": "As senhas não coincidem"
+  },
+  "messages": {
+    "saveSuccess": "Dados salvos com sucesso!",
+    "saveError": "Erro ao salvar os dados. Tente novamente.",
+    "deleteSuccess": "Item excluído com sucesso!",
+    "deleteError": "Erro ao excluir o item. Tente novamente.",
+    "importSuccess": "Dados importados com sucesso!",
+    "importError": "Erro ao importar os dados. Verifique o formato do arquivo.",
+    "exportSuccess": "Dados exportados com sucesso!",
+    "exportError": "Erro ao exportar os dados. Tente novamente.",
+    "connectionError": "Erro de conexão. Verifique sua internet.",
+    "unexpectedError": "Ocorreu um erro inesperado. Tente novamente.",
+    "noDataFound": "Nenhum dado encontrado",
+    "dataUpdated": "Dados atualizados com sucesso",
+    "actionCancelled": "Ação cancelada pelo usuário",
+    "confirmAction": "Tem certeza que deseja continuar?",
+    "unsavedChanges": "Você tem alterações não salvas. Deseja continuar?",
+    "sessionExpired": "Sua sessão expirou. Por favor, recarregue a página."
+  },
+  "formats": {
+    "currency": {
+      "symbol": "R$",
+      "placeholder": "R$ 0,00",
+      "example": "R$ 1.234,56"
+    },
+    "date": {
+      "format": "dd/mm/aaaa",
+      "placeholder": "dd/mm/aaaa",
+      "example": "25/12/2024"
+    },
+    "time": {
+      "format": "HH:mm",
+      "placeholder": "HH:mm",
+      "example": "14:30"
+    }
+  }
+}

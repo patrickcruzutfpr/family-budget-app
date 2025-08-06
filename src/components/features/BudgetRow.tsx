@@ -2,6 +2,7 @@ import React from 'react';
 import { BudgetItem } from '@/types';
 import { EditableCell } from '@/components/ui/EditableCell';
 import { Trash2Icon } from '@/assets/icons/Trash2Icon';
+import { useCategoryTranslations, useFormatters } from '@/hooks';
 
 interface BudgetRowProps {
   item: BudgetItem;
@@ -10,17 +11,15 @@ interface BudgetRowProps {
   deleteItem: (categoryId: string, itemId: string) => void;
 }
 
-const formatCurrency = (value: number) => {
-  return new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD', minimumFractionDigits: 2, maximumFractionDigits: 2 }).format(value);
-};
-
 export const BudgetRow: React.FC<BudgetRowProps> = ({ item, categoryId, updateItemValue, deleteItem }) => {
+  const { translateItemName } = useCategoryTranslations();
+  const { formatCurrency } = useFormatters();
   const difference = item.projected - item.actual;
   const differenceColor = difference >= 0 ? 'text-green-600' : 'text-red-600';
   
   return (
     <tr className="hover:bg-gray-50 group">
-      <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-700">{item.name}</td>
+      <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-700">{translateItemName(item.name)}</td>
       <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500 text-right">
         <EditableCell
           value={item.projected}

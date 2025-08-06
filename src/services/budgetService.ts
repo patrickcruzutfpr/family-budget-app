@@ -8,8 +8,8 @@ const initialBudget: BudgetState = [
     name: 'Income',
     type: CategoryType.INCOME,
     items: [
-      { id: 'income-1', name: 'Net Pay', projected: 5000, actual: 5000 },
-      { id: 'income-2', name: 'Other Income', projected: 0, actual: 0 },
+      { id: 'income-1', name: 'Salário Líquido', projected: 5000, actual: 5000 },
+      { id: 'income-2', name: 'Outras Rendas', projected: 0, actual: 0 },
     ],
   },
   {
@@ -17,8 +17,8 @@ const initialBudget: BudgetState = [
     name: 'Housing',
     type: CategoryType.EXPENSE,
     items: [
-      { id: 'housing-1', name: 'Mortgage/Rent', projected: 1500, actual: 1500 },
-      { id: 'housing-2', name: 'Utilities', projected: 200, actual: 185 },
+      { id: 'housing-1', name: 'Aluguel/Financiamento', projected: 1500, actual: 1500 },
+      { id: 'housing-2', name: 'Contas Básicas', projected: 200, actual: 185 },
       { id: 'housing-3', name: 'Internet', projected: 60, actual: 60 },
     ],
   },
@@ -27,9 +27,9 @@ const initialBudget: BudgetState = [
     name: 'Transportation',
     type: CategoryType.EXPENSE,
     items: [
-      { id: 'transport-1', name: 'Car Payment', projected: 350, actual: 350 },
-      { id: 'transport-2', name: 'Gas & Fuel', projected: 150, actual: 180 },
-      { id: 'transport-3', name: 'Insurance', projected: 120, actual: 120 },
+      { id: 'transport-1', name: 'Financiamento do Carro', projected: 350, actual: 350 },
+      { id: 'transport-2', name: 'Gasolina', projected: 150, actual: 180 },
+      { id: 'transport-3', name: 'Seguro do Veículo', projected: 120, actual: 120 },
     ],
   },
   {
@@ -37,8 +37,8 @@ const initialBudget: BudgetState = [
     name: 'Food',
     type: CategoryType.EXPENSE,
     items: [
-      { id: 'food-1', name: 'Groceries', projected: 600, actual: 750 },
-      { id: 'food-2', name: 'Restaurants', projected: 200, actual: 280 },
+      { id: 'food-1', name: 'Supermercado', projected: 600, actual: 750 },
+      { id: 'food-2', name: 'Restaurantes', projected: 200, actual: 280 },
     ],
   },
     {
@@ -46,9 +46,9 @@ const initialBudget: BudgetState = [
     name: 'Personal & Family',
     type: CategoryType.EXPENSE,
     items: [
-      { id: 'personal-1', name: 'Childcare', projected: 800, actual: 800 },
-      { id: 'personal-2', name: 'Entertainment', projected: 150, actual: 200 },
-      { id: 'personal-3', name: 'Shopping', projected: 100, actual: 150 },
+      { id: 'personal-1', name: 'Cuidados Infantis', projected: 800, actual: 800 },
+      { id: 'personal-2', name: 'Entretenimento', projected: 150, actual: 200 },
+      { id: 'personal-3', name: 'Compras', projected: 100, actual: 150 },
     ],
   },
   {
@@ -56,8 +56,8 @@ const initialBudget: BudgetState = [
     name: 'Savings & Investments',
     type: CategoryType.EXPENSE,
     items: [
-        { id: 'savings-1', name: 'Retirement (401k)', projected: 300, actual: 300 },
-        { id: 'savings-2', name: 'Investments', projected: 200, actual: 200 },
+        { id: 'savings-1', name: 'Previdência Privada', projected: 300, actual: 300 },
+        { id: 'savings-2', name: 'Investimentos', projected: 200, actual: 200 },
     ]
   }
 ];
@@ -84,6 +84,28 @@ export const saveBudget = (budget: BudgetState) => {
 };
 
 export const resetBudgetToDefault = (): BudgetState => {
-    localStorage.removeItem(STORAGE_KEY);
+    try {
+        // Clear all possible storage keys
+        localStorage.removeItem(STORAGE_KEY);
+        localStorage.removeItem('familyBudget');
+        localStorage.removeItem('budget');
+        localStorage.removeItem('family-budget-language'); // Force language reset too
+        
+        // Clear any profile-related data that might interfere
+        const keys = Object.keys(localStorage);
+        keys.forEach(key => {
+            if (key.includes('budget') || key.includes('Budget') || key.includes('profile')) {
+                localStorage.removeItem(key);
+            }
+        });
+        
+        // Force page reload to clear any cached state
+        setTimeout(() => {
+            window.location.reload();
+        }, 100);
+        
+    } catch (error) {
+        console.error('Failed to clear localStorage', error);
+    }
     return JSON.parse(JSON.stringify(initialBudget)); // Return a deep copy
 }
