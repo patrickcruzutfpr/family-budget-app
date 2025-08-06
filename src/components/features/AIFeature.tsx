@@ -8,6 +8,7 @@ import { HeartIcon } from '@/assets/icons/HeartIcon';
 import { Trash2Icon } from '@/assets/icons/Trash2Icon';
 import { useI18n } from '@/i18n';
 import { useSavedSuggestions } from '@/hooks/useSavedSuggestions';
+import { getCurrentProfile } from '@/services/profileService';
 
 interface AIFeatureProps {
   budget: BudgetState;
@@ -15,6 +16,11 @@ interface AIFeatureProps {
 
 export const AIFeature: React.FC<AIFeatureProps> = ({ budget }) => {
   const { t, language } = useI18n();
+  
+  // Get current profile ID for profile-specific AI suggestions
+  const currentProfile = getCurrentProfile();
+  const profileId = currentProfile?.id;
+  
   const {
     savedSuggestions,
     saveSuggestion,
@@ -22,7 +28,7 @@ export const AIFeature: React.FC<AIFeatureProps> = ({ budget }) => {
     toggleFavorite,
     setCurrentSuggestions,
     reloadSuggestions
-  } = useSavedSuggestions(language);
+  } = useSavedSuggestions(language, profileId);
   
   const [suggestions, setSuggestions] = useState<AISuggestion[]>([]);
   const [isLoading, setIsLoading] = useState(false);

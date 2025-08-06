@@ -7,7 +7,7 @@ const CURRENT_PROFILE_KEY = 'currentProfileId';
 
 // Get translations synchronously for default data
 const getDefaultTranslations = () => {
-  // Try multiple sources for language detection
+  // Tr    console.log(`📦 Import: Restored ${aiSuggestions.length} AI suggestions (${totalFavorites} total favorites) for profile ${profileId || 'default'}`); multiple sources for language detection
   let currentLanguage;
   
   try {
@@ -313,8 +313,8 @@ export const exportProfile = (id: string): string => {
     throw new Error('Profile not found');
   }
   
-  // Include AI suggestions in export
-  const aiSuggestions = getAISuggestionsForExport();
+  // Include AI suggestions in export (profile-specific)
+  const aiSuggestions = getProfileAISuggestions(id);
   const profileWithAI = {
     ...profile,
     aiSuggestions
@@ -323,10 +323,44 @@ export const exportProfile = (id: string): string => {
   return JSON.stringify(profileWithAI, null, 2);
 };
 
-// Helper function to get AI suggestions for export
-const getAISuggestionsForExport = () => {
+// Helper function to get AI suggestions for a specific profile
+const getProfileAISuggestions = (profileId: string) => {
   try {
-    const stored = localStorage.getItem('family-budget-saved-suggestions');
+    // Get suggestions for the specific profile
+    const profileStorageKey = `family-budget-saved-suggestions-${profileId}`;
+    const stored = localStorage.getItem(profileStorageKey);
+    
+    if (stored) {
+      const allSuggestions = JSON.parse(stored);
+      
+      // Flatten all language suggestions into single array for export
+      const flatSuggestions: any[] = [];
+      Object.keys(allSuggestions).forEach(language => {
+        if (allSuggestions[language] && Array.isArray(allSuggestions[language])) {
+          flatSuggestions.push(...allSuggestions[language]);
+        }
+      });
+      
+      const favoritesCount = flatSuggestions.filter(s => s.isFavorite).length;
+      console.log(`📤 Export: Including ${flatSuggestions.length} AI suggestions (${favoritesCount} favorites) for profile ${profileId}`);
+      
+      return flatSuggestions;
+    }
+  } catch (error) {
+    console.error('Error getting AI suggestions for export:', error);
+  }
+  return [];
+};
+
+// Helper function to get AI suggestions for export
+const getAISuggestionsForExport = (profileId?: string) => {
+  try {
+    // Use profile-specific storage key
+    const storageKey = profileId 
+      ? `family-budget-saved-suggestions-${profileId}`
+      : 'family-budget-saved-suggestions'; // Fallback for backward compatibility
+      
+    const stored = localStorage.getItem(storageKey);
     
     if (stored) {
       const allSuggestions = JSON.parse(stored);
@@ -351,13 +385,18 @@ const getAISuggestionsForExport = () => {
 };
 
 // Helper function to restore AI suggestions from import
-const restoreAISuggestionsFromImport = (aiSuggestions?: any[]) => {
+const restoreAISuggestionsFromImport = (aiSuggestions?: any[], profileId?: string) => {
   if (!aiSuggestions || !Array.isArray(aiSuggestions)) {
     return;
   }
 
   try {
-    const stored = localStorage.getItem('family-budget-saved-suggestions');
+    // Use profile-specific storage key
+    const storageKey = profileId 
+      ? `family-budget-saved-suggestions-${profileId}`
+      : 'family-budget-saved-suggestions'; // Fallback for backward compatibility
+      
+    const stored = localStorage.getItem(storageKey);
     const currentSuggestions = stored ? JSON.parse(stored) : {};
     
     // Group imported suggestions by language
@@ -388,14 +427,14 @@ const restoreAISuggestionsFromImport = (aiSuggestions?: any[]) => {
       }
     });
     
-    localStorage.setItem('family-budget-saved-suggestions', JSON.stringify(currentSuggestions));
+    localStorage.setItem(storageKey, JSON.stringify(currentSuggestions));
     
     const totalFavorites = Object.values(currentSuggestions).flat().filter((s: any) => s.isFavorite).length;
     console.log(`� Import: Restored ${aiSuggestions.length} AI suggestions (${totalFavorites} total favorites)`);
     
     // Dispatch custom event to notify components that AI suggestions were updated
     const event = new CustomEvent('ai-suggestions-updated', {
-      detail: { type: 'ai-suggestions-imported', totalFavorites }
+      detail: { type: 'ai-suggestions-imported', totalFavorites, profileId }
     });
     window.dispatchEvent(event);
   } catch (error) {
@@ -412,11 +451,6 @@ export const importProfile = (profileData: string): BudgetProfile => {
       throw new Error('Invalid profile data format');
     }
     
-    // Restore AI suggestions if present
-    if (profile.aiSuggestions) {
-      restoreAISuggestionsFromImport(profile.aiSuggestions);
-    }
-    
     // Generate new ID and timestamps for imported profile
     const importedProfile: BudgetProfile = {
       id: generateId(),
@@ -430,6 +464,12 @@ export const importProfile = (profileData: string): BudgetProfile => {
     };
     
     saveProfile(importedProfile);
+    
+    // Restore AI suggestions for the new profile if present
+    if (profile.aiSuggestions) {
+      restoreAISuggestionsFromImport(profile.aiSuggestions, importedProfile.id);
+    }
+    
     return importedProfile;
   } catch (error) {
     console.error('Error importing profile:', error);
