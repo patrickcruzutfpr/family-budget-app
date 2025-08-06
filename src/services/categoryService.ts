@@ -38,7 +38,31 @@ export class CategoryService {
 
   // Get translations for default categories
   private static getDefaultTranslations() {
-    const currentLanguage = getInitialLanguage();
+    // Try multiple sources for language detection
+    let currentLanguage;
+    
+    try {
+      // 1. Try to get from localStorage first (user preference)
+      const stored = localStorage.getItem('family-budget-language');
+      if (stored && (stored === 'pt-BR' || stored === 'en')) {
+        currentLanguage = stored;
+      }
+    } catch (error) {
+      console.warn('Failed to get language from localStorage:', error);
+    }
+    
+    // 2. If no stored preference, use initial language detection
+    if (!currentLanguage) {
+      currentLanguage = getInitialLanguage();
+    }
+    
+    // 3. Final fallback based on browser language if detection fails
+    if (!currentLanguage || (currentLanguage !== 'pt-BR' && currentLanguage !== 'en')) {
+      const browserLang = navigator.language || navigator.languages?.[0] || 'pt-BR';
+      currentLanguage = browserLang.startsWith('pt') ? 'pt-BR' : 'en';
+    }
+    
+    console.log('🌍 Creating default categories with language:', currentLanguage);
     
     const translations = {
       'pt-BR': {
@@ -63,7 +87,7 @@ export class CategoryService {
       }
     };
 
-    return translations[currentLanguage] || translations['en'];
+    return translations[currentLanguage as keyof typeof translations] || translations['pt-BR'];
   }
 
   // Get default categories (not used anymore, kept for reference)

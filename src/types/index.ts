@@ -29,6 +29,13 @@ export interface AISuggestion {
   suggestion: string;
 }
 
+export interface SavedAISuggestion extends AISuggestion {
+  id: string;
+  savedAt: Date;
+  language: string;
+  isFavorite?: boolean;
+}
+
 export interface BudgetProfile {
   id: string;
   name: string;
@@ -37,6 +44,7 @@ export interface BudgetProfile {
   createdAt: Date;
   updatedAt: Date;
   isDefault?: boolean;
+  aiSuggestions?: SavedAISuggestion[]; // Optional field for AI suggestions
 }
 
 export interface ProfileSummary {

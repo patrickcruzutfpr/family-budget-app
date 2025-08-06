@@ -7,7 +7,31 @@ const CURRENT_PROFILE_KEY = 'currentProfileId';
 
 // Get translations synchronously for default data
 const getDefaultTranslations = () => {
-  const currentLanguage = getInitialLanguage();
+  // Try multiple sources for language detection
+  let currentLanguage;
+  
+  try {
+    // 1. Try to get from localStorage first (user preference)
+    const stored = localStorage.getItem('family-budget-language');
+    if (stored && (stored === 'pt-BR' || stored === 'en')) {
+      currentLanguage = stored;
+    }
+  } catch (error) {
+    console.warn('Failed to get language from localStorage:', error);
+  }
+  
+  // 2. If no stored preference, use initial language detection
+  if (!currentLanguage) {
+    currentLanguage = getInitialLanguage();
+  }
+  
+  // 3. Final fallback based on browser language if detection fails
+  if (!currentLanguage || (currentLanguage !== 'pt-BR' && currentLanguage !== 'en')) {
+    const browserLang = navigator.language || navigator.languages?.[0] || 'pt-BR';
+    currentLanguage = browserLang.startsWith('pt') ? 'pt-BR' : 'en';
+  }
+  
+  console.log('🌍 Creating default profile with language:', currentLanguage);
   
   // Fallback translations based on current language
   const translations = {
@@ -39,7 +63,7 @@ const getDefaultTranslations = () => {
     }
   };
 
-  return translations[currentLanguage] || translations['en'];
+  return translations[currentLanguage as keyof typeof translations] || translations['pt-BR'];
 };
 
 // Default profile template
@@ -289,25 +313,103 @@ export const exportProfile = (id: string): string => {
     throw new Error('Profile not found');
   }
   
-  return JSON.stringify(profile, null, 2);
+  // Include AI suggestions in export
+  const profileWithAI = {
+    ...profile,
+    aiSuggestions: getAISuggestionsForExport()
+  };
+  
+  return JSON.stringify(profileWithAI, null, 2);
+};
+
+// Helper function to get AI suggestions for export
+const getAISuggestionsForExport = () => {
+  try {
+    const stored = localStorage.getItem('family-budget-saved-suggestions');
+    if (stored) {
+      const allSuggestions = JSON.parse(stored);
+      // Flatten all language suggestions into single array for export
+      const flatSuggestions: any[] = [];
+      Object.keys(allSuggestions).forEach(language => {
+        if (allSuggestions[language] && Array.isArray(allSuggestions[language])) {
+          flatSuggestions.push(...allSuggestions[language]);
+        }
+      });
+      return flatSuggestions;
+    }
+  } catch (error) {
+    console.error('Error getting AI suggestions for export:', error);
+  }
+  return [];
+};
+
+// Helper function to restore AI suggestions from import
+const restoreAISuggestionsFromImport = (aiSuggestions?: any[]) => {
+  if (!aiSuggestions || !Array.isArray(aiSuggestions)) {
+    return;
+  }
+  
+  try {
+    const stored = localStorage.getItem('family-budget-saved-suggestions');
+    const currentSuggestions = stored ? JSON.parse(stored) : {};
+    
+    // Group imported suggestions by language
+    aiSuggestions.forEach(suggestion => {
+      const language = suggestion.language || 'pt-BR'; // Default fallback
+      
+      if (!currentSuggestions[language]) {
+        currentSuggestions[language] = [];
+      }
+      
+      // Avoid duplicates by checking title and content
+      const exists = currentSuggestions[language].some((s: any) => 
+        s.title === suggestion.title && s.suggestion === suggestion.suggestion
+      );
+      
+      if (!exists) {
+        // Ensure proper date object
+        const restoredSuggestion = {
+          ...suggestion,
+          savedAt: new Date(suggestion.savedAt),
+          id: suggestion.id || `imported-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`
+        };
+        currentSuggestions[language].unshift(restoredSuggestion);
+        
+        // Keep only last 50 suggestions per language
+        currentSuggestions[language] = currentSuggestions[language].slice(0, 50);
+      }
+    });
+    
+    localStorage.setItem('family-budget-saved-suggestions', JSON.stringify(currentSuggestions));
+  } catch (error) {
+    console.error('Error restoring AI suggestions from import:', error);
+  }
 };
 
 export const importProfile = (profileData: string): BudgetProfile => {
   try {
-    const profile = JSON.parse(profileData) as BudgetProfile;
+    const profile = JSON.parse(profileData) as BudgetProfile & { aiSuggestions?: any[] };
     
     // Validate required fields
     if (!profile.name || !profile.budget || !Array.isArray(profile.budget)) {
       throw new Error('Invalid profile data format');
     }
     
+    // Restore AI suggestions if present
+    if (profile.aiSuggestions) {
+      restoreAISuggestionsFromImport(profile.aiSuggestions);
+    }
+    
     // Generate new ID and timestamps for imported profile
     const importedProfile: BudgetProfile = {
-      ...profile,
       id: generateId(),
       name: `${profile.name} (Imported)`,
+      description: profile.description,
+      budget: profile.budget,
       createdAt: new Date(),
       updatedAt: new Date(),
+      isDefault: false
+      // Don't include aiSuggestions in the stored profile - they're handled separately
     };
     
     saveProfile(importedProfile);
@@ -328,4 +430,63 @@ export const resetToDefault = (): BudgetProfile => {
   setCurrentProfileId(defaultProfile.id);
   
   return defaultProfile;
+};
+
+// Force recreate default profile with current language settings
+export const recreateDefaultProfileWithCurrentLanguage = (): BudgetProfile => {
+  console.log('🔄 Recreating default profile with current language settings...');
+  
+  // Get current profiles
+  const profiles = getAllProfiles();
+  
+  // Find and remove any default profile
+  const nonDefaultProfiles = profiles.filter(p => !p.isDefault);
+  
+  // Create new default profile with current language
+  const newDefaultProfile = createDefaultProfile();
+  
+  // Save updated profiles
+  const updatedProfiles = [newDefaultProfile, ...nonDefaultProfiles];
+  localStorage.setItem(PROFILES_STORAGE_KEY, JSON.stringify(updatedProfiles));
+  
+  // Set as current if no other current profile exists
+  const currentId = getCurrentProfileId();
+  if (!currentId || !nonDefaultProfiles.find(p => p.id === currentId)) {
+    setCurrentProfileId(newDefaultProfile.id);
+  }
+  
+  return newDefaultProfile;
+};
+
+// Check if default profile needs language update
+export const checkAndUpdateDefaultProfileLanguage = (): boolean => {
+  try {
+    const profiles = getAllProfiles();
+    const defaultProfile = profiles.find(p => p.isDefault);
+    
+    if (!defaultProfile) {
+      return false; // No default profile to update
+    }
+    
+    // Get expected categories for current language
+    const t = getDefaultTranslations();
+    const expectedCategories = [t.income, t.housing, t.food, t.transportation];
+    const actualCategories = defaultProfile.budget.map(cat => cat.name);
+    
+    // Check if categories match current language
+    const needsUpdate = !expectedCategories.every(expected => 
+      actualCategories.includes(expected)
+    );
+    
+    if (needsUpdate) {
+      console.log('🔄 Default profile language mismatch detected. Updating...');
+      recreateDefaultProfileWithCurrentLanguage();
+      return true;
+    }
+    
+    return false;
+  } catch (error) {
+    console.error('Error checking default profile language:', error);
+    return false;
+  }
 };
