@@ -114,7 +114,7 @@ export const useBudget = () => {
     setBudget(newBudget);
   }, [confirmReset]);
 
-  // Reload budget from current profile (useful after profile switch)
+  // Reload budget from current profile (useful after profile switch or category changes)
   const reloadBudget = useCallback(() => {
     try {
       const currentProfile = getCurrentProfile();
@@ -124,6 +124,42 @@ export const useBudget = () => {
     }
   }, []);
 
+  // Add category to budget
+  const addCategory = useCallback((categoryName: string, categoryType: CategoryType) => {
+    setBudget(prevBudget => {
+      const newCategory = {
+        id: generateId(),
+        name: categoryName,
+        type: categoryType,
+        items: []
+      };
+      return [...prevBudget, newCategory];
+    });
+  }, []);
+
+  // Update category in budget
+  const updateCategory = useCallback((categoryId: string, updates: Partial<{ name: string; description?: string; icon?: string; color?: string }>) => {
+    setBudget(prevBudget => {
+      return prevBudget.map(category => {
+        if (category.id === categoryId) {
+          return {
+            ...category,
+            ...updates,
+            updatedAt: new Date()
+          };
+        }
+        return category;
+      });
+    });
+  }, []);
+
+  // Remove category from budget
+  const removeCategory = useCallback((categoryId: string) => {
+    setBudget(prevBudget => {
+      return prevBudget.filter(category => category.id !== categoryId);
+    });
+  }, []);
+
   return { 
     budget, 
     updateItemValue,
@@ -131,6 +167,9 @@ export const useBudget = () => {
     addItem, 
     deleteItem, 
     resetBudget, 
-    reloadBudget 
+    reloadBudget,
+    addCategory,
+    updateCategory,
+    removeCategory
   };
 };

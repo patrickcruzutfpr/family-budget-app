@@ -5,14 +5,16 @@ A modern React TypeScript application for managing family budgets with AI-powere
 ## ✨ Features
 
 - 📊 **Budget Tracking**: Track income and expenses with projected vs actual amounts
+- 🏷️ **Category Management**: Complete CRUD system for custom expense categories with real-time synchronization
 - 🤖 **AI Suggestions**: Get personalized financial advice powered by Gemini AI
 - 📈 **Visual Charts**: Interactive pie charts and expense visualization with Recharts
-- 💾 **Data Persistence**: Automatic saving to local storage with data backup
-- 🎨 **Modern UI**: Clean, responsive design with modern CSS styling
+- 💾 **Data Persistence**: Automatic saving to local storage with data backup and migration utilities
+- 🎨 **Modern UI**: Clean, responsive design with modern CSS styling and modal interfaces
 - 📱 **Mobile Responsive**: Optimized for desktop, tablet, and mobile devices
 - 🔐 **Type Safety**: Full TypeScript support for robust development
 - ⚡ **Fast Performance**: Built with Vite for lightning-fast development and builds
 - 🌐 **PWA Ready**: Progressive Web App capabilities for offline usage
+- 🔄 **Real-time Updates**: Live synchronization between category changes and budget calculations
 
 ## 🏗️ Project Structure
 
@@ -21,12 +23,15 @@ src/
 ├── assets/           # Static assets (icons, images)
 ├── components/       # React components
 │   ├── features/    # Feature-specific components
+│   │   ├── budget/  # Budget management and calculations
+│   │   ├── categories/ # Category CRUD management system
+│   │   └── ai/      # AI-powered suggestions
 │   ├── layout/      # Layout components
 │   └── ui/          # Reusable UI components
-├── hooks/           # Custom React hooks
-├── services/        # API and business logic
+├── hooks/           # Custom React hooks (useBudget, useCategories)
+├── services/        # API and business logic (CategoryService, ProfileService)
 ├── types/           # TypeScript definitions
-└── utils/           # Utility functions
+└── utils/           # Utility functions and data migration
 ```
 
 ## 🚀 Getting Started
@@ -115,10 +120,12 @@ Set-ExecutionPolicy -ExecutionPolicy RemoteSigned -Scope CurrentUser
    - Include all income sources (salary, freelance, investments)
    - Update regularly for accuracy
 
-2. **📋 Create Expense Categories**
-   - Add categories like Housing, Food, Transportation
-   - Set projected amounts for each category
-   - Customize categories to fit your lifestyle
+2. **📋 Create and Manage Expense Categories**
+   - Create custom categories with names, descriptions, and colors
+   - Edit existing categories with real-time budget updates
+   - Delete unused categories with confirmation dialogs
+   - View category statistics and usage information
+   - Import/export categories between profiles
 
 3. **💰 Track Your Expenses**
    - Enter actual spending amounts
@@ -139,9 +146,96 @@ Set-ExecutionPolicy -ExecutionPolicy RemoteSigned -Scope CurrentUser
 
 - **Dashboard**: Overview of your financial health
 - **Budget Calculator**: Real-time budget calculations
+- **Category Manager**: Complete CRUD system for expense categories
 - **Expense Tracker**: Detailed expense management
 - **AI Assistant**: Smart financial recommendations
 - **Visual Analytics**: Charts and graphs for insights
+
+## 🏷️ Category Management System
+
+### Overview
+The Category Management System provides a comprehensive CRUD (Create, Read, Update, Delete) interface for managing expense categories with full integration to the budget system.
+
+### Key Features
+
+**✨ Complete Category CRUD**
+- **Create**: Add new categories with custom names, descriptions, and colors
+- **Read**: View all categories in an organized card-based layout
+- **Update**: Edit category details with real-time validation
+- **Delete**: Remove categories with confirmation and dependency checks
+
+**🔄 Real-time Integration**
+- Automatic synchronization with budget calculations
+- Live updates when categories are modified
+- Seamless integration with existing budget data
+- Migration utilities for data consistency
+
+**💾 Advanced Data Management**
+- Profile-based category storage
+- Local storage persistence with backup
+- Data migration and validation utilities
+- Category usage tracking and statistics
+
+### How to Use Category Management
+
+1. **Access Category Manager**
+   - Click the "Categories" button in the main interface
+   - View all existing categories in a card layout
+
+2. **Create New Categories**
+   - Click "Add New Category" button
+   - Fill in category name (required)
+   - Add optional description
+   - Choose a custom color
+   - Save to see immediate integration
+
+3. **Edit Existing Categories**
+   - Click the edit button on any category card
+   - Modify name, description, or color
+   - Changes are applied instantly to budget calculations
+
+4. **Delete Categories**
+   - Click the delete button on category cards
+   - Confirm deletion in the modal dialog
+   - System checks for dependencies before removal
+
+5. **View Category Statistics**
+   - See category usage information
+   - Monitor which categories are most used
+   - Track category creation and modification dates
+
+### Technical Implementation
+
+**Architecture Components:**
+- `CategoryService`: Core business logic for CRUD operations
+- `useCategories`: Custom React hook for state management
+- `CategoryManager`: Main UI component with modal system
+- `CategoryForm`: Reusable form component with validation
+- `CategoryModal`: Modal wrapper for create/edit operations
+
+**Data Integration:**
+- Real-time synchronization with `useBudget` hook
+- Event-driven updates between components
+- Profile system integration for user data
+- Migration utilities for backward compatibility
+
+**File Structure:**
+```
+src/components/features/categories/
+├── CategoryManager.tsx    # Main management interface
+├── CategoryForm.tsx       # Form component for CRUD operations
+├── CategoryModal.tsx      # Modal wrapper component
+└── index.ts              # Component exports
+
+src/hooks/
+├── useCategories.ts       # Category state management hook
+
+src/services/
+├── CategoryService.ts     # Business logic and CRUD operations
+
+src/utils/
+├── categoryMigration.ts   # Data migration utilities
+```
 
 ## 🤖 AI Features
 
@@ -168,7 +262,9 @@ When AI services are unavailable, the app provides:
 - **Build Tool**: Vite 6.3.5 for fast development and builds
 - **Charts**: Recharts 3.1.2 for data visualization
 - **AI Integration**: Google Gemini AI (@google/genai)
-- **State Management**: Redux Toolkit for complex state
+- **State Management**: Custom hooks pattern with event-driven updates
+- **Data Persistence**: LocalStorage with profile system and migration utilities
+- **UI Components**: Modal system, form validation, and responsive design
 - **Styling**: Modern CSS with responsive design
 - **Package Manager**: npm with Node.js 18+
 
@@ -222,15 +318,16 @@ import { BudgetService } from '@/services';
 src/
 ├── components/
 │   ├── features/     # Feature-specific components
-│   │   ├── budget/   # Budget management
-│   │   ├── expenses/ # Expense tracking
-│   │   └── ai/       # AI suggestions
-│   ├── layout/       # Layout components
-│   └── ui/           # Reusable UI components
-├── hooks/            # Custom React hooks
-├── services/         # Business logic and API calls
+│   │   ├── budget/   # Budget management and calculations
+│   │   ├── categories/ # Complete CRUD category management
+│   │   ├── expenses/ # Expense tracking and management
+│   │   └── ai/       # AI suggestions and insights
+│   ├── layout/       # Layout components (Header, Footer)
+│   └── ui/           # Reusable UI components (modals, forms)
+├── hooks/            # Custom React hooks (useBudget, useCategories)
+├── services/         # Business logic and API calls (CategoryService, ProfileService)
 ├── types/            # TypeScript type definitions
-├── utils/            # Helper functions
+├── utils/            # Helper functions and migration utilities
 └── assets/           # Static files
 ```
 

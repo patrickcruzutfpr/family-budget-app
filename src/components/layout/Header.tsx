@@ -6,9 +6,10 @@ import { useI18n } from '@/i18n';
 interface HeaderProps {
     onReset: () => void;
     onManageProfiles: () => void;
+    onManageCategories: () => void;
 }
 
-export const Header: React.FC<HeaderProps> = ({ onReset, onManageProfiles }) => {
+export const Header: React.FC<HeaderProps> = ({ onReset, onManageProfiles, onManageCategories }) => {
     const { t } = useI18n();
     
     return (
@@ -22,6 +23,16 @@ export const Header: React.FC<HeaderProps> = ({ onReset, onManageProfiles }) => 
                     </div>
                     <div className="flex items-center gap-3">
                         <LanguageSelector />
+                        <button
+                            onClick={onManageCategories}
+                            className="flex items-center gap-2 px-4 py-2 text-sm font-medium text-purple-600 bg-purple-50 rounded-lg hover:bg-purple-100 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-purple-500 transition-colors"
+                            aria-label={t('header.categories', 'Categories')}
+                        >
+                            <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 11H5m14-4H3m16 8H7m12 4H9" />
+                            </svg>
+                            <span>{t('header.categories', 'Categorias')}</span>
+                        </button>
                         <button
                             onClick={onManageProfiles}
                             className="flex items-center gap-2 px-4 py-2 text-sm font-medium text-primary bg-primary/10 rounded-lg hover:bg-primary/20 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary transition-colors"

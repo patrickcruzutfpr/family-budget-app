@@ -10,3 +10,7 @@ export { BudgetRow } from './features/BudgetRow';
 export { BudgetTable } from './features/BudgetTable';
 export { Summary } from './features/Summary';
 export { ProfileManager } from './features/ProfileManager';
+export { CategoryManager } from './features/CategoryManager';
+export { CategoryForm } from './features/CategoryForm';
+export { CategoryModal } from './features/CategoryModal';
+export { DeleteConfirmationModal } from './features/DeleteConfirmationModal';

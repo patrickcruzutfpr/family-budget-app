@@ -1,11 +1,13 @@
-import React, { useMemo, useState } from 'react';
+import React, { useMemo, useState, useEffect } from 'react';
 import { useBudget } from '@/hooks';
-import { BudgetTable, Summary, BudgetChart, AIFeature, Header, ProfileManager } from '@/components';
+import { BudgetTable, Summary, BudgetChart, AIFeature, Header, ProfileManager, CategoryManager } from '@/components';
 import { CategoryType } from '@/types';
 import { useI18n } from '@/i18n';
+import { migrateCategoryData, ensureDefaultCategories } from '@/utils/categoryMigration';
 
 function App(): React.ReactNode {
   const [showProfileManager, setShowProfileManager] = useState(false);
+  const [showCategoryManager, setShowCategoryManager] = useState(false);
   const { t, language, isLoading } = useI18n();
   const {
     budget,
@@ -43,6 +45,24 @@ function App(): React.ReactNode {
   const expenseCategories = useMemo(() => budget.filter(c => c.type === CategoryType.EXPENSE), [budget]);
   const incomeCategory = useMemo(() => budget.find(c => c.type === CategoryType.INCOME), [budget]);
 
+  // Initialize category migration and default categories on first load
+  useEffect(() => {
+    migrateCategoryData();
+    ensureDefaultCategories();
+  }, []);
+
+  // Listen for category changes and reload budget
+  useEffect(() => {
+    const handleCategoryChange = () => {
+      reloadBudget();
+    };
+
+    window.addEventListener('categoryDataChanged', handleCategoryChange);
+    return () => {
+      window.removeEventListener('categoryDataChanged', handleCategoryChange);
+    };
+  }, [reloadBudget]);
+
   // Show loading screen while translations are loading
   if (isLoading) {
     return (
@@ -58,7 +78,11 @@ function App(): React.ReactNode {
 
   return (
     <div className="min-h-screen bg-gray-50 text-gray-800">
-      <Header onReset={resetBudget} onManageProfiles={() => setShowProfileManager(true)} />
+      <Header 
+        onReset={resetBudget} 
+        onManageProfiles={() => setShowProfileManager(true)}
+        onManageCategories={() => setShowCategoryManager(true)}
+      />
       
       {showProfileManager && (
         <div className="fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center p-4">
@@ -78,6 +102,30 @@ function App(): React.ReactNode {
                 onProfileChange={() => {
                   reloadBudget();
                   setShowProfileManager(false);
+                }}
+              />
+            </div>
+          </div>
+        </div>
+      )}
+
+      {showCategoryManager && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center p-4">
+          <div className="bg-white rounded-2xl shadow-2xl max-w-6xl w-full max-h-[90vh] overflow-hidden">
+            <div className="p-6 border-b border-gray-200 flex justify-between items-center">
+              <h2 className="text-2xl font-bold text-gray-800">Gerenciamento de Categorias</h2>
+              <button
+                onClick={() => setShowCategoryManager(false)}
+                className="text-gray-500 hover:text-gray-700 text-2xl font-bold"
+                aria-label="Fechar"
+              >
+                ×
+              </button>
+            </div>
+            <div className="overflow-y-auto max-h-[calc(90vh-80px)] p-6">
+              <CategoryManager 
+                onCategoryChange={() => {
+                  reloadBudget(); // Reload budget when categories change
                 }}
               />
             </div>

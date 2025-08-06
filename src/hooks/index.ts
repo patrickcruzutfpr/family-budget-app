@@ -4,3 +4,4 @@ export { useProfileManager } from './useProfileManager';
 export { useBudgetMessages } from './useBudgetMessages';
 export { useCategoryTranslations } from './useCategoryTranslations';
 export { useFormatters } from './useFormatters';
+export { useCategories } from './useCategories';
