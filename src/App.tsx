@@ -5,13 +5,17 @@ import { CategoryType } from '@/types';
 import { useI18n } from '@/i18n';
 import { migrateCategoryData, ensureDefaultCategories } from '@/utils/categoryMigration';
 import { debugCategoryImportExport, cleanupDebugData } from '@/utils/debugCategoryImportExport';
-import { initializeDefaultProfileLanguage } from '@/utils/initializeDefaultProfileLanguage';
+import { useProfileCategoriesLanguageSync } from '@/hooks/useProfileCategoriesLanguageSync';
 import { runAISuggestionsTest } from '@/utils/testAISuggestions';
 
 function App(): React.ReactNode {
   const [showProfileManager, setShowProfileManager] = useState(false);
   const [showCategoryManager, setShowCategoryManager] = useState(false);
   const { t, language, isLoading } = useI18n();
+  
+  // Use the new hook to sync profile categories with language changes
+  useProfileCategoriesLanguageSync();
+  
   const {
     budget,
     updateItemValue,
@@ -50,9 +54,6 @@ function App(): React.ReactNode {
 
   // Initialize category migration and default categories on first load
   useEffect(() => {
-    // Initialize profile language synchronization with browser language
-    initializeDefaultProfileLanguage();
-    
     migrateCategoryData();
     ensureDefaultCategories();
     
@@ -60,6 +61,14 @@ function App(): React.ReactNode {
     (window as any).debugCategoryImportExport = debugCategoryImportExport;
     (window as any).cleanupDebugData = cleanupDebugData;
     (window as any).testAISuggestions = runAISuggestionsTest;
+    
+    // Add category language test function
+    (window as any).testCategoryLanguageUpdate = () => {
+      const { updateAllProfileCategoriesLanguage } = require('@/services/profileService');
+      const wasUpdated = updateAllProfileCategoriesLanguage();
+      console.log('Category language update test:', wasUpdated ? 'SUCCESS' : 'NO CHANGES');
+      return wasUpdated;
+    };
     
     // Add AI suggestions test function
     (window as any).addTestAISuggestions = () => {

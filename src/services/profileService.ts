@@ -547,3 +547,85 @@ export const checkAndUpdateDefaultProfileLanguage = (): boolean => {
     return false;
   }
 };
+
+// Update all profile categories to match current language
+export const updateAllProfileCategoriesLanguage = (): boolean => {
+  try {
+    const profiles = getAllProfiles();
+    if (profiles.length === 0) {
+      return false;
+    }
+
+    const t = getDefaultTranslations();
+    const categoryTranslations = {
+      // Income translations
+      'Income': t.income,
+      'Renda': t.income,
+      'Receita': t.income,
+      'Ingresos': t.income,
+      'Revenu': t.income,
+      
+      // Housing translations  
+      'Housing': t.housing,
+      'Habitação': t.housing,
+      'Moradia': t.housing,
+      'Casa': t.housing,
+      'Vivienda': t.housing,
+      'Logement': t.housing,
+      
+      // Food translations
+      'Food': t.food,
+      'Alimentação': t.food,
+      'Comida': t.food,
+      'Alimentos': t.food,
+      'Nourriture': t.food,
+      'Alimentation': t.food,
+      
+      // Transportation translations
+      'Transportation': t.transportation,
+      'Transporte': t.transportation,
+      'Transport': t.transportation,
+      'Locomoção': t.transportation,
+      'Mobilidade': t.transportation
+    };
+
+    let hasChanges = false;
+
+    const updatedProfiles = profiles.map(profile => {
+      const updatedProfile = { ...profile };
+      let profileChanged = false;
+
+      updatedProfile.budget = profile.budget.map(category => {
+        const newName = categoryTranslations[category.name as keyof typeof categoryTranslations];
+        if (newName && newName !== category.name) {
+          profileChanged = true;
+          hasChanges = true;
+          return { ...category, name: newName };
+        }
+        return category;
+      });
+
+      if (profileChanged) {
+        updatedProfile.updatedAt = new Date();
+      }
+
+      return updatedProfile;
+    });
+
+    if (hasChanges) {
+      localStorage.setItem(PROFILES_STORAGE_KEY, JSON.stringify(updatedProfiles));
+      console.log('✅ Updated all profile categories to current language');
+      
+      // Dispatch event to notify components
+      const event = new CustomEvent('profileChanged', {
+        detail: { type: 'categories-language-updated' }
+      });
+      window.dispatchEvent(event);
+    }
+
+    return hasChanges;
+  } catch (error) {
+    console.error('Error updating profile categories language:', error);
+    return false;
+  }
+};

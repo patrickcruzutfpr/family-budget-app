@@ -51,7 +51,7 @@ export const BudgetTable: React.FC<BudgetTableProps> = ({ categories, updateItem
             
             // Inverte a lógica de cores para categoria de renda (INCOME)
             // Para renda: valores positivos = verde, valores negativos = vermelho
-            // Para despesas: valores positivos = vermelho, valores negativos = verde
+            // Para despesas: valores positivos = verde, valores negativos = vermelho
             const isIncomeCategory = category.type === CategoryType.INCOME;
             let differenceColorClass;
             
@@ -59,8 +59,8 @@ export const BudgetTable: React.FC<BudgetTableProps> = ({ categories, updateItem
               // Para renda: positivo = bom (verde), negativo = ruim (vermelho)
               differenceColorClass = categoryDifference >= 0 ? 'text-green-600' : 'text-red-600';
             } else {
-              // Para despesas: positivo = ruim (vermelho), negativo = bom (verde)
-              differenceColorClass = categoryDifference >= 0 ? 'text-red-600' : 'text-green-600';
+              // Para despesas: positivo = bom (verde), negativo = ruim (vermelho)
+              differenceColorClass = categoryDifference >= 0 ? 'text-green-600' : 'text-red-600';
             }
 
             return (

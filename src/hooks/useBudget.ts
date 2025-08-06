@@ -36,6 +36,27 @@ export const useBudget = () => {
     }
   }, [budget]);
 
+  // Listen for category language updates and reload budget
+  useEffect(() => {
+    const handleCategoryLanguageUpdate = (e: CustomEvent) => {
+      if (e.detail?.type === 'categories-language-updated') {
+        console.log('🔄 Category language updated, reloading budget...');
+        try {
+          const currentProfile = getCurrentProfile();
+          setBudget(currentProfile.budget);
+        } catch (error) {
+          console.warn('Failed to reload budget after language update:', error);
+        }
+      }
+    };
+
+    window.addEventListener('profileChanged' as any, handleCategoryLanguageUpdate);
+
+    return () => {
+      window.removeEventListener('profileChanged' as any, handleCategoryLanguageUpdate);
+    };
+  }, []);
+
   const updateItemValue = useCallback((categoryId: string, itemId: string, field: 'projected' | 'actual', value: number) => {
     setBudget(prevBudget => {
       return prevBudget.map(category => {
