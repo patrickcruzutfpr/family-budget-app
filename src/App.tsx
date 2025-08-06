@@ -5,6 +5,7 @@ import { CategoryType } from '@/types';
 import { useI18n } from '@/i18n';
 import { migrateCategoryData, ensureDefaultCategories } from '@/utils/categoryMigration';
 import { debugCategoryImportExport, cleanupDebugData } from '@/utils/debugCategoryImportExport';
+import { initializeDefaultProfileLanguage } from '@/utils/initializeDefaultProfileLanguage';
 
 function App(): React.ReactNode {
   const [showProfileManager, setShowProfileManager] = useState(false);
@@ -48,6 +49,9 @@ function App(): React.ReactNode {
 
   // Initialize category migration and default categories on first load
   useEffect(() => {
+    // Initialize profile language synchronization with browser language
+    initializeDefaultProfileLanguage();
+    
     migrateCategoryData();
     ensureDefaultCategories();
     

@@ -262,5 +262,20 @@
       "placeholder": "HH:mm",
       "example": "14:30"
     }
+  },
+  "languageDetection": {
+    "title": "Demonstração de Detecção de Idioma",
+    "runTest": "Executar Teste de Detecção",
+    "simulateFirstVisit": "Simular Primeira Visita",
+    "currentState": "Estado Atual",
+    "sampleCategories": "Categorias de Exemplo",
+    "detectionFlow": "Fluxo de Detecção",
+    "howItWorks": "Como Funciona a Detecção",
+    "step1": "Detecta o idioma do navegador usando navigator.language",
+    "step2": "Volta para idioma suportado (pt-BR ou en)",
+    "step3": "Verifica preferência salva no localStorage",
+    "step4": "Sincroniza idioma do perfil com idioma detectado/salvo",
+    "step5": "Cria categorias padrão no idioma correto",
+    "currentBrowser": "Informações do Seu Navegador"
   }
 }
