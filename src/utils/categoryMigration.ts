@@ -79,8 +79,8 @@ export const migrateCategoriesToIncludeIcons = (): void => {
       'Habitação': { icon: '🏠', color: '#3B82F6' },
       'Transporte': { icon: '🚗', color: '#EF4444' },
       'Alimentação': { icon: '🍕', color: '#10B981' },
-      'Pessoal & Família': { icon: '👨‍👩‍👧‍👦', color: '#F59E0B' },
-      'Economia & Investimentos': { icon: '🎯', color: '#8B5CF6' },
+      'Pessoal e Família': { icon: '👨‍👩‍👧‍👦', color: '#F59E0B' },
+      'Poupança e Investimentos': { icon: '🎯', color: '#8B5CF6' },
       // English
       'Income': { icon: '💰', color: '#10B981' },
       'Housing': { icon: '🏠', color: '#3B82F6' },

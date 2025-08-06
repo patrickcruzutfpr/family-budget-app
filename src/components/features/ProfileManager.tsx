@@ -204,7 +204,7 @@ export const ProfileManager: React.FC<ProfileManagerProps> = ({ onProfileChange 
       <div className="flex items-center justify-between mb-6">
         <h3 className="text-xl font-bold text-gray-700 flex items-center gap-2">
           <FolderIcon className="w-6 h-6 text-primary" />
-          {t('profiles.title', 'Profile Manager')}
+          {t('profiles.label', 'Profiles')}
         </h3>
         <div className="flex gap-2">
           <button

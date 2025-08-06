@@ -36,6 +36,7 @@
   },
   "profiles": {
     "title": "Gerenciamento de Perfis",
+    "label": "Todos os Perfis",
     "close": "Fechar",
     "createNew": "Criar Novo Perfil",
     "import": "Importar Perfil",

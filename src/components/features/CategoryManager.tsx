@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { Category, CategoryType, CategoryFormData, CategoryModalState, DeleteConfirmationState } from '../../types';
 import { useCategories } from '../../hooks/useCategories';
 import { useI18n } from '../../i18n/context';
+import { useCategoryTranslations } from '../../hooks/useCategoryTranslations';
 import { CategoryModal } from './CategoryModal';
 import { DeleteConfirmationModal } from './DeleteConfirmationModal';
 
@@ -11,6 +12,7 @@ interface CategoryManagerProps {
 
 export const CategoryManager: React.FC<CategoryManagerProps> = ({ onCategoryChange }) => {
   const { t } = useI18n();
+  const { translateCategoryName } = useCategoryTranslations();
   const {
     categories,
     loading: categoriesLoading,
@@ -136,7 +138,7 @@ export const CategoryManager: React.FC<CategoryManagerProps> = ({ onCategoryChan
               <span className="text-xl">{category.icon}</span>
             )}
             <div>
-              <h3 className="font-semibold text-gray-900">{category.name}</h3>
+              <h3 className="font-semibold text-gray-900">{translateCategoryName(category.name)}</h3>
               {category.description && (
                 <p className="text-sm text-gray-600 mt-1">{category.description}</p>
               )}
@@ -215,8 +217,7 @@ export const CategoryManager: React.FC<CategoryManagerProps> = ({ onCategoryChan
       {/* Header */}
       <div className="flex items-center justify-between">
         <div>
-          <h2 className="text-2xl font-bold text-gray-900">{t('categoryManager.title', 'Gerenciar Categorias')}</h2>
-          <p className="text-gray-600 mt-1">{t('categoryManager.subtitle', 'Organize suas categorias de renda e gastos')}</p>
+          <h2 className="text-gray-600 mt-1">{t('categoryManager.subtitle', 'Organize suas categorias de renda e gastos')}</h2>
         </div>
         <button
           onClick={handleCreateCategory}
