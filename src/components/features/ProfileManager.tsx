@@ -2,6 +2,7 @@ import React, { useState, useRef } from 'react';
 import { useProfileManager } from '@/hooks';
 import { useNotification } from '@/components/ui/Notification';
 import { useFormatters } from '@/hooks';
+import { useI18n } from '@/i18n';
 import { ProfileSummary } from '@/types';
 import { 
   UserIcon, 
@@ -34,6 +35,19 @@ export const ProfileManager: React.FC<ProfileManagerProps> = ({ onProfileChange 
   } = useProfileManager();
   const { showNotification } = useNotification();
   const { formatCurrency, formatDate } = useFormatters();
+  const { t } = useI18n();
+
+  // Utility function to translate default profile names and descriptions
+  const translateProfileText = (text: string): string => {
+    // Translate default profile names
+    if (text === 'My First Budget') {
+      return t('profiles.defaultProfileName', 'Meu Primeiro Orçamento');
+    }
+    if (text === 'Default family budget profile') {
+      return t('profiles.defaultProfileDescription', 'Perfil padrão do orçamento familiar');
+    }
+    return text;
+  };
 
   const [showCreateForm, setShowCreateForm] = useState(false);
   const [showImportForm, setShowImportForm] = useState(false);
@@ -177,24 +191,24 @@ export const ProfileManager: React.FC<ProfileManagerProps> = ({ onProfileChange 
       <div className="flex items-center justify-between mb-6">
         <h3 className="text-xl font-bold text-gray-700 flex items-center gap-2">
           <FolderIcon className="w-6 h-6 text-primary" />
-          Profile Manager
+          {t('profiles.title', 'Profile Manager')}
         </h3>
         <div className="flex gap-2">
           <button
             onClick={() => setShowCreateForm(true)}
             className="flex items-center gap-1 px-3 py-1 text-sm bg-primary text-white rounded-lg hover:bg-secondary transition-colors"
-            title="Create New Profile"
+            title={t('profiles.createNew', 'Create New Profile')}
           >
             <PlusCircleIcon className="w-4 h-4" />
-            New
+            {t('profiles.createNew', 'New')}
           </button>
           <button
             onClick={() => fileInputRef.current?.click()}
             className="flex items-center gap-1 px-3 py-1 text-sm bg-gray-500 text-white rounded-lg hover:bg-gray-600 transition-colors"
-            title="Import Profile"
+            title={t('profiles.import', 'Import Profile')}
           >
             <UploadIcon className="w-4 h-4" />
-            Import
+            {t('profiles.import', 'Import')}
           </button>
           <input
             ref={fileInputRef}
@@ -220,17 +234,17 @@ export const ProfileManager: React.FC<ProfileManagerProps> = ({ onProfileChange 
             <div>
               <h4 className="font-semibold text-primary flex items-center gap-2">
                 <UserIcon className="w-5 h-5" />
-                Current: {currentProfile.name}
+                {t('profiles.currentProfile', 'Current Profile')}: {translateProfileText(currentProfile.name)}
               </h4>
               {currentProfile.description && (
-                <p className="text-sm text-gray-600 mt-1">{currentProfile.description}</p>
+                <p className="text-sm text-gray-600 mt-1">{translateProfileText(currentProfile.description)}</p>
               )}
             </div>
             <button
               onClick={() => setEditingProfile(currentProfile.id)}
               className="text-sm text-primary hover:text-secondary"
             >
-              Edit
+              {t('profiles.edit', 'Edit')}
             </button>
           </div>
         </div>
@@ -257,26 +271,26 @@ export const ProfileManager: React.FC<ProfileManagerProps> = ({ onProfileChange 
               <div className="flex items-center justify-between">
                 <div className="flex-1">
                   <div className="flex items-center gap-2">
-                    <h4 className="font-semibold text-gray-800">{profile.name}</h4>
+                    <h4 className="font-semibold text-gray-800">{translateProfileText(profile.name)}</h4>
                     {profile.isDefault && (
                       <span className="px-2 py-1 text-xs bg-green-100 text-green-700 rounded">
-                        Default
+                        {t('common.default', 'Default')}
                       </span>
                     )}
                     {profile.id === currentProfile?.id && (
                       <span className="px-2 py-1 text-xs bg-blue-100 text-blue-700 rounded">
-                        Active
+                        {t('common.active', 'Active')}
                       </span>
                     )}
                   </div>
                   {profile.description && (
-                    <p className="text-sm text-gray-600 mt-1">{profile.description}</p>
+                    <p className="text-sm text-gray-600 mt-1">{translateProfileText(profile.description)}</p>
                   )}
                   <div className="flex gap-4 mt-2 text-xs text-gray-500">
-                    <span>Income: {formatCurrency(profile.totalIncome)}</span>
-                    <span>Expenses: {formatCurrency(profile.totalExpenses)}</span>
-                    <span>{profile.itemCount} items</span>
-                    <span>Updated: {formatDate(profile.updatedAt)}</span>
+                    <span>{t('budget.income', 'Income')}: {formatCurrency(profile.totalIncome)}</span>
+                    <span>{t('budget.expenses', 'Expenses')}: {formatCurrency(profile.totalExpenses)}</span>
+                    <span>{profile.itemCount} {t('profiles.items', 'items')}</span>
+                    <span>{t('profiles.updated', 'Updated')}: {formatDate(profile.updatedAt)}</span>
                   </div>
                 </div>
                 <div className="flex gap-2">
@@ -285,20 +299,20 @@ export const ProfileManager: React.FC<ProfileManagerProps> = ({ onProfileChange 
                       onClick={() => handleSwitchProfile(profile.id)}
                       className="px-3 py-1 text-sm bg-primary text-white rounded hover:bg-secondary transition-colors"
                     >
-                      Switch
+                      {t('profiles.switchTo', 'Switch To')}
                     </button>
                   )}
                   <button
                     onClick={() => handleDuplicateProfile(profile.id)}
                     className="p-1 text-gray-500 hover:text-gray-700"
-                    title="Duplicate"
+                    title={t('profiles.duplicate', 'Duplicate')}
                   >
                     <CopyIcon className="w-4 h-4" />
                   </button>
                   <button
                     onClick={() => handleExportProfile(profile.id)}
                     className="p-1 text-gray-500 hover:text-gray-700"
-                    title="Export"
+                    title={t('profiles.export', 'Export')}
                   >
                     <SaveIcon className="w-4 h-4" />
                   </button>
@@ -306,7 +320,7 @@ export const ProfileManager: React.FC<ProfileManagerProps> = ({ onProfileChange 
                     <button
                       onClick={() => handleDeleteProfile(profile.id)}
                       className="p-1 text-red-500 hover:text-red-700"
-                      title="Delete"
+                      title={t('profiles.delete', 'Delete')}
                     >
                       <Trash2Icon className="w-4 h-4" />
                     </button>
@@ -321,17 +335,17 @@ export const ProfileManager: React.FC<ProfileManagerProps> = ({ onProfileChange 
       {/* Create Profile Form */}
       {showCreateForm && (
         <div className="border-t pt-4">
-          <h4 className="font-semibold mb-3">Create New Profile</h4>
+          <h4 className="font-semibold mb-3">{t('profiles.createNew', 'Create New Profile')}</h4>
           <div className="space-y-3">
             <input
               type="text"
-              placeholder="Profile name"
+              placeholder={t('profiles.profileName', 'Profile name')}
               value={newProfileName}
               onChange={(e) => setNewProfileName(e.target.value)}
               className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent"
             />
             <textarea
-              placeholder="Description (optional)"
+              placeholder={t('profiles.profileDescription', 'Description (optional)')}
               value={newProfileDescription}
               onChange={(e) => setNewProfileDescription(e.target.value)}
               className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent"
@@ -344,7 +358,7 @@ export const ProfileManager: React.FC<ProfileManagerProps> = ({ onProfileChange 
                 onChange={(e) => setBasedOnCurrent(e.target.checked)}
                 className="rounded"
               />
-              <span className="text-sm">Copy data from current profile</span>
+              <span className="text-sm">{t('profiles.basedOnCurrent', 'Based on current budget')}</span>
             </label>
             <div className="flex gap-2">
               <button
@@ -352,7 +366,7 @@ export const ProfileManager: React.FC<ProfileManagerProps> = ({ onProfileChange 
                 disabled={!newProfileName.trim()}
                 className="px-4 py-2 bg-primary text-white rounded-lg hover:bg-secondary disabled:bg-gray-300 transition-colors"
               >
-                Create
+                {t('profiles.create', 'Create')}
               </button>
               <button
                 onClick={() => {
@@ -363,7 +377,7 @@ export const ProfileManager: React.FC<ProfileManagerProps> = ({ onProfileChange 
                 }}
                 className="px-4 py-2 bg-gray-300 text-gray-700 rounded-lg hover:bg-gray-400 transition-colors"
               >
-                Cancel
+                {t('profiles.cancel', 'Cancel')}
               </button>
             </div>
           </div>
@@ -373,10 +387,10 @@ export const ProfileManager: React.FC<ProfileManagerProps> = ({ onProfileChange 
       {/* Import Profile Form */}
       {showImportForm && (
         <div className="border-t pt-4">
-          <h4 className="font-semibold mb-3">Import Profile</h4>
+          <h4 className="font-semibold mb-3">{t('profiles.import', 'Import Profile')}</h4>
           <div className="space-y-3">
             <textarea
-              placeholder="Paste profile JSON data here..."
+              placeholder={t('profiles.importData', 'Paste profile JSON data here...')}
               value={importData}
               onChange={(e) => setImportData(e.target.value)}
               className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent"
@@ -388,7 +402,7 @@ export const ProfileManager: React.FC<ProfileManagerProps> = ({ onProfileChange 
                 disabled={!importData.trim()}
                 className="px-4 py-2 bg-primary text-white rounded-lg hover:bg-secondary disabled:bg-gray-300 transition-colors"
               >
-                Import
+                {t('profiles.import', 'Import')}
               </button>
               <button
                 onClick={() => {
@@ -397,7 +411,7 @@ export const ProfileManager: React.FC<ProfileManagerProps> = ({ onProfileChange 
                 }}
                 className="px-4 py-2 bg-gray-300 text-gray-700 rounded-lg hover:bg-gray-400 transition-colors"
               >
-                Cancel
+                {t('profiles.cancel', 'Cancel')}
               </button>
             </div>
           </div>
@@ -417,6 +431,7 @@ interface EditProfileFormProps {
 const EditProfileForm: React.FC<EditProfileFormProps> = ({ profile, onSave, onCancel }) => {
   const [name, setName] = useState(profile.name);
   const [description, setDescription] = useState(profile.description || '');
+  const { t } = useI18n();
 
   const handleSave = () => {
     if (name.trim()) {
@@ -435,7 +450,7 @@ const EditProfileForm: React.FC<EditProfileFormProps> = ({ profile, onSave, onCa
       <textarea
         value={description}
         onChange={(e) => setDescription(e.target.value)}
-        placeholder="Description (optional)"
+        placeholder={t('profiles.profileDescription', 'Description (optional)')}
         className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent"
         rows={2}
       />
@@ -445,13 +460,13 @@ const EditProfileForm: React.FC<EditProfileFormProps> = ({ profile, onSave, onCa
           disabled={!name.trim()}
           className="px-3 py-1 text-sm bg-primary text-white rounded hover:bg-secondary disabled:bg-gray-300 transition-colors"
         >
-          Save
+          {t('profiles.save', 'Save')}
         </button>
         <button
           onClick={onCancel}
           className="px-3 py-1 text-sm bg-gray-300 text-gray-700 rounded hover:bg-gray-400 transition-colors"
         >
-          Cancel
+          {t('profiles.cancel', 'Cancel')}
         </button>
       </div>
     </div>

@@ -10,7 +10,7 @@ interface AIFeatureProps {
 }
 
 export const AIFeature: React.FC<AIFeatureProps> = ({ budget }) => {
-  const { t } = useI18n();
+  const { t, language } = useI18n();
   const [suggestions, setSuggestions] = useState<AISuggestion[]>([]);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -19,7 +19,7 @@ export const AIFeature: React.FC<AIFeatureProps> = ({ budget }) => {
     setIsLoading(true);
     setError(null);
     try {
-      const result = await getBudgetSuggestions(budget);
+      const result = await getBudgetSuggestions(budget, language);
       setSuggestions(result);
     } catch (err) {
       if (err instanceof Error) {
@@ -30,7 +30,7 @@ export const AIFeature: React.FC<AIFeatureProps> = ({ budget }) => {
     } finally {
       setIsLoading(false);
     }
-  }, [budget]);
+  }, [budget, language]);
 
   return (
     <div className="bg-white p-6 rounded-2xl shadow-lg shadow-gray-200/50">

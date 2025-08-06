@@ -49,8 +49,6 @@
     "updated": "Updated",
     "items": "items",
     "currentProfile": "Current Profile",
-    "defaultProfileName": "My First Budget",
-    "defaultProfileDescription": "Default family budget profile",
     "profileName": "Profile Name",
     "profileDescription": "Profile Description (optional)",
     "basedOnCurrent": "Based on current budget",
