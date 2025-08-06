@@ -60,7 +60,7 @@ function App(): React.ReactNode {
             </div>
             <div className="overflow-y-auto max-h-[calc(90vh-80px)]">
               <ProfileManager 
-                onProfileSwitch={() => {
+                onProfileChange={() => {
                   reloadBudget();
                   setShowProfileManager(false);
                 }}

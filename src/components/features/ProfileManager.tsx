@@ -123,9 +123,15 @@ export const ProfileManager: React.FC<ProfileManagerProps> = ({ onProfileChange 
     if (!importData.trim()) return;
     
     try {
-      await importProfileData(importData);
+      const importedProfile = await importProfileData(importData);
       setShowImportForm(false);
       setImportData('');
+      
+      // Switch to the newly imported profile
+      await switchProfile(importedProfile.id);
+      
+      // Trigger budget reload in parent component
+      onProfileChange?.();
     } catch (err) {
       // Error is handled by the hook
     }
