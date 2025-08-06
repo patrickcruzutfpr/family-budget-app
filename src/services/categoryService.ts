@@ -93,11 +93,11 @@ export class CategoryService {
     const t = this.getDefaultTranslations();
     
     const defaultExpenseCategories = [
-      t.housing,
-      t.transportation, 
-      t.food,
-      t.personalFamily,
-      t.savingsInvestments
+      { name: t.housing, icon: '🏠', color: '#3B82F6' },
+      { name: t.transportation, icon: '🚗', color: '#EF4444' },
+      { name: t.food, icon: '🍕', color: '#10B981' },
+      { name: t.personalFamily, icon: '👨‍👩‍👧‍👦', color: '#F59E0B' },
+      { name: t.savingsInvestments, icon: '🎯', color: '#8B5CF6' }
     ];
 
     return [
@@ -107,15 +107,19 @@ export class CategoryService {
         type: CategoryType.INCOME,
         items: [],
         description: t.incomeDesc,
+        icon: '💰',
+        color: '#10B981',
         createdAt: new Date(),
         updatedAt: new Date()
       },
-      ...defaultExpenseCategories.map((name, index) => ({
+      ...defaultExpenseCategories.map((categoryData, index) => ({
         id: generateId(),
-        name,
+        name: categoryData.name,
         type: CategoryType.EXPENSE,
         items: [],
-        description: `${t.expenseDesc}: ${name}`,
+        description: `${t.expenseDesc}: ${categoryData.name}`,
+        icon: categoryData.icon,
+        color: categoryData.color,
         createdAt: new Date(),
         updatedAt: new Date()
       }))

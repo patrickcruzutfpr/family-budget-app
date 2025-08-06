@@ -80,6 +80,8 @@ const createDefaultProfile = (): BudgetProfile => {
         items: [
           { id: generateId(), name: t.salary, projected: 5000, actual: 5000 },
         ],
+        icon: '💰',
+        color: '#10B981'
       },
       {
         id: generateId(),
@@ -89,6 +91,8 @@ const createDefaultProfile = (): BudgetProfile => {
           { id: generateId(), name: t.rentMortgage, projected: 1500, actual: 1500 },
           { id: generateId(), name: t.utilities, projected: 200, actual: 180 },
         ],
+        icon: '🏠',
+        color: '#3B82F6'
       },
       {
         id: generateId(),
@@ -98,6 +102,8 @@ const createDefaultProfile = (): BudgetProfile => {
           { id: generateId(), name: t.groceries, projected: 600, actual: 650 },
           { id: generateId(), name: t.diningOut, projected: 200, actual: 180 },
         ],
+        icon: '🍕',
+        color: '#10B981'
       },
       {
         id: generateId(),
@@ -107,6 +113,8 @@ const createDefaultProfile = (): BudgetProfile => {
           { id: generateId(), name: t.gas, projected: 200, actual: 220 },
           { id: generateId(), name: t.carPayment, projected: 300, actual: 300 },
         ],
+        icon: '🚗',
+        color: '#EF4444'
       },
     ],
     createdAt: new Date(),

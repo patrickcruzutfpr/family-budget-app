@@ -66,7 +66,12 @@ export const BudgetTable: React.FC<BudgetTableProps> = ({ categories, updateItem
             return (
               <React.Fragment key={category.id}>
                 <tr className="bg-gray-100">
-                    <td className="px-6 py-4 whitespace-nowrap text-sm font-bold text-gray-800" colSpan={1}>{translateCategoryName(category.name)}</td>
+                    <td className="px-6 py-4 whitespace-nowrap text-sm font-bold text-gray-800" colSpan={1}>
+                      <div className="flex items-center gap-2">
+                        {category.icon && <span className="text-lg">{category.icon}</span>}
+                        {translateCategoryName(category.name)}
+                      </div>
+                    </td>
                     <td className="px-6 py-4 whitespace-nowrap text-sm font-semibold text-gray-600 text-right">{formatCurrency(categoryTotals.projected)}</td>
                     <td className="px-6 py-4 whitespace-nowrap text-sm font-semibold text-gray-600 text-right">{formatCurrency(categoryTotals.actual)}</td>
                     <td className={`px-6 py-4 whitespace-nowrap text-sm font-semibold text-right ${differenceColorClass}`}>

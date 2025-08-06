@@ -3,7 +3,7 @@ import { useBudget } from '@/hooks';
 import { BudgetTable, Summary, BudgetChart, AIFeature, Header, ProfileManager, CategoryManager } from '@/components';
 import { CategoryType } from '@/types';
 import { useI18n } from '@/i18n';
-import { migrateCategoryData, ensureDefaultCategories } from '@/utils/categoryMigration';
+import { migrateCategoryData, ensureDefaultCategories, migrateCategoriesToIncludeIcons } from '@/utils/categoryMigration';
 import { useProfileCategoriesLanguageSync } from '@/hooks/useProfileCategoriesLanguageSync';
 
 function App(): React.ReactNode {
@@ -54,6 +54,7 @@ function App(): React.ReactNode {
   useEffect(() => {
     migrateCategoryData();
     ensureDefaultCategories();
+    migrateCategoriesToIncludeIcons();
   }, []);
 
   // Listen for category changes and reload budget
