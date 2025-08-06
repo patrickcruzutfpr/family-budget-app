@@ -4,10 +4,12 @@ import { loadBudget, saveBudget, resetBudgetToDefault } from '@/services/budgetS
 import { getCurrentProfile, updateCurrentProfileBudget } from '@/services/profileService';
 import { generateId } from '@/utils';
 import { useBudgetMessages } from './useBudgetMessages';
+import { useI18n } from '@/i18n';
 
 export const useBudget = () => {
   const [budget, setBudget] = useState<BudgetState>([]);
   const { promptItemName, confirmDelete, confirmReset } = useBudgetMessages();
+  const { t } = useI18n();
 
   // Load budget from current profile
   useEffect(() => {
@@ -53,17 +55,34 @@ export const useBudget = () => {
     });
   }, []);
 
+  const updateItemName = useCallback((categoryId: string, itemId: string, name: string) => {
+    setBudget(prevBudget => {
+      return prevBudget.map(category => {
+        if (category.id === categoryId) {
+          return {
+            ...category,
+            items: category.items.map(item => {
+              if (item.id === itemId) {
+                return { ...item, name };
+              }
+              return item;
+            }),
+          };
+        }
+        return category;
+      });
+    });
+  }, []);
+
   const addItem = useCallback((categoryId: string) => {
     setBudget(prevBudget => {
       const category = prevBudget.find(c => c.id === categoryId);
       if (!category) return prevBudget;
 
-      const newItemName = prompt(promptItemName());
-      if (!newItemName) return prevBudget;
-      
+      // Create new item with default name that can be edited inline
       const newItem = {
         id: generateId(),
-        name: newItemName,
+        name: t('budget.newItem', 'New Item'), // Default name that will be translated and can be edited
         projected: 0,
         actual: 0,
       };
@@ -75,7 +94,7 @@ export const useBudget = () => {
         return cat;
       });
     });
-  }, [promptItemName]);
+  }, [t]);
 
   const deleteItem = useCallback((categoryId: string, itemId: string) => {
     if (!window.confirm(confirmDelete())) return;
@@ -107,7 +126,8 @@ export const useBudget = () => {
 
   return { 
     budget, 
-    updateItemValue, 
+    updateItemValue,
+    updateItemName,
     addItem, 
     deleteItem, 
     resetBudget, 

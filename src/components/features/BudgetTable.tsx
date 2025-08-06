@@ -8,11 +8,12 @@ import { useCategoryTranslations, useFormatters } from '@/hooks';
 interface BudgetTableProps {
   categories: Category[];
   updateItemValue: (categoryId: string, itemId: string, field: 'projected' | 'actual', value: number) => void;
+  updateItemName: (categoryId: string, itemId: string, name: string) => void;
   addItem: (categoryId: string) => void;
   deleteItem: (categoryId: string, itemId: string) => void;
 }
 
-export const BudgetTable: React.FC<BudgetTableProps> = ({ categories, updateItemValue, addItem, deleteItem }) => {
+export const BudgetTable: React.FC<BudgetTableProps> = ({ categories, updateItemValue, updateItemName, addItem, deleteItem }) => {
   const { t } = useI18n();
   const { translateCategoryName } = useCategoryTranslations();
   const { formatCurrency } = useFormatters();
@@ -69,6 +70,7 @@ export const BudgetTable: React.FC<BudgetTableProps> = ({ categories, updateItem
                     item={item}
                     categoryId={category.id}
                     updateItemValue={updateItemValue}
+                    updateItemName={updateItemName}
                     deleteItem={deleteItem}
                   />
                 ))}

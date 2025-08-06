@@ -10,6 +10,7 @@ function App(): React.ReactNode {
   const {
     budget,
     updateItemValue,
+    updateItemName,
     addItem,
     deleteItem,
     resetBudget,
@@ -100,6 +101,7 @@ function App(): React.ReactNode {
                         <BudgetTable
                             categories={[incomeCategory]}
                             updateItemValue={updateItemValue}
+                            updateItemName={updateItemName}
                             addItem={addItem}
                             deleteItem={deleteItem}
                         />
@@ -110,6 +112,7 @@ function App(): React.ReactNode {
                     <BudgetTable
                         categories={expenseCategories}
                         updateItemValue={updateItemValue}
+                        updateItemName={updateItemName}
                         addItem={addItem}
                         deleteItem={deleteItem}
                     />

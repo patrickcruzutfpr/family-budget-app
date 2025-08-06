@@ -1,6 +1,7 @@
 import React from 'react';
 import { BudgetItem } from '@/types';
 import { EditableCell } from '@/components/ui/EditableCell';
+import { EditableTextCell } from '@/components/ui/EditableTextCell';
 import { Trash2Icon } from '@/assets/icons/Trash2Icon';
 import { useI18n } from '@/i18n';
 import { useCategoryTranslations, useFormatters } from '@/hooks';
@@ -9,10 +10,11 @@ interface BudgetRowProps {
   item: BudgetItem;
   categoryId: string;
   updateItemValue: (categoryId: string, itemId: string, field: 'projected' | 'actual', value: number) => void;
+  updateItemName: (categoryId: string, itemId: string, name: string) => void;
   deleteItem: (categoryId: string, itemId: string) => void;
 }
 
-export const BudgetRow: React.FC<BudgetRowProps> = ({ item, categoryId, updateItemValue, deleteItem }) => {
+export const BudgetRow: React.FC<BudgetRowProps> = ({ item, categoryId, updateItemValue, updateItemName, deleteItem }) => {
   const { t } = useI18n();
   const { translateItemName } = useCategoryTranslations();
   const { formatCurrency } = useFormatters();
@@ -21,7 +23,14 @@ export const BudgetRow: React.FC<BudgetRowProps> = ({ item, categoryId, updateIt
   
   return (
     <tr className="hover:bg-gray-50 group">
-      <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-700">{translateItemName(item.name)}</td>
+      <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-700">
+        <EditableTextCell
+          value={item.name}
+          displayValue={translateItemName(item.name)}
+          onSave={(name) => updateItemName(categoryId, item.id, name)}
+          placeholder={t('budget.itemNamePlaceholder', 'Item name')}
+        />
+      </td>
       <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500 text-right">
         <EditableCell
           value={item.projected}
