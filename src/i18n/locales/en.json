@@ -113,7 +113,12 @@
     "salary": "Salary",
     "freelance": "Freelance",
     "investments": "Investments",
-    "other": "Other"
+    "other": "Other",
+    "rentMortgage": "Rent/Mortgage",
+    "groceries": "Groceries",
+    "diningOut": "Dining Out",
+    "gas": "Gas",
+    "carPayment": "Car Payment"
   },
   "categoryManager": {
     "title": "Manage Categories",

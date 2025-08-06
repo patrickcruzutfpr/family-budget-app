@@ -1,6 +1,7 @@
 import { Category, CategoryType, CategoryFormData, BudgetState } from '../types';
 import { getCurrentProfile, updateCurrentProfileBudget, saveProfile } from './profileService';
 import { generateId } from '../utils/generateId';
+import { getInitialLanguage } from '../i18n/utils';
 
 export class CategoryService {
   private static readonly STORAGE_KEY = 'budget_categories';
@@ -35,23 +36,55 @@ export class CategoryService {
     }));
   }
 
+  // Get translations for default categories
+  private static getDefaultTranslations() {
+    const currentLanguage = getInitialLanguage();
+    
+    const translations = {
+      'pt-BR': {
+        income: 'Renda',
+        housing: 'Habitação',
+        transportation: 'Transporte',
+        food: 'Alimentação',
+        personalFamily: 'Pessoal e Família',
+        savingsInvestments: 'Poupança e Investimentos',
+        incomeDesc: 'Categoria padrão de renda',
+        expenseDesc: 'Categoria de gastos'
+      },
+      'en': {
+        income: 'Income',
+        housing: 'Housing',
+        transportation: 'Transportation',
+        food: 'Food',
+        personalFamily: 'Personal & Family',
+        savingsInvestments: 'Savings & Investments',
+        incomeDesc: 'Default income category',
+        expenseDesc: 'Expense category'
+      }
+    };
+
+    return translations[currentLanguage] || translations['en'];
+  }
+
   // Get default categories (not used anymore, kept for reference)
   static getDefaultCategories(): Category[] {
+    const t = this.getDefaultTranslations();
+    
     const defaultExpenseCategories = [
-      'Habitação',
-      'Transporte', 
-      'Alimentação',
-      'Pessoal e Família',
-      'Poupança e Investimentos'
+      t.housing,
+      t.transportation, 
+      t.food,
+      t.personalFamily,
+      t.savingsInvestments
     ];
 
     return [
       {
         id: generateId(),
-        name: 'Renda',
+        name: t.income,
         type: CategoryType.INCOME,
         items: [],
-        description: 'Categoria padrão de renda',
+        description: t.incomeDesc,
         createdAt: new Date(),
         updatedAt: new Date()
       },
@@ -60,7 +93,7 @@ export class CategoryService {
         name,
         type: CategoryType.EXPENSE,
         items: [],
-        description: `Categoria de gastos: ${name}`,
+        description: `${t.expenseDesc}: ${name}`,
         createdAt: new Date(),
         updatedAt: new Date()
       }))

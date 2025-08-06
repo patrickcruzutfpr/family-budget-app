@@ -91,3 +91,15 @@ export const getTranslation = (translations: Translation, key: string, fallback?
   
   return typeof current === 'string' ? current : fallback || key;
 };
+
+// Get translation for a specific key and language (for use outside React context)
+export const getTranslationForLanguage = async (key: string, language?: SupportedLanguage, fallback?: string): Promise<string> => {
+  try {
+    const currentLanguage = language || getInitialLanguage();
+    const translations = await loadTranslations(currentLanguage);
+    return getTranslation(translations, key, fallback);
+  } catch (error) {
+    console.error('Failed to get translation:', error);
+    return fallback || key;
+  }
+};

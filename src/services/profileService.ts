@@ -1,55 +1,97 @@
 import { BudgetProfile, BudgetState, ProfileSummary, CategoryType } from '@/types';
 import { generateId } from '@/utils/generateId';
+import { getInitialLanguage, loadTranslations, getTranslation } from '@/i18n/utils';
 
 const PROFILES_STORAGE_KEY = 'familyBudgetProfiles';
 const CURRENT_PROFILE_KEY = 'currentProfileId';
 
+// Get translations synchronously for default data
+const getDefaultTranslations = () => {
+  const currentLanguage = getInitialLanguage();
+  
+  // Fallback translations based on current language
+  const translations = {
+    'pt-BR': {
+      income: 'Renda',
+      housing: 'Habitação',
+      food: 'Alimentação',
+      transportation: 'Transporte',
+      salary: 'Salário',
+      rentMortgage: 'Aluguel/Financiamento',
+      utilities: 'Utilidades',
+      groceries: 'Mercado',
+      diningOut: 'Restaurantes',
+      gas: 'Combustível',
+      carPayment: 'Prestação do Carro'
+    },
+    'en': {
+      income: 'Income',
+      housing: 'Housing',
+      food: 'Food',
+      transportation: 'Transportation',
+      salary: 'Salary',
+      rentMortgage: 'Rent/Mortgage',
+      utilities: 'Utilities',
+      groceries: 'Groceries',
+      diningOut: 'Dining Out',
+      gas: 'Gas',
+      carPayment: 'Car Payment'
+    }
+  };
+
+  return translations[currentLanguage] || translations['en'];
+};
+
 // Default profile template
-const createDefaultProfile = (): BudgetProfile => ({
-  id: generateId(),
-  name: 'My First Budget',
-  description: 'Default family budget profile',
-  budget: [
-    {
-      id: generateId(),
-      name: 'Income',
-      type: CategoryType.INCOME,
-      items: [
-        { id: generateId(), name: 'Salary', projected: 5000, actual: 5000 },
-      ],
-    },
-    {
-      id: generateId(),
-      name: 'Housing',
-      type: CategoryType.EXPENSE,
-      items: [
-        { id: generateId(), name: 'Rent/Mortgage', projected: 1500, actual: 1500 },
-        { id: generateId(), name: 'Utilities', projected: 200, actual: 180 },
-      ],
-    },
-    {
-      id: generateId(),
-      name: 'Food',
-      type: CategoryType.EXPENSE,
-      items: [
-        { id: generateId(), name: 'Groceries', projected: 600, actual: 650 },
-        { id: generateId(), name: 'Dining Out', projected: 200, actual: 180 },
-      ],
-    },
-    {
-      id: generateId(),
-      name: 'Transportation',
-      type: CategoryType.EXPENSE,
-      items: [
-        { id: generateId(), name: 'Gas', projected: 200, actual: 220 },
-        { id: generateId(), name: 'Car Payment', projected: 300, actual: 300 },
-      ],
-    },
-  ],
-  createdAt: new Date(),
-  updatedAt: new Date(),
-  isDefault: true,
-});
+const createDefaultProfile = (): BudgetProfile => {
+  const t = getDefaultTranslations();
+
+  return {
+    id: generateId(),
+    name: 'My First Budget',
+    description: 'Default family budget profile',
+    budget: [
+      {
+        id: generateId(),
+        name: t.income,
+        type: CategoryType.INCOME,
+        items: [
+          { id: generateId(), name: t.salary, projected: 5000, actual: 5000 },
+        ],
+      },
+      {
+        id: generateId(),
+        name: t.housing,
+        type: CategoryType.EXPENSE,
+        items: [
+          { id: generateId(), name: t.rentMortgage, projected: 1500, actual: 1500 },
+          { id: generateId(), name: t.utilities, projected: 200, actual: 180 },
+        ],
+      },
+      {
+        id: generateId(),
+        name: t.food,
+        type: CategoryType.EXPENSE,
+        items: [
+          { id: generateId(), name: t.groceries, projected: 600, actual: 650 },
+          { id: generateId(), name: t.diningOut, projected: 200, actual: 180 },
+        ],
+      },
+      {
+        id: generateId(),
+        name: t.transportation,
+        type: CategoryType.EXPENSE,
+        items: [
+          { id: generateId(), name: t.gas, projected: 200, actual: 220 },
+          { id: generateId(), name: t.carPayment, projected: 300, actual: 300 },
+        ],
+      },
+    ],
+    createdAt: new Date(),
+    updatedAt: new Date(),
+    isDefault: true,
+  };
+};
 
 // Get all profiles from storage
 export const getAllProfiles = (): BudgetProfile[] => {

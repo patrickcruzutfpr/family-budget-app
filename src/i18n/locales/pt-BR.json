@@ -113,7 +113,12 @@
     "salary": "Salário",
     "freelance": "Freelance",
     "investments": "Investimentos",
-    "other": "Outros"
+    "other": "Outros",
+    "rentMortgage": "Aluguel/Financiamento",
+    "groceries": "Mercado",
+    "diningOut": "Restaurantes",
+    "gas": "Combustível",
+    "carPayment": "Prestação do Carro"
   },
   "categoryManager": {
     "title": "Gerenciar Categorias",
