@@ -1,15 +1,17 @@
-import React, { useMemo } from 'react';
+import React, { useMemo, useState } from 'react';
 import { useBudget } from '@/hooks';
-import { BudgetTable, Summary, BudgetChart, AIFeature, Header } from '@/components';
+import { BudgetTable, Summary, BudgetChart, AIFeature, Header, ProfileManager } from '@/components';
 import { CategoryType } from '@/types';
 
 function App(): React.ReactNode {
+  const [showProfileManager, setShowProfileManager] = useState(false);
   const {
     budget,
     updateItemValue,
     addItem,
     deleteItem,
     resetBudget,
+    reloadBudget,
   } = useBudget();
 
   const { totalProjected, totalActual, totalIncome, totalExpenses } = useMemo(() => {
@@ -41,7 +43,33 @@ function App(): React.ReactNode {
 
   return (
     <div className="min-h-screen bg-gray-50 text-gray-800">
-      <Header onReset={resetBudget} />
+      <Header onReset={resetBudget} onManageProfiles={() => setShowProfileManager(true)} />
+      
+      {showProfileManager && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center p-4">
+          <div className="bg-white rounded-2xl shadow-2xl max-w-4xl w-full max-h-[90vh] overflow-hidden">
+            <div className="p-6 border-b border-gray-200 flex justify-between items-center">
+              <h2 className="text-2xl font-bold text-gray-800">Profile Management</h2>
+              <button
+                onClick={() => setShowProfileManager(false)}
+                className="text-gray-500 hover:text-gray-700 text-2xl font-bold"
+                aria-label="Close"
+              >
+                ×
+              </button>
+            </div>
+            <div className="overflow-y-auto max-h-[calc(90vh-80px)]">
+              <ProfileManager 
+                onProfileSwitch={() => {
+                  reloadBudget();
+                  setShowProfileManager(false);
+                }}
+              />
+            </div>
+          </div>
+        </div>
+      )}
+
       <main className="p-4 sm:p-6 lg:p-8">
         <Summary 
           totalIncome={totalIncome}

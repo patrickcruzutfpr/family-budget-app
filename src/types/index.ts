@@ -23,3 +23,25 @@ export interface AISuggestion {
   title: string;
   suggestion: string;
 }
+
+export interface BudgetProfile {
+  id: string;
+  name: string;
+  description?: string;
+  budget: BudgetState;
+  createdAt: Date;
+  updatedAt: Date;
+  isDefault?: boolean;
+}
+
+export interface ProfileSummary {
+  id: string;
+  name: string;
+  description?: string;
+  totalIncome: number;
+  totalExpenses: number;
+  itemCount: number;
+  createdAt: Date;
+  updatedAt: Date;
+  isDefault?: boolean;
+}

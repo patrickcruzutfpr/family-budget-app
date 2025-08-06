@@ -1,17 +1,34 @@
 import { useState, useEffect, useCallback } from 'react';
 import { BudgetState, CategoryType } from '@/types';
 import { loadBudget, saveBudget, resetBudgetToDefault } from '@/services/budgetService';
+import { getCurrentProfile, updateCurrentProfileBudget } from '@/services/profileService';
+import { generateId } from '@/utils';
 
 export const useBudget = () => {
   const [budget, setBudget] = useState<BudgetState>([]);
 
+  // Load budget from current profile
   useEffect(() => {
-    setBudget(loadBudget());
+    try {
+      const currentProfile = getCurrentProfile();
+      setBudget(currentProfile.budget);
+    } catch (error) {
+      // Fallback to old budget service if profile system fails
+      console.warn('Profile system failed, falling back to legacy budget:', error);
+      setBudget(loadBudget());
+    }
   }, []);
 
+  // Save budget changes to current profile
   useEffect(() => {
     if (budget.length > 0) {
-      saveBudget(budget);
+      try {
+        updateCurrentProfileBudget(budget);
+      } catch (error) {
+        // Fallback to old budget service
+        console.warn('Profile update failed, saving to legacy storage:', error);
+        saveBudget(budget);
+      }
     }
   }, [budget]);
 
@@ -43,7 +60,7 @@ export const useBudget = () => {
       if (!newItemName) return prevBudget;
       
       const newItem = {
-        id: `${categoryId}-${Date.now()}`,
+        id: generateId(),
         name: newItemName,
         projected: 0,
         actual: 0,
@@ -76,6 +93,22 @@ export const useBudget = () => {
     setBudget(newBudget);
   }, []);
 
+  // Reload budget from current profile (useful after profile switch)
+  const reloadBudget = useCallback(() => {
+    try {
+      const currentProfile = getCurrentProfile();
+      setBudget(currentProfile.budget);
+    } catch (error) {
+      console.error('Failed to reload budget from profile:', error);
+    }
+  }, []);
 
-  return { budget, updateItemValue, addItem, deleteItem, resetBudget };
+  return { 
+    budget, 
+    updateItemValue, 
+    addItem, 
+    deleteItem, 
+    resetBudget, 
+    reloadBudget 
+  };
 };
