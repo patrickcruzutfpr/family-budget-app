@@ -1,37 +1,47 @@
 # 💰 Family Budget App 
 
-A modern React TypeScript application for managing family budgets with AI-powered suggestions and real-time financial insights.
+A modern React TypeScript application for managing family budgets with AI-powered suggestions, multi-language support, profile management, and real-time financial insights.
 
 ## ✨ Features
 
-- 📊 **Budget Tracking**: Track income and expenses with projected vs actual amounts
-- 🏷️ **Category Management**: Complete CRUD system for custom expense categories with real-time synchronization
-- 🤖 **AI Suggestions**: Get personalized financial advice powered by Gemini AI
+- 📊 **Budget Tracking**: Track income and expenses with projected vs actual amounts with intelligent color-coding
+- 🏷️ **Category Management**: Complete CRUD system for custom expense categories with default icons and colors
+- 👥 **Profile Management**: Multi-profile support with individual budgets and AI suggestions
+- 🌍 **Multi-Language Support**: Full internationalization (i18n) with Portuguese and English support
+- 🎨 **Visual Categories**: Default emoji icons and color schemes for intuitive category recognition
+- 🤖 **AI Suggestions**: Profile-specific personalized financial advice powered by Gemini AI
 - 📈 **Visual Charts**: Interactive pie charts and expense visualization with Recharts
-- 💾 **Data Persistence**: Automatic saving to local storage with data backup and migration utilities
-- 🎨 **Modern UI**: Clean, responsive design with modern CSS styling and modal interfaces
+- 💾 **Data Persistence**: Profile-based data storage with import/export functionality
+- 🎨 **Modern UI**: Clean, responsive design with intelligent status indicators and visual feedback
 - 📱 **Mobile Responsive**: Optimized for desktop, tablet, and mobile devices
 - 🔐 **Type Safety**: Full TypeScript support for robust development
 - ⚡ **Fast Performance**: Built with Vite for lightning-fast development and builds
 - 🌐 **PWA Ready**: Progressive Web App capabilities for offline usage
-- 🔄 **Real-time Updates**: Live synchronization between category changes and budget calculations
+- 🔄 **Real-time Updates**: Live synchronization between profile changes, categories, and budget calculations
+- 💰 **Smart Status Indicators**: Color-coded balance and difference displays for instant financial health overview
 
 ## 🏗️ Project Structure
 
 ```
 src/
 ├── assets/           # Static assets (icons, images)
+│   └── icons/       # Custom SVG icon components
 ├── components/       # React components
 │   ├── features/    # Feature-specific components
 │   │   ├── budget/  # Budget management and calculations
 │   │   ├── categories/ # Category CRUD management system
-│   │   └── ai/      # AI-powered suggestions
-│   ├── layout/      # Layout components
-│   └── ui/          # Reusable UI components
-├── hooks/           # Custom React hooks (useBudget, useCategories)
+│   │   ├── profiles/ # Profile management system
+│   │   └── ai/      # AI-powered suggestions with profile support
+│   ├── layout/      # Layout components (Header with language selector)
+│   └── ui/          # Reusable UI components (modals, forms, language selector)
+├── hooks/           # Custom React hooks (useBudget, useCategories, useProfileManager)
+├── i18n/            # Internationalization system
+│   ├── context.tsx  # i18n React context
+│   ├── locales/     # Translation files (pt-BR.json, en.json)
+│   └── types.ts     # i18n TypeScript definitions
 ├── services/        # API and business logic (CategoryService, ProfileService)
-├── types/           # TypeScript definitions
-└── utils/           # Utility functions and data migration
+├── types/           # TypeScript definitions (Category, Profile, BudgetState)
+└── utils/           # Utility functions and data migration with profile support
 ```
 
 ## 🚀 Getting Started
@@ -115,60 +125,238 @@ Set-ExecutionPolicy -ExecutionPolicy RemoteSigned -Scope CurrentUser
 
 ### Getting Started with Your Budget
 
-1. **🏠 Set Your Income**
-   - Enter your total monthly income
-   - Include all income sources (salary, freelance, investments)
-   - Update regularly for accuracy
+1. **� Choose Your Language**
+   - Select your preferred language (Portuguese/English) from the header
+   - All categories and UI elements will automatically translate
+   - Language preference is saved per profile
 
-2. **📋 Create and Manage Expense Categories**
-   - Create custom categories with names, descriptions, and colors
+2. **👥 Set Up Your Profile**
+   - Create multiple profiles for different budgets (personal, business, family)
+   - Each profile has independent categories and AI suggestions
+   - Switch between profiles instantly from the header
+
+3. **�🏠 Set Your Income**
+   - Enter your total monthly income with visual feedback
+   - Include all income sources (salary, freelance, investments)
+   - Update regularly for accuracy with color-coded status indicators
+
+4. **📋 Create and Manage Expense Categories**
+   - Default categories come with emoji icons and colors
+   - Create custom categories with icon and color selection
    - Edit existing categories with real-time budget updates
    - Delete unused categories with confirmation dialogs
-   - View category statistics and usage information
-   - Import/export categories between profiles
+   - Categories automatically translate when switching languages
 
-3. **💰 Track Your Expenses**
-   - Enter actual spending amounts
-   - Compare projected vs actual spending
-   - Monitor your budget in real-time
+5. **💰 Track Your Expenses**
+   - Enter actual spending amounts with intelligent color coding
+   - Compare projected vs actual spending with visual indicators
+   - Monitor your budget in real-time with status colors
+   - Green indicates positive balance, red shows overspending
 
-4. **🤖 Get AI-Powered Insights**
-   - Click "Get Smart Suggestions" for personalized advice
-   - Receive budget optimization recommendations
-   - Get spending pattern analysis
+6. **🤖 Get AI-Powered Insights**
+   - Click "Get Smart Suggestions" for profile-specific personalized advice
+   - Save favorite suggestions for future reference
+   - Receive budget optimization recommendations in your language
+   - Get spending pattern analysis tailored to your profile
 
-5. **📊 Analyze with Charts**
-   - View interactive pie charts of your expenses
-   - Identify spending trends and patterns
-   - Make data-driven financial decisions
+7. **📊 Analyze with Charts**
+   - View interactive pie charts with category icons
+   - Identify spending trends and patterns with visual enhancements
+   - Make data-driven financial decisions with color-coded feedback
+
+8. **📤📥 Backup and Share**
+   - Export profiles to backup your data
+   - Import profiles on other devices or share with family
+   - All data including categories, budgets, and AI suggestions are preserved
 
 ### Key Features Walkthrough
 
-- **Dashboard**: Overview of your financial health
-- **Budget Calculator**: Real-time budget calculations
-- **Category Manager**: Complete CRUD system for expense categories
-- **Expense Tracker**: Detailed expense management
-- **AI Assistant**: Smart financial recommendations
-- **Visual Analytics**: Charts and graphs for insights
+- **Dashboard**: Overview of your financial health with color-coded status indicators
+- **Profile Manager**: Multi-profile support with individual budgets and settings
+- **Budget Calculator**: Real-time budget calculations with visual status feedback
+- **Category Manager**: Complete CRUD system for expense categories with default icons
+- **Expense Tracker**: Detailed expense management with intelligent color coding
+- **AI Assistant**: Profile-specific smart financial recommendations
+- **Visual Analytics**: Charts and graphs for insights with category icons
+- **Language Selector**: Switch between Portuguese and English with automatic category translation
+
+## 👥 Profile Management System
+
+### Overview
+The Profile Management System allows users to create and manage multiple budget profiles, each with independent budgets, categories, and AI suggestions.
+
+### Key Features
+
+**✨ Multi-Profile Support**
+- Create unlimited budget profiles for different purposes (personal, business, family)
+- Switch between profiles instantly with automatic data synchronization
+- Independent budgets and categories for each profile
+- Profile-specific AI suggestions and recommendations
+
+**📤📥 Import/Export Functionality**
+- Export complete profile data including budgets, categories, and AI suggestions
+- Import profiles from backup files or share between devices
+- Automatic data validation and migration during import
+- Backup and restore capabilities for data security
+
+**🔄 Real-time Profile Switching**
+- Instant profile switching with automatic language sync
+- Live updates when switching between profiles
+- Seamless integration with all app features
+- Profile-specific settings and preferences
+
+### How to Use Profile Management
+
+1. **Access Profile Manager**
+   - Click the "Profiles" button in the header
+   - View all existing profiles in a card layout
+
+2. **Create New Profiles**
+   - Click "Create New Profile" button
+   - Choose to start fresh or copy from existing profile
+   - Add profile name and description
+   - Optionally base on current profile data
+
+3. **Switch Between Profiles**
+   - Click on any profile card to switch
+   - Data automatically loads for selected profile
+   - Categories and AI suggestions update accordingly
+
+4. **Export/Import Profiles**
+   - Use "Export Profile" to save profile data
+   - Use "Import Profile" to restore from backup
+   - Share profiles between devices or users
+
+## 🌍 Multi-Language Support (i18n)
+
+### Overview
+Complete internationalization system supporting Portuguese (Brazil) and English, with automatic category translation and language-aware AI suggestions.
+
+### Supported Languages
+
+**🇧🇷 Portuguese (Brazil) - pt-BR**
+- Complete UI translation
+- Brazilian currency formatting (R$)
+- Portuguese financial terminology
+- Localized date and number formats
+
+**🇺🇸 English - en**
+- Full English translation
+- USD currency formatting
+- International financial terms
+- Standard date and number formats
+
+### Key Features
+
+**🔄 Dynamic Language Switching**
+- Switch languages instantly from header selector
+- Automatic category name translation
+- AI suggestions in selected language
+- Persistent language preference per profile
+
+**📝 Smart Category Translation**
+- Automatic translation of default category names
+- Support for both Portuguese and English category names
+- Fallback translation system for custom categories
+- Real-time updates when language changes
+
+**🤖 Language-Aware AI**
+- AI suggestions in selected language
+- Cultural and regional financial advice
+- Currency-specific recommendations
+- Localized financial terminology
+
+### How to Use Multi-Language Support
+
+1. **Change Language**
+   - Click the language selector in the header
+   - Choose between "Português" and "English"
+   - All UI elements update automatically
+
+2. **Category Translation**
+   - Default categories automatically translate
+   - Custom categories maintain original names
+   - New categories use current language setting
+
+3. **AI Suggestions**
+   - AI responses match selected language
+   - Financial advice considers regional context
+   - Currency recommendations in local format
+
+## 🎨 Visual Design Enhancements
+
+### Default Category Icons and Colors
+
+**💰 Income Categories**
+- 💰 Income/Renda - Green (#10B981)
+- Consistent visual identity across all views
+
+**🏠 Expense Categories**
+- 🏠 Housing/Habitação - Blue (#3B82F6)
+- 🚗 Transportation/Transporte - Red (#EF4444)
+- 🍕 Food/Alimentação - Green (#10B981)
+- 👨‍👩‍👧‍👦 Personal & Family/Pessoal e Família - Yellow (#F59E0B)
+- 🎯 Savings & Investments/Poupança e Investimentos - Purple (#8B5CF6)
+
+### Smart Status Indicators
+
+**💚 Positive Balance/Surplus**
+- Green text color for positive financial status
+- Visual indicators for healthy budget state
+- Encouraging color scheme for good financial health
+
+**❤️ Negative Balance/Deficit**
+- Red text color for budget overruns
+- Warning indicators for attention-needed areas
+- Clear visual feedback for budget management
+
+**⚪ Neutral Status**
+- Gray colors for balanced or zero states
+- Neutral visual indicators for stable conditions
+
+### Enhanced Visual Feedback
+
+**🎯 Category Icons in All Views**
+- Budget table displays category icons
+- Category manager shows icons and colors
+- Consistent visual identity throughout app
+- Improved user experience and recognition
+
+**📊 Color-Coded Financial Data**
+- Difference calculations with smart color coding
+- Balance indicators with status-appropriate colors
+- Visual hierarchy for quick financial assessment
 
 ## 🏷️ Category Management System
 
 ### Overview
-The Category Management System provides a comprehensive CRUD (Create, Read, Update, Delete) interface for managing expense categories with full integration to the budget system.
+The Category Management System provides a comprehensive CRUD (Create, Read, Update, Delete) interface for managing expense categories with default icons, colors, and full integration to the budget system.
 
 ### Key Features
 
-**✨ Complete Category CRUD**
-- **Create**: Add new categories with custom names, descriptions, and colors
-- **Read**: View all categories in an organized card-based layout
-- **Update**: Edit category details with real-time validation
+**✨ Complete Category CRUD with Visual Design**
+- **Create**: Add new categories with custom names, descriptions, icons, and colors
+- **Read**: View all categories in an organized card-based layout with visual indicators
+- **Update**: Edit category details with real-time validation and icon selection
 - **Delete**: Remove categories with confirmation and dependency checks
+
+**🎨 Default Icons and Colors**
+- Automatic icon assignment for default categories
+- Emoji-based visual recognition system
+- Coordinated color schemes for category types
+- Migration system for existing categories without icons
 
 **🔄 Real-time Integration**
 - Automatic synchronization with budget calculations
 - Live updates when categories are modified
 - Seamless integration with existing budget data
-- Migration utilities for data consistency
+- Profile-aware category management
+
+**🌍 Multi-Language Category Support**
+- Automatic translation of default category names
+- Language-aware category display
+- Smart translation fallback system
+- Consistent naming across language switches
 
 **💾 Advanced Data Management**
 - Profile-based category storage
@@ -180,19 +368,21 @@ The Category Management System provides a comprehensive CRUD (Create, Read, Upda
 
 1. **Access Category Manager**
    - Click the "Categories" button in the main interface
-   - View all existing categories in a card layout
+   - View all existing categories in a card layout with icons and colors
 
 2. **Create New Categories**
    - Click "Add New Category" button
    - Fill in category name (required)
+   - Select from available emoji icons
+   - Choose a custom color from predefined palette
    - Add optional description
-   - Choose a custom color
-   - Save to see immediate integration
+   - Save to see immediate integration with icons
 
 3. **Edit Existing Categories**
    - Click the edit button on any category card
-   - Modify name, description, or color
+   - Modify name, description, icon, or color
    - Changes are applied instantly to budget calculations
+   - Visual updates reflect across all app views
 
 4. **Delete Categories**
    - Click the delete button on category cards
@@ -207,66 +397,96 @@ The Category Management System provides a comprehensive CRUD (Create, Read, Upda
 ### Technical Implementation
 
 **Architecture Components:**
-- `CategoryService`: Core business logic for CRUD operations
-- `useCategories`: Custom React hook for state management
-- `CategoryManager`: Main UI component with modal system
-- `CategoryForm`: Reusable form component with validation
+- `CategoryService`: Core business logic for CRUD operations with icon/color support
+- `useCategories`: Custom React hook for state management with profile integration
+- `useCategoryTranslations`: Translation hook for category name localization
+- `CategoryManager`: Main UI component with visual enhancements and modal system
+- `CategoryForm`: Reusable form component with icon/color selection and validation
 - `CategoryModal`: Modal wrapper for create/edit operations
+- `migrateCategoriesToIncludeIcons`: Migration utility for adding icons to existing categories
 
 **Data Integration:**
 - Real-time synchronization with `useBudget` hook
 - Event-driven updates between components
 - Profile system integration for user data
-- Migration utilities for backward compatibility
+- Migration utilities for backward compatibility and icon assignments
+- Translation system integration for multi-language support
+
+**Visual Enhancement:**
+- Default icon assignment system
+- Color coordination for category types
+- Icon display in budget tables and category cards
+- Consistent visual identity across all app views
 
 **File Structure:**
 ```
 src/components/features/categories/
-├── CategoryManager.tsx    # Main management interface
-├── CategoryForm.tsx       # Form component for CRUD operations
+├── CategoryManager.tsx    # Main management interface with icons
+├── CategoryForm.tsx       # Form component with icon/color selection
 ├── CategoryModal.tsx      # Modal wrapper component
 └── index.ts              # Component exports
 
 src/hooks/
 ├── useCategories.ts       # Category state management hook
+├── useCategoryTranslations.ts # Category translation hook
 
 src/services/
-├── CategoryService.ts     # Business logic and CRUD operations
+├── CategoryService.ts     # Business logic with icon/color support
 
 src/utils/
-├── categoryMigration.ts   # Data migration utilities
+├── categoryMigration.ts   # Data migration with icon assignment utilities
+
+src/assets/icons/
+├── [Various Icon Components] # Custom SVG icon components
+└── index.ts              # Icon exports
 ```
 
 ## 🤖 AI Features
 
 ### Smart Budget Analysis
-The app leverages Google's Gemini AI to provide intelligent budget insights:
+The app leverages Google's Gemini AI to provide intelligent, profile-specific budget insights:
 
-- **Personalized Recommendations**: Tailored advice based on your spending patterns
-- **Expense Optimization**: Suggestions for reducing unnecessary expenses
-- **Financial Goal Planning**: Help setting and achieving financial targets
+- **Profile-Specific Recommendations**: Tailored advice based on individual profile spending patterns
+- **Language-Aware Suggestions**: AI responses in Portuguese or English based on user preference
+- **Expense Optimization**: Suggestions for reducing unnecessary expenses per profile
+- **Financial Goal Planning**: Help setting and achieving profile-specific financial targets
 - **Spending Alerts**: Proactive warnings about budget overruns
-- **Trend Analysis**: AI-powered insights into your financial habits
+- **Trend Analysis**: AI-powered insights into profile-specific financial habits
+- **Favorite Suggestions**: Save and manage favorite AI recommendations per profile
+- **Cross-Profile Insights**: Compare and contrast different profile performances
+
+### Profile Integration
+- **Individual AI History**: Each profile maintains its own AI suggestion history
+- **Favorite Management**: Save and organize favorite suggestions by profile
+- **Export/Import AI Data**: Include AI suggestions in profile export/import
+- **Language Consistency**: AI suggestions match profile language settings
+- **Context-Aware Advice**: Recommendations consider profile-specific budget data
 
 ### Fallback Intelligence
 When AI services are unavailable, the app provides:
 - Smart mock suggestions based on financial best practices
-- Local calculation-based recommendations
-- Offline budget analysis capabilities
+- Local calculation-based recommendations adapted to profile data
+- Offline budget analysis capabilities with profile context
+- Language-appropriate fallback suggestions
 
 ## 🛠️ Development
 
 ### Tech Stack
 
-- **Frontend**: React 19.1.1 with TypeScript
+- **Frontend**: React 19.1.1 with TypeScript for type-safe development
 - **Build Tool**: Vite 6.3.5 for fast development and builds
-- **Charts**: Recharts 3.1.2 for data visualization
-- **AI Integration**: Google Gemini AI (@google/genai)
-- **State Management**: Custom hooks pattern with event-driven updates
-- **Data Persistence**: LocalStorage with profile system and migration utilities
-- **UI Components**: Modal system, form validation, and responsive design
-- **Styling**: Modern CSS with responsive design
+- **Charts**: Recharts 3.1.2 for data visualization with category icons
+- **AI Integration**: Google Gemini AI (@google/genai) with profile-specific suggestions
+- **Internationalization**: Custom i18n system with React Context for multi-language support
+- **Profile Management**: Custom profile system with import/export functionality
+- **State Management**: Custom hooks pattern with event-driven updates and profile synchronization
+- **Data Persistence**: LocalStorage with profile system, migration utilities, and backup capabilities
+- **UI Components**: Modal system, form validation, language selector, and responsive design
+- **Icon System**: Custom SVG components and emoji-based category icons
+- **Visual Design**: Color-coded status indicators and coordinated category color schemes
+- **Styling**: Modern CSS with responsive design and intelligent visual feedback
 - **Package Manager**: npm with Node.js 18+
+- **Translation System**: Dynamic category name translation with fallback support
 
 ### Available Scripts
 
@@ -318,17 +538,32 @@ import { BudgetService } from '@/services';
 src/
 ├── components/
 │   ├── features/     # Feature-specific components
-│   │   ├── budget/   # Budget management and calculations
-│   │   ├── categories/ # Complete CRUD category management
-│   │   ├── expenses/ # Expense tracking and management
-│   │   └── ai/       # AI suggestions and insights
-│   ├── layout/       # Layout components (Header, Footer)
-│   └── ui/           # Reusable UI components (modals, forms)
-├── hooks/            # Custom React hooks (useBudget, useCategories)
-├── services/         # Business logic and API calls (CategoryService, ProfileService)
+│   │   ├── budget/   # Budget management with color-coded status indicators
+│   │   ├── categories/ # Complete CRUD category management with icons
+│   │   ├── profiles/ # Profile management with import/export functionality
+│   │   ├── expenses/ # Expense tracking with visual enhancements
+│   │   └── ai/       # Profile-specific AI suggestions and favorites
+│   ├── layout/       # Layout components (Header with language selector, Footer)
+│   └── ui/           # Reusable UI components (modals, forms, language selector)
+├── hooks/            # Custom React hooks (useBudget, useCategories, useProfileManager, useCategoryTranslations)
+├── i18n/             # Internationalization system
+│   ├── context.tsx   # i18n React context provider
+│   ├── locales/      # Translation files (pt-BR.json, en.json)
+│   └── types.ts      # i18n TypeScript definitions
+├── services/         # Business logic and API calls
+│   ├── CategoryService.ts # Category CRUD with icon/color support
+│   ├── ProfileService.ts  # Profile management with AI integration
+│   └── budgetService.ts   # Budget calculations with status indicators
 ├── types/            # TypeScript type definitions
+│   ├── index.ts      # Core types (Category, Profile, BudgetState)
+│   └── i18n.ts       # Internationalization types
 ├── utils/            # Helper functions and migration utilities
-└── assets/           # Static files
+│   ├── categoryMigration.ts # Category migration with icon assignment
+│   ├── profileMigration.ts  # Profile data migration utilities
+│   └── formatters.ts        # Currency and date formatting utilities
+├── assets/           # Static files
+│   └── icons/        # Custom SVG icon components
+└── main.tsx          # App entry point with i18n provider
 ```
 
 ## 📦 Build & Deployment
@@ -432,6 +667,6 @@ For support and questions:
 
 ---
 
-**Built with ❤️ by [Patrick Cruz](https://github.com/patrickcruzutfpr)**
+**Built with ❤️ by [Patrick Motin Cruz](https://github.com/patrickcruzutfpr)**
 
 *Making family budget management simple, intelligent, and accessible for everyone.*
