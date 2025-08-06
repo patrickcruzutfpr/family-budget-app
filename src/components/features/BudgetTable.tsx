@@ -1,5 +1,5 @@
 import React, { useMemo } from 'react';
-import { Category } from '@/types';
+import { Category, CategoryType } from '@/types';
 import { BudgetRow } from './BudgetRow';
 import { PlusCircleIcon } from '@/assets/icons/PlusCircleIcon';
 import { useI18n } from '@/i18n';
@@ -48,6 +48,20 @@ export const BudgetTable: React.FC<BudgetTableProps> = ({ categories, updateItem
               return acc;
             }, { projected: 0, actual: 0 });
             const categoryDifference = categoryTotals.projected - categoryTotals.actual;
+            
+            // Inverte a lógica de cores para categoria de renda (INCOME)
+            // Para renda: valores positivos = verde, valores negativos = vermelho
+            // Para despesas: valores positivos = vermelho, valores negativos = verde
+            const isIncomeCategory = category.type === CategoryType.INCOME;
+            let differenceColorClass;
+            
+            if (isIncomeCategory) {
+              // Para renda: positivo = bom (verde), negativo = ruim (vermelho)
+              differenceColorClass = categoryDifference >= 0 ? 'text-green-600' : 'text-red-600';
+            } else {
+              // Para despesas: positivo = ruim (vermelho), negativo = bom (verde)
+              differenceColorClass = categoryDifference >= 0 ? 'text-red-600' : 'text-green-600';
+            }
 
             return (
               <React.Fragment key={category.id}>
@@ -55,7 +69,7 @@ export const BudgetTable: React.FC<BudgetTableProps> = ({ categories, updateItem
                     <td className="px-6 py-4 whitespace-nowrap text-sm font-bold text-gray-800" colSpan={1}>{translateCategoryName(category.name)}</td>
                     <td className="px-6 py-4 whitespace-nowrap text-sm font-semibold text-gray-600 text-right">{formatCurrency(categoryTotals.projected)}</td>
                     <td className="px-6 py-4 whitespace-nowrap text-sm font-semibold text-gray-600 text-right">{formatCurrency(categoryTotals.actual)}</td>
-                    <td className={`px-6 py-4 whitespace-nowrap text-sm font-semibold text-right ${categoryDifference >= 0 ? 'text-green-600' : 'text-red-600'}`}>
+                    <td className={`px-6 py-4 whitespace-nowrap text-sm font-semibold text-right ${differenceColorClass}`}>
                         {formatCurrency(categoryDifference)}
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
@@ -69,6 +83,7 @@ export const BudgetTable: React.FC<BudgetTableProps> = ({ categories, updateItem
                     key={item.id}
                     item={item}
                     categoryId={category.id}
+                    categoryType={category.type}
                     updateItemValue={updateItemValue}
                     updateItemName={updateItemName}
                     deleteItem={deleteItem}

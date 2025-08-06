@@ -1,5 +1,5 @@
 import React from 'react';
-import { BudgetItem } from '@/types';
+import { BudgetItem, CategoryType } from '@/types';
 import { EditableCell } from '@/components/ui/EditableCell';
 import { EditableTextCell } from '@/components/ui/EditableTextCell';
 import { Trash2Icon } from '@/assets/icons/Trash2Icon';
@@ -9,17 +9,31 @@ import { useCategoryTranslations, useFormatters } from '@/hooks';
 interface BudgetRowProps {
   item: BudgetItem;
   categoryId: string;
+  categoryType: CategoryType;
   updateItemValue: (categoryId: string, itemId: string, field: 'projected' | 'actual', value: number) => void;
   updateItemName: (categoryId: string, itemId: string, name: string) => void;
   deleteItem: (categoryId: string, itemId: string) => void;
 }
 
-export const BudgetRow: React.FC<BudgetRowProps> = ({ item, categoryId, updateItemValue, updateItemName, deleteItem }) => {
+export const BudgetRow: React.FC<BudgetRowProps> = ({ item, categoryId, categoryType, updateItemValue, updateItemName, deleteItem }) => {
   const { t } = useI18n();
   const { translateItemName } = useCategoryTranslations();
   const { formatCurrency } = useFormatters();
   const difference = item.projected - item.actual;
-  const differenceColor = difference >= 0 ? 'text-green-600' : 'text-red-600';
+  
+  // Inverte a lógica de cores para categoria de renda (INCOME)
+  // Para renda: valores positivos = verde, valores negativos = vermelho
+  // Para despesas: valores positivos = vermelho, valores negativos = verde
+  const isIncomeCategory = categoryType === CategoryType.INCOME;
+  let differenceColor;
+  
+  if (isIncomeCategory) {
+    // Para renda: positivo = bom (verde), negativo = ruim (vermelho)
+    differenceColor = difference >= 0 ? 'text-green-600' : 'text-red-600';
+  } else {
+    // Para despesas: positivo = ruim (vermelho), negativo = bom (verde)
+    differenceColor = difference >= 0 ? 'text-red-600' : 'text-green-600';
+  }
   
   return (
     <tr className="hover:bg-gray-50 group">
