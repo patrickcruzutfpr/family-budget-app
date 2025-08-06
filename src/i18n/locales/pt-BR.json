@@ -77,7 +77,22 @@
     "getSuggestions": "Obter Sugestões Inteligentes",
     "loading": "Analisando seu orçamento...",
     "error": "Falha ao obter sugestões inteligentes. Tente novamente mais tarde.",
-    "retry": "Tentar Novamente"
+    "retry": "Tentar Novamente",
+    "current": "Atuais",
+    "saved": "Salvas",
+    "save": "Salvar sugestão",
+    "favorite": "Adicionar aos favoritos",
+    "unfavorite": "Remover dos favoritos",
+    "delete": "Excluir sugestão",
+    "savedAt": "Salva em",
+    "noSaved": "Nenhuma sugestão salva ainda",
+    "saveTip": "Obtenha novas sugestões e salve as que você gosta!",
+    "changeLanguageTitle": "Alterar Idioma",
+    "unsavedWarning": "Você tem sugestões da IA não salvas.",
+    "unsavedWarningDetail": "Essas sugestões serão perdidas ao mudar para o idioma selecionado. Gostaria de salvá-las primeiro?",
+    "changeLanguageConfirm": "Tem certeza que deseja alterar o idioma?",
+    "saveAndContinue": "Salvar e Continuar",
+    "continueWithoutSaving": "Continuar Sem Salvar"
   },
   "categories": {
     "income": "Renda",

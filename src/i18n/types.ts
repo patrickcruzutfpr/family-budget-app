@@ -12,6 +12,7 @@ export interface I18nState {
 
 export interface I18nContextType extends I18nState {
   setLanguage: (language: SupportedLanguage) => Promise<void>;
+  setLanguageWithConfirmation: (language: SupportedLanguage, onBeforeChange?: () => Promise<boolean>) => Promise<void>;
   t: (key: string, fallback?: string) => string;
   detectBrowserLanguage: () => SupportedLanguage;
 }

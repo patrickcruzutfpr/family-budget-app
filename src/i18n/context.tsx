@@ -43,6 +43,23 @@ export const I18nProvider: React.FC<I18nProviderProps> = ({ children }) => {
     await loadLanguageTranslations(newLanguage);
   };
 
+  // Change language with callback for validation (e.g., unsaved suggestions check)
+  const setLanguageWithConfirmation = async (
+    newLanguage: SupportedLanguage, 
+    onBeforeChange?: () => Promise<boolean>
+  ) => {
+    if (newLanguage === language) return;
+    
+    let canProceed = true;
+    if (onBeforeChange) {
+      canProceed = await onBeforeChange();
+    }
+    
+    if (canProceed) {
+      await setLanguage(newLanguage);
+    }
+  };
+
   // Translation function
   const t = (key: string, fallback?: string): string => {
     return getTranslation(translations, key, fallback);
@@ -73,6 +90,7 @@ export const I18nProvider: React.FC<I18nProviderProps> = ({ children }) => {
     translations,
     isLoading,
     setLanguage,
+    setLanguageWithConfirmation,
     t,
     detectBrowserLanguage,
   };

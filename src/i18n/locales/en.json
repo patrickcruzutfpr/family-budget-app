@@ -77,7 +77,22 @@
     "getSuggestions": "Get Smart Suggestions",
     "loading": "Analyzing your budget...",
     "error": "Failed to get AI-powered suggestions. Please try again later.",
-    "retry": "Try Again"
+    "retry": "Try Again",
+    "current": "Current",
+    "saved": "Saved",
+    "save": "Save suggestion",
+    "favorite": "Add to favorites",
+    "unfavorite": "Remove from favorites",
+    "delete": "Delete suggestion",
+    "savedAt": "Saved on",
+    "noSaved": "No saved suggestions yet",
+    "saveTip": "Get new suggestions and save the ones you like!",
+    "changeLanguageTitle": "Change Language",
+    "unsavedWarning": "You have unsaved AI suggestions.",
+    "unsavedWarningDetail": "These suggestions will be lost when changing to the selected language. Would you like to save them first?",
+    "changeLanguageConfirm": "Are you sure you want to change the language?",
+    "saveAndContinue": "Save & Continue",
+    "continueWithoutSaving": "Continue Without Saving"
   },
   "categories": {
     "income": "Income",
