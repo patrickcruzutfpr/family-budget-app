@@ -314,9 +314,10 @@ export const exportProfile = (id: string): string => {
   }
   
   // Include AI suggestions in export
+  const aiSuggestions = getAISuggestionsForExport();
   const profileWithAI = {
     ...profile,
-    aiSuggestions: getAISuggestionsForExport()
+    aiSuggestions
   };
   
   return JSON.stringify(profileWithAI, null, 2);
@@ -326,8 +327,10 @@ export const exportProfile = (id: string): string => {
 const getAISuggestionsForExport = () => {
   try {
     const stored = localStorage.getItem('family-budget-saved-suggestions');
+    
     if (stored) {
       const allSuggestions = JSON.parse(stored);
+      
       // Flatten all language suggestions into single array for export
       const flatSuggestions: any[] = [];
       Object.keys(allSuggestions).forEach(language => {
@@ -335,6 +338,10 @@ const getAISuggestionsForExport = () => {
           flatSuggestions.push(...allSuggestions[language]);
         }
       });
+      
+      const favoritesCount = flatSuggestions.filter(s => s.isFavorite).length;
+      console.log(`� Export: Including ${flatSuggestions.length} AI suggestions (${favoritesCount} favorites)`);
+      
       return flatSuggestions;
     }
   } catch (error) {
@@ -348,7 +355,7 @@ const restoreAISuggestionsFromImport = (aiSuggestions?: any[]) => {
   if (!aiSuggestions || !Array.isArray(aiSuggestions)) {
     return;
   }
-  
+
   try {
     const stored = localStorage.getItem('family-budget-saved-suggestions');
     const currentSuggestions = stored ? JSON.parse(stored) : {};
@@ -367,12 +374,13 @@ const restoreAISuggestionsFromImport = (aiSuggestions?: any[]) => {
       );
       
       if (!exists) {
-        // Ensure proper date object
+        // Ensure proper date object and preserve all properties including isFavorite
         const restoredSuggestion = {
           ...suggestion,
           savedAt: new Date(suggestion.savedAt),
           id: suggestion.id || `imported-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`
         };
+        
         currentSuggestions[language].unshift(restoredSuggestion);
         
         // Keep only last 50 suggestions per language
@@ -381,6 +389,15 @@ const restoreAISuggestionsFromImport = (aiSuggestions?: any[]) => {
     });
     
     localStorage.setItem('family-budget-saved-suggestions', JSON.stringify(currentSuggestions));
+    
+    const totalFavorites = Object.values(currentSuggestions).flat().filter((s: any) => s.isFavorite).length;
+    console.log(`� Import: Restored ${aiSuggestions.length} AI suggestions (${totalFavorites} total favorites)`);
+    
+    // Dispatch custom event to notify components that AI suggestions were updated
+    const event = new CustomEvent('ai-suggestions-updated', {
+      detail: { type: 'ai-suggestions-imported', totalFavorites }
+    });
+    window.dispatchEvent(event);
   } catch (error) {
     console.error('Error restoring AI suggestions from import:', error);
   }

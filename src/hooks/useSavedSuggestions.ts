@@ -169,6 +169,38 @@ export const useSavedSuggestions = (currentLanguage: SupportedLanguage) => {
     }
   }, [currentLanguage]);
 
+  // Force reload suggestions (useful after profile import)
+  const reloadSuggestions = useCallback(() => {
+    console.log('🔄 Force reloading AI suggestions...');
+    loadSuggestions();
+  }, [loadSuggestions]);
+
+  // Listen for storage changes from profile imports
+  useEffect(() => {
+    const handleStorageChange = (e: StorageEvent) => {
+      if (e.key === STORAGE_KEY) {
+        console.log('📥 AI suggestions localStorage changed, reloading...');
+        loadSuggestions();
+      }
+    };
+
+    // Listen for custom events (for same-tab changes)
+    const handleCustomEvent = (e: CustomEvent) => {
+      if (e.detail?.type === 'ai-suggestions-imported') {
+        console.log('📥 AI suggestions imported event detected, reloading...');
+        setTimeout(() => loadSuggestions(), 100); // Small delay to ensure localStorage is updated
+      }
+    };
+
+    window.addEventListener('storage', handleStorageChange);
+    window.addEventListener('ai-suggestions-updated' as any, handleCustomEvent);
+
+    return () => {
+      window.removeEventListener('storage', handleStorageChange);
+      window.removeEventListener('ai-suggestions-updated' as any, handleCustomEvent);
+    };
+  }, [loadSuggestions]);
+
   // Load suggestions when language changes
   useEffect(() => {
     loadSuggestions();
@@ -183,6 +215,7 @@ export const useSavedSuggestions = (currentLanguage: SupportedLanguage) => {
     hasUnsavedSuggestions,
     saveAllCurrent,
     clearAllSaved,
+    reloadSuggestions,
     unsavedSuggestions
   };
 };

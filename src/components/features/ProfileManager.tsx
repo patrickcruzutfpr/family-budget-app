@@ -80,6 +80,13 @@ export const ProfileManager: React.FC<ProfileManagerProps> = ({ onProfileChange 
   const handleSwitchProfile = async (profileId: string) => {
     try {
       await switchProfile(profileId);
+      
+      // Dispatch event to notify that profile changed (triggers AI suggestions reload)
+      const profileChangeEvent = new CustomEvent('profileChanged', {
+        detail: { profileId, type: 'switched' }
+      });
+      window.dispatchEvent(profileChangeEvent);
+      
       onProfileChange?.();
     } catch (err) {
       // Error is handled by the hook
@@ -151,6 +158,12 @@ export const ProfileManager: React.FC<ProfileManagerProps> = ({ onProfileChange 
       
       // Switch to the newly imported profile
       await switchProfile(importedProfile.id);
+      
+      // Dispatch event to notify that profile changed (triggers AI suggestions reload)
+      const profileChangeEvent = new CustomEvent('profileChanged', {
+        detail: { profileId: importedProfile.id, type: 'imported' }
+      });
+      window.dispatchEvent(profileChangeEvent);
       
       // Trigger budget reload in parent component
       onProfileChange?.();

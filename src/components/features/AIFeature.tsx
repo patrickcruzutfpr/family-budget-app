@@ -1,4 +1,4 @@
-import React, { useState, useCallback } from 'react';
+import React, { useState, useCallback, useEffect } from 'react';
 import { getBudgetSuggestions } from '@/services/geminiService';
 import { AISuggestion, BudgetState } from '@/types';
 import { SparklesIcon } from '@/assets/icons/SparklesIcon';
@@ -20,7 +20,8 @@ export const AIFeature: React.FC<AIFeatureProps> = ({ budget }) => {
     saveSuggestion,
     removeSavedSuggestion,
     toggleFavorite,
-    setCurrentSuggestions
+    setCurrentSuggestions,
+    reloadSuggestions
   } = useSavedSuggestions(language);
   
   const [suggestions, setSuggestions] = useState<AISuggestion[]>([]);
@@ -45,6 +46,30 @@ export const AIFeature: React.FC<AIFeatureProps> = ({ budget }) => {
       setIsLoading(false);
     }
   }, [budget, language, setCurrentSuggestions]);
+
+  // Listen for profile changes and AI suggestions updates
+  useEffect(() => {
+    const handleProfileChange = () => {
+      console.log('📋 Profile change detected, reloading AI suggestions...');
+      reloadSuggestions();
+    };
+
+    const handleAISuggestionsUpdate = (e: CustomEvent) => {
+      if (e.detail?.type === 'ai-suggestions-imported') {
+        console.log('📥 AI suggestions imported, reloading component suggestions...');
+        reloadSuggestions();
+      }
+    };
+
+    // Listen for custom events
+    window.addEventListener('profileChanged', handleProfileChange);
+    window.addEventListener('ai-suggestions-updated' as any, handleAISuggestionsUpdate);
+
+    return () => {
+      window.removeEventListener('profileChanged', handleProfileChange);
+      window.removeEventListener('ai-suggestions-updated' as any, handleAISuggestionsUpdate);
+    };
+  }, [reloadSuggestions]);
 
   return (
     <div className="bg-white p-6 rounded-2xl shadow-lg shadow-gray-200/50">
