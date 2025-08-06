@@ -14,9 +14,6 @@ export const useProfileCategoriesLanguageSync = () => {
     const updateAllCategories = () => {
       try {
         const wasUpdated = updateAllProfileCategoriesLanguage();
-        if (wasUpdated) {
-          console.log('✅ All profile categories updated to match current language:', language);
-        }
       } catch (error) {
         console.error('❌ Error updating profile categories language:', error);
       }

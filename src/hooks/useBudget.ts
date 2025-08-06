@@ -40,7 +40,6 @@ export const useBudget = () => {
   useEffect(() => {
     const handleCategoryLanguageUpdate = (e: CustomEvent) => {
       if (e.detail?.type === 'categories-language-updated') {
-        console.log('🔄 Category language updated, reloading budget...');
         try {
           const currentProfile = getCurrentProfile();
           setBudget(currentProfile.budget);

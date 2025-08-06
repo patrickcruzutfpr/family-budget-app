@@ -56,13 +56,11 @@ export const AIFeature: React.FC<AIFeatureProps> = ({ budget }) => {
   // Listen for profile changes and AI suggestions updates
   useEffect(() => {
     const handleProfileChange = () => {
-      console.log('📋 Profile change detected, reloading AI suggestions...');
       reloadSuggestions();
     };
 
     const handleAISuggestionsUpdate = (e: CustomEvent) => {
       if (e.detail?.type === 'ai-suggestions-imported') {
-        console.log('📥 AI suggestions imported, reloading component suggestions...');
         reloadSuggestions();
       }
     };

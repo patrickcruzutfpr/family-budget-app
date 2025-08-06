@@ -62,8 +62,6 @@ export class CategoryService {
       currentLanguage = browserLang.startsWith('pt') ? 'pt-BR' : 'en';
     }
     
-    console.log('🌍 Creating default categories with language:', currentLanguage);
-    
     const translations = {
       'pt-BR': {
         income: 'Renda',

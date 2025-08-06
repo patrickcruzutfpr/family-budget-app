@@ -30,8 +30,6 @@ export const migrateCategoryData = (): void => {
       
       // Remove legacy data
       localStorage.removeItem(legacyCategoriesKey);
-      
-      console.log('Successfully migrated legacy category data to profile system');
     }
   } catch (error) {
     console.warn('Category migration failed or not needed:', error);
@@ -50,7 +48,6 @@ export const ensureDefaultCategories = (): void => {
     if (currentBudget.length === 0) {
       const defaultCategories = CategoryService.getDefaultCategories();
       updateCurrentProfileBudget(defaultCategories);
-      console.log('Created default categories for new profile');
     }
   } catch (error) {
     console.error('Failed to ensure default categories:', error);

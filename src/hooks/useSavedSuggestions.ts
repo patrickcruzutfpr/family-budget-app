@@ -187,7 +187,6 @@ export const useSavedSuggestions = (currentLanguage: SupportedLanguage, profileI
 
   // Force reload suggestions (useful after profile import)
   const reloadSuggestions = useCallback(() => {
-    console.log('🔄 Force reloading AI suggestions...');
     loadSuggestions();
   }, [loadSuggestions]);
 
@@ -197,7 +196,6 @@ export const useSavedSuggestions = (currentLanguage: SupportedLanguage, profileI
     
     const handleStorageChange = (e: StorageEvent) => {
       if (e.key === storageKey) {
-        console.log(`📥 AI suggestions localStorage changed for profile ${profileId}, reloading...`);
         loadSuggestions();
       }
     };
@@ -205,7 +203,6 @@ export const useSavedSuggestions = (currentLanguage: SupportedLanguage, profileI
     // Listen for custom events (for same-tab changes)
     const handleCustomEvent = (e: CustomEvent) => {
       if (e.detail?.type === 'ai-suggestions-imported' && e.detail?.profileId === profileId) {
-        console.log(`📥 AI suggestions imported event detected for profile ${profileId}, reloading...`);
         setTimeout(() => loadSuggestions(), 100); // Small delay to ensure localStorage is updated
       }
     };

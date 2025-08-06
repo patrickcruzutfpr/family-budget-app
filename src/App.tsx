@@ -4,9 +4,7 @@ import { BudgetTable, Summary, BudgetChart, AIFeature, Header, ProfileManager, C
 import { CategoryType } from '@/types';
 import { useI18n } from '@/i18n';
 import { migrateCategoryData, ensureDefaultCategories } from '@/utils/categoryMigration';
-import { debugCategoryImportExport, cleanupDebugData } from '@/utils/debugCategoryImportExport';
 import { useProfileCategoriesLanguageSync } from '@/hooks/useProfileCategoriesLanguageSync';
-import { runAISuggestionsTest } from '@/utils/testAISuggestions';
 
 function App(): React.ReactNode {
   const [showProfileManager, setShowProfileManager] = useState(false);
@@ -56,62 +54,6 @@ function App(): React.ReactNode {
   useEffect(() => {
     migrateCategoryData();
     ensureDefaultCategories();
-    
-    // Add debug functions to window for testing
-    (window as any).debugCategoryImportExport = debugCategoryImportExport;
-    (window as any).cleanupDebugData = cleanupDebugData;
-    (window as any).testAISuggestions = runAISuggestionsTest;
-    
-    // Add category language test function
-    (window as any).testCategoryLanguageUpdate = () => {
-      const { updateAllProfileCategoriesLanguage } = require('@/services/profileService');
-      const wasUpdated = updateAllProfileCategoriesLanguage();
-      console.log('Category language update test:', wasUpdated ? 'SUCCESS' : 'NO CHANGES');
-      return wasUpdated;
-    };
-    
-    // Add AI suggestions test function
-    (window as any).addTestAISuggestions = () => {
-      const testData = {
-        'pt-BR': [
-          {
-            id: 'test-fav-1',
-            title: 'Economize no Supermercado',
-            suggestion: 'Faça uma lista de compras para evitar gastos desnecessários',
-            savedAt: new Date(),
-            language: 'pt-BR',
-            isFavorite: true
-          },
-          {
-            id: 'test-normal-1',
-            title: 'Corte Gastos com Transporte', 
-            suggestion: 'Use transporte público para economizar combustível',
-            savedAt: new Date(),
-            language: 'pt-BR',
-            isFavorite: false
-          }
-        ]
-      };
-      localStorage.setItem('family-budget-saved-suggestions', JSON.stringify(testData));
-      console.log('✅ Test AI suggestions added! Export a profile to test.');
-    };
-
-    // Add comprehensive test function
-    (window as any).testAIExportImport = () => {
-      console.log('🧪 Running comprehensive AI export/import test...');
-      
-      // Step 1: Add test data
-      (window as any).addTestAISuggestions();
-      
-      setTimeout(() => {
-        console.log('📋 Step 1: Test suggestions added');
-        console.log('📋 Step 2: Now export your current profile using Profile Manager');
-        console.log('📋 Step 3: Then import the exported file to test favorites restoration');
-        console.log('📋 Watch console for detailed logs during export/import process');
-      }, 500);
-    };
-    
-    console.log('🧪 Debug functions available: debugCategoryImportExport(), cleanupDebugData(), testAISuggestions(), addTestAISuggestions(), testAIExportImport()');
   }, []);
 
   // Listen for category changes and reload budget
