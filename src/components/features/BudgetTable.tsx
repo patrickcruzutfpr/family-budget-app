@@ -58,8 +58,8 @@ export const BudgetTable: React.FC<BudgetTableProps> = ({ categories, updateItem
                         {formatCurrency(categoryDifference)}
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
-                        <button onClick={() => addItem(category.id)} className="text-primary hover:text-secondary transition-colors duration-200 flex items-center gap-1 ml-auto">
-                           <PlusCircleIcon className="w-4 h-4"/> {t('budget.addItem', 'Add')}
+                        <button onClick={() => addItem(category.id)} className="text-primary hover:text-secondary transition-colors duration-200 flex items-center justify-center ml-auto" title={t('budget.addItem', 'Add')}>
+                           <PlusCircleIcon className="w-4 h-4"/>
                         </button>
                     </td>
                 </tr>
