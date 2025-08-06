@@ -1,5 +1,6 @@
 import React from 'react';
 import { Category } from '../../types';
+import { useI18n } from '../../i18n/context';
 
 interface DeleteConfirmationModalProps {
   isOpen: boolean;
@@ -16,6 +17,7 @@ export const DeleteConfirmationModal: React.FC<DeleteConfirmationModalProps> = (
   onCancel,
   loading = false
 }) => {
+  const { t } = useI18n();
   if (!isOpen || !category) return null;
 
   const hasItems = category.items && category.items.length > 0;
@@ -40,7 +42,7 @@ export const DeleteConfirmationModal: React.FC<DeleteConfirmationModalProps> = (
               </div>
               <div className="ml-3">
                 <h3 className="text-lg font-semibold text-gray-900">
-                  Confirmar Exclusão
+                  {t('categoryManager.confirmDelete', 'Confirmar Exclusão')}
                 </h3>
               </div>
             </div>
@@ -50,7 +52,7 @@ export const DeleteConfirmationModal: React.FC<DeleteConfirmationModalProps> = (
           <div className="px-6 py-4">
             <div className="space-y-3">
               <p className="text-gray-700">
-                Tem certeza que deseja excluir a categoria{' '}
+                {t('categoryManager.confirmDeleteMessage', 'Tem certeza que deseja excluir a categoria')}{' '}
                 <span className="font-semibold">"{category.name}"</span>?
               </p>
               
@@ -64,11 +66,10 @@ export const DeleteConfirmationModal: React.FC<DeleteConfirmationModalProps> = (
                     </svg>
                     <div className="ml-2">
                       <h4 className="text-sm font-medium text-yellow-800">
-                        Atenção
+                        {t('categoryManager.warningTitle', 'Atenção')}
                       </h4>
                       <p className="text-sm text-yellow-700 mt-1">
-                        Esta categoria possui {itemCount} {itemCount === 1 ? 'item' : 'itens'}. 
-                        Todos os itens serão perdidos permanentemente.
+                        {t('categoryManager.confirmDeleteWarning', `Esta categoria possui ${itemCount} ${itemCount === 1 ? 'item' : 'itens'}. Todos os itens serão movidos para 'Outros' automaticamente.`)}
                       </p>
                     </div>
                   </div>
@@ -89,7 +90,7 @@ export const DeleteConfirmationModal: React.FC<DeleteConfirmationModalProps> = (
               className="px-4 py-2 text-gray-700 bg-gray-100 border border-gray-300 rounded-md hover:bg-gray-200 focus:outline-none focus:ring-2 focus:ring-gray-500"
               disabled={loading}
             >
-              Cancelar
+              {t('categoryManager.cancel', 'Cancelar')}
             </button>
             <button
               type="button"
@@ -97,7 +98,7 @@ export const DeleteConfirmationModal: React.FC<DeleteConfirmationModalProps> = (
               className="px-4 py-2 text-white bg-red-600 rounded-md hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-red-500 disabled:opacity-50"
               disabled={loading}
             >
-              {loading ? 'Excluindo...' : 'Excluir'}
+              {loading ? t('common.loading', 'Carregando...') : t('categoryManager.delete', 'Excluir')}
             </button>
           </div>
         </div>

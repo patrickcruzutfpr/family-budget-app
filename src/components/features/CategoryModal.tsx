@@ -1,5 +1,6 @@
 import React from 'react';
 import { Category, CategoryFormData } from '../../types';
+import { useI18n } from '../../i18n/context';
 import { CategoryForm } from './CategoryForm';
 
 interface CategoryModalProps {
@@ -21,9 +22,11 @@ export const CategoryModal: React.FC<CategoryModalProps> = ({
   loading = false,
   categoryNameExists
 }) => {
+  const { t } = useI18n();
+  
   if (!isOpen) return null;
 
-  const title = mode === 'create' ? 'Nova Categoria' : 'Editar Categoria';
+  const title = mode === 'create' ? t('categoryManager.createCategory', 'Nova Categoria') : t('categoryManager.updateCategory', 'Editar Categoria');
 
   return (
     <div className="fixed inset-0 z-50 overflow-y-auto">

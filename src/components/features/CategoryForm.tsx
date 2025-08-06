@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Category, CategoryFormData, CategoryType } from '../../types';
+import { useI18n } from '../../i18n/context';
 
 interface CategoryFormProps {
   category?: Category;
@@ -18,6 +19,7 @@ export const CategoryForm: React.FC<CategoryFormProps> = ({
   loading = false,
   categoryNameExists
 }) => {
+  const { t } = useI18n();
   const [formData, setFormData] = useState<CategoryFormData>({
     name: '',
     type: CategoryType.EXPENSE,
@@ -47,16 +49,16 @@ export const CategoryForm: React.FC<CategoryFormProps> = ({
 
     // Name validation
     if (!formData.name.trim()) {
-      newErrors.name = 'Nome é obrigatório';
+      newErrors.name = t('categoryManager.validation.nameRequired', 'Nome é obrigatório');
     } else if (formData.name.trim().length < 2) {
-      newErrors.name = 'Nome deve ter pelo menos 2 caracteres';
+      newErrors.name = t('categoryManager.validation.nameMinLength', 'Nome deve ter pelo menos 2 caracteres');
     } else if (categoryNameExists(formData.name.trim(), category?.id)) {
-      newErrors.name = 'Uma categoria com este nome já existe';
+      newErrors.name = t('categoryManager.validation.nameExists', 'Uma categoria com este nome já existe');
     }
 
     // Type validation
     if (!formData.type) {
-      newErrors.type = 'Tipo é obrigatório';
+      newErrors.type = t('categoryManager.validation.typeRequired', 'Tipo é obrigatório');
     }
 
     setErrors(newErrors);
@@ -94,18 +96,18 @@ export const CategoryForm: React.FC<CategoryFormProps> = ({
 
   // Available icons
   const availableIcons = [
-    { value: '🏠', label: 'Casa' },
-    { value: '🚗', label: 'Transporte' },
-    { value: '🍕', label: 'Alimentação' },
-    { value: '👨‍👩‍👧‍👦', label: 'Família' },
-    { value: '💰', label: 'Dinheiro' },
+    { value: '🏠', label: t('categoryManager.icons.house', 'Casa') },
+    { value: '🚗', label: t('categoryManager.icons.transport', 'Transporte') },
+    { value: '🍕', label: t('categoryManager.icons.food', 'Alimentação') },
+    { value: '👨‍👩‍👧‍👦', label: t('categoryManager.icons.family', 'Família') },
+    { value: '💰', label: t('categoryManager.icons.money', 'Dinheiro') },
     { value: '🎯', label: 'Meta' },
-    { value: '🛒', label: 'Compras' },
+    { value: '🛒', label: t('categoryManager.icons.shopping', 'Compras') },
     { value: '⚡', label: 'Energia' },
-    { value: '📱', label: 'Tecnologia' },
-    { value: '🎓', label: 'Educação' },
-    { value: '🏥', label: 'Saúde' },
-    { value: '🎭', label: 'Entretenimento' }
+    { value: '📱', label: t('categoryManager.icons.technology', 'Tecnologia') },
+    { value: '🎓', label: t('categoryManager.icons.education', 'Educação') },
+    { value: '🏥', label: t('categoryManager.icons.health', 'Saúde') },
+    { value: '🎭', label: t('categoryManager.icons.entertainment', 'Entretenimento') }
   ];
 
   // Available colors
@@ -127,7 +129,7 @@ export const CategoryForm: React.FC<CategoryFormProps> = ({
       {/* Category Name */}
       <div>
         <label htmlFor="categoryName" className="block text-sm font-medium text-gray-700 mb-1">
-          Nome da Categoria *
+          {t('categoryManager.categoryName', 'Nome da Categoria')} *
         </label>
         <input
           id="categoryName"
@@ -137,7 +139,7 @@ export const CategoryForm: React.FC<CategoryFormProps> = ({
           className={`w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 ${
             errors.name ? 'border-red-500' : 'border-gray-300'
           }`}
-          placeholder="Ex: Habitação, Transporte..."
+          placeholder={t('categoryManager.categoryNamePlaceholder', 'Digite o nome da categoria')}
           disabled={loading}
         />
         {errors.name && (
@@ -148,7 +150,7 @@ export const CategoryForm: React.FC<CategoryFormProps> = ({
       {/* Category Type */}
       <div>
         <label htmlFor="categoryType" className="block text-sm font-medium text-gray-700 mb-1">
-          Tipo *
+          {t('categoryManager.categoryType', 'Tipo')} *
         </label>
         <select
           id="categoryType"
@@ -159,8 +161,8 @@ export const CategoryForm: React.FC<CategoryFormProps> = ({
           }`}
           disabled={loading}
         >
-          <option value={CategoryType.EXPENSE}>Gasto</option>
-          <option value={CategoryType.INCOME}>Renda</option>
+          <option value={CategoryType.EXPENSE}>{t('categoryManager.expense', 'Gasto')}</option>
+          <option value={CategoryType.INCOME}>{t('categoryManager.income', 'Renda')}</option>
         </select>
         {errors.type && (
           <p className="mt-1 text-sm text-red-600">{errors.type}</p>
@@ -170,14 +172,14 @@ export const CategoryForm: React.FC<CategoryFormProps> = ({
       {/* Description */}
       <div>
         <label htmlFor="categoryDescription" className="block text-sm font-medium text-gray-700 mb-1">
-          Descrição
+          {t('categoryManager.categoryDescription', 'Descrição (Opcional)')}
         </label>
         <textarea
           id="categoryDescription"
           value={formData.description}
           onChange={(e) => handleInputChange('description', e.target.value)}
           className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-          placeholder="Descrição opcional da categoria"
+          placeholder={t('categoryManager.categoryDescriptionPlaceholder', 'Digite uma descrição para a categoria')}
           rows={3}
           disabled={loading}
         />
@@ -186,7 +188,7 @@ export const CategoryForm: React.FC<CategoryFormProps> = ({
       {/* Icon Selection */}
       <div>
         <label className="block text-sm font-medium text-gray-700 mb-2">
-          Ícone
+          {t('categoryManager.categoryIcon', 'Ícone')}
         </label>
         <div className="grid grid-cols-6 gap-2">
           {availableIcons.map((icon) => (
@@ -209,7 +211,7 @@ export const CategoryForm: React.FC<CategoryFormProps> = ({
       {/* Color Selection */}
       <div>
         <label className="block text-sm font-medium text-gray-700 mb-2">
-          Cor
+          {t('categoryManager.categoryColor', 'Cor')}
         </label>
         <div className="flex gap-2 flex-wrap">
           {availableColors.map((color) => (
@@ -236,14 +238,14 @@ export const CategoryForm: React.FC<CategoryFormProps> = ({
           className="px-4 py-2 text-gray-700 bg-gray-100 border border-gray-300 rounded-md hover:bg-gray-200 focus:outline-none focus:ring-2 focus:ring-gray-500"
           disabled={loading}
         >
-          Cancelar
+          {t('categoryManager.cancel', 'Cancelar')}
         </button>
         <button
           type="submit"
           className="px-4 py-2 text-white bg-blue-600 rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 disabled:opacity-50"
           disabled={loading}
         >
-          {loading ? 'Salvando...' : mode === 'create' ? 'Criar Categoria' : 'Salvar Alterações'}
+          {loading ? t('common.loading', 'Carregando...') : mode === 'create' ? t('categoryManager.createCategory', 'Criar Categoria') : t('categoryManager.updateCategory', 'Atualizar Categoria')}
         </button>
       </div>
     </form>

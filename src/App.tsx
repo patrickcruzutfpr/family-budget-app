@@ -4,6 +4,7 @@ import { BudgetTable, Summary, BudgetChart, AIFeature, Header, ProfileManager, C
 import { CategoryType } from '@/types';
 import { useI18n } from '@/i18n';
 import { migrateCategoryData, ensureDefaultCategories } from '@/utils/categoryMigration';
+import { debugCategoryImportExport, cleanupDebugData } from '@/utils/debugCategoryImportExport';
 
 function App(): React.ReactNode {
   const [showProfileManager, setShowProfileManager] = useState(false);
@@ -49,6 +50,11 @@ function App(): React.ReactNode {
   useEffect(() => {
     migrateCategoryData();
     ensureDefaultCategories();
+    
+    // Add debug functions to window for testing
+    (window as any).debugCategoryImportExport = debugCategoryImportExport;
+    (window as any).cleanupDebugData = cleanupDebugData;
+    console.log('🧪 Debug functions available: debugCategoryImportExport(), cleanupDebugData()');
   }, []);
 
   // Listen for category changes and reload budget
@@ -113,11 +119,11 @@ function App(): React.ReactNode {
         <div className="fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center p-4">
           <div className="bg-white rounded-2xl shadow-2xl max-w-6xl w-full max-h-[90vh] overflow-hidden">
             <div className="p-6 border-b border-gray-200 flex justify-between items-center">
-              <h2 className="text-2xl font-bold text-gray-800">Gerenciamento de Categorias</h2>
+              <h2 className="text-2xl font-bold text-gray-800">{t('categoryManager.title', 'Gerenciamento de Categorias')}</h2>
               <button
                 onClick={() => setShowCategoryManager(false)}
                 className="text-gray-500 hover:text-gray-700 text-2xl font-bold"
-                aria-label="Fechar"
+                aria-label={t('common.close', 'Fechar')}
               >
                 ×
               </button>

@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { Category, CategoryType, CategoryFormData, CategoryModalState, DeleteConfirmationState } from '../../types';
 import { useCategories } from '../../hooks/useCategories';
+import { useI18n } from '../../i18n/context';
 import { CategoryModal } from './CategoryModal';
 import { DeleteConfirmationModal } from './DeleteConfirmationModal';
 
@@ -9,6 +10,7 @@ interface CategoryManagerProps {
 }
 
 export const CategoryManager: React.FC<CategoryManagerProps> = ({ onCategoryChange }) => {
+  const { t } = useI18n();
   const {
     categories,
     loading: categoriesLoading,
@@ -145,7 +147,7 @@ export const CategoryManager: React.FC<CategoryManagerProps> = ({ onCategoryChan
             <button
               onClick={() => handleEditCategory(category)}
               className="p-1 text-gray-400 hover:text-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500 rounded"
-              title="Editar categoria"
+              title={t('categoryManager.editCategory', 'Editar categoria')}
             >
               <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} 
@@ -155,7 +157,7 @@ export const CategoryManager: React.FC<CategoryManagerProps> = ({ onCategoryChan
             <button
               onClick={() => handleDeleteRequest(category)}
               className="p-1 text-gray-400 hover:text-red-600 focus:outline-none focus:ring-2 focus:ring-red-500 rounded"
-              title="Excluir categoria"
+              title={t('categoryManager.deleteCategory', 'Excluir categoria')}
             >
               <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} 
@@ -167,18 +169,18 @@ export const CategoryManager: React.FC<CategoryManagerProps> = ({ onCategoryChan
 
         <div className="space-y-2">
           <div className="flex justify-between text-sm">
-            <span className="text-gray-600">Itens:</span>
+            <span className="text-gray-600">{t('categoryManager.items', 'Itens')}:</span>
             <span className="font-medium">{itemCount}</span>
           </div>
           
           {itemCount > 0 && (
             <>
               <div className="flex justify-between text-sm">
-                <span className="text-gray-600">Projetado:</span>
+                <span className="text-gray-600">{t('categoryManager.projected', 'Projetado')}:</span>
                 <span className="font-medium text-blue-600">{formatCurrency(projectedTotal)}</span>
               </div>
               <div className="flex justify-between text-sm">
-                <span className="text-gray-600">Realizado:</span>
+                <span className="text-gray-600">{t('categoryManager.actual', 'Realizado')}:</span>
                 <span className={`font-medium ${actualTotal > projectedTotal ? 'text-red-600' : 'text-green-600'}`}>
                   {formatCurrency(actualTotal)}
                 </span>
@@ -203,7 +205,7 @@ export const CategoryManager: React.FC<CategoryManagerProps> = ({ onCategoryChan
     return (
       <div className="flex items-center justify-center py-8">
         <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600"></div>
-        <span className="ml-2 text-gray-600">Carregando categorias...</span>
+        <span className="ml-2 text-gray-600">{t('categoryManager.loadingCategories', 'Carregando categorias...')}</span>
       </div>
     );
   }
@@ -213,8 +215,8 @@ export const CategoryManager: React.FC<CategoryManagerProps> = ({ onCategoryChan
       {/* Header */}
       <div className="flex items-center justify-between">
         <div>
-          <h2 className="text-2xl font-bold text-gray-900">Gerenciar Categorias</h2>
-          <p className="text-gray-600 mt-1">Organize suas categorias de renda e gastos</p>
+          <h2 className="text-2xl font-bold text-gray-900">{t('categoryManager.title', 'Gerenciar Categorias')}</h2>
+          <p className="text-gray-600 mt-1">{t('categoryManager.subtitle', 'Organize suas categorias de renda e gastos')}</p>
         </div>
         <button
           onClick={handleCreateCategory}
@@ -223,7 +225,7 @@ export const CategoryManager: React.FC<CategoryManagerProps> = ({ onCategoryChan
           <svg className="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" />
           </svg>
-          Nova Categoria
+          {t('categoryManager.newCategory', 'Nova Categoria')}
         </button>
       </div>
 
@@ -247,7 +249,7 @@ export const CategoryManager: React.FC<CategoryManagerProps> = ({ onCategoryChan
       <div>
         <h3 className="text-lg font-semibold text-gray-900 mb-4 flex items-center">
           <span className="text-red-600 mr-2">💸</span>
-          Categorias de Gastos ({expenseCategories.length})
+          {t('categoryManager.expenseCategories', 'Categorias de Gastos')} ({expenseCategories.length})
         </h3>
         
         {expenseCategories.length > 0 ? (
@@ -256,7 +258,7 @@ export const CategoryManager: React.FC<CategoryManagerProps> = ({ onCategoryChan
           </div>
         ) : (
           <div className="text-center py-8 bg-gray-50 rounded-lg">
-            <p className="text-gray-500">Nenhuma categoria de gastos encontrada</p>
+            <p className="text-gray-500">{t('categoryManager.noExpenseCategories', 'Nenhuma categoria de gastos encontrada')}</p>
           </div>
         )}
       </div>
@@ -265,7 +267,7 @@ export const CategoryManager: React.FC<CategoryManagerProps> = ({ onCategoryChan
       <div>
         <h3 className="text-lg font-semibold text-gray-900 mb-4 flex items-center">
           <span className="text-green-600 mr-2">💰</span>
-          Categorias de Renda ({incomeCategories.length})
+          {t('categoryManager.incomeCategories', 'Categorias de Renda')} ({incomeCategories.length})
         </h3>
         
         {incomeCategories.length > 0 ? (
@@ -274,7 +276,7 @@ export const CategoryManager: React.FC<CategoryManagerProps> = ({ onCategoryChan
           </div>
         ) : (
           <div className="text-center py-8 bg-gray-50 rounded-lg">
-            <p className="text-gray-500">Nenhuma categoria de renda encontrada</p>
+            <p className="text-gray-500">{t('categoryManager.noIncomeCategories', 'Nenhuma categoria de renda encontrada')}</p>
           </div>
         )}
       </div>
