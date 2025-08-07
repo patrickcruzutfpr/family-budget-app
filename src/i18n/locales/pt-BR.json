@@ -86,6 +86,8 @@
     "favorite": "Adicionar aos favoritos",
     "unfavorite": "Remover dos favoritos",
     "delete": "Excluir sugestão",
+    "savedLabel": "Salva",
+    "alreadySaved": "Já salva",
     "savedAt": "Salva em",
     "noSaved": "Nenhuma sugestão salva ainda",
     "saveTip": "Obtenha novas sugestões e salve as que você gosta!",

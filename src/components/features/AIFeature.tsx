@@ -4,7 +4,6 @@ import { AISuggestion, BudgetState } from '@/types';
 import { SparklesIcon } from '@/assets/icons/SparklesIcon';
 import { LightbulbIcon } from '@/assets/icons/LightbulbIcon';
 import { BookmarkIcon } from '@/assets/icons/BookmarkIcon';
-import { HeartIcon } from '@/assets/icons/HeartIcon';
 import { Trash2Icon } from '@/assets/icons/Trash2Icon';
 import { useI18n } from '@/i18n';
 import { useSavedSuggestions } from '@/hooks/useSavedSuggestions';
@@ -25,7 +24,6 @@ export const AIFeature: React.FC<AIFeatureProps> = ({ budget }) => {
     savedSuggestions,
     saveSuggestion,
     removeSavedSuggestion,
-    toggleFavorite,
     setCurrentSuggestions,
     reloadSuggestions
   } = useSavedSuggestions(language, profileId);
@@ -34,10 +32,12 @@ export const AIFeature: React.FC<AIFeatureProps> = ({ budget }) => {
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [showSaved, setShowSaved] = useState(false);
+  const [savedStates, setSavedStates] = useState<{[key: string]: boolean}>({});
 
   const handleGetSuggestions = useCallback(async () => {
     setIsLoading(true);
     setError(null);
+    setSavedStates({}); // Reset saved states when getting new suggestions
     try {
       const result = await getBudgetSuggestions(budget, language);
       setSuggestions(result);
@@ -52,6 +52,39 @@ export const AIFeature: React.FC<AIFeatureProps> = ({ budget }) => {
       setIsLoading(false);
     }
   }, [budget, language, setCurrentSuggestions]);
+
+  // Handle saving suggestion with visual feedback
+  const handleSaveSuggestion = useCallback((suggestion: AISuggestion, index: number) => {
+    const suggestionKey = `${suggestion.title}-${index}`;
+    saveSuggestion(suggestion, false); // Always save as non-favorite since we removed favorites
+    setSavedStates(prev => ({
+      ...prev,
+      [suggestionKey]: true
+    }));
+  }, [saveSuggestion]);
+
+  // Handle removing suggestion and clearing saved state
+  const handleRemoveSuggestion = useCallback((suggestionId: string, suggestion: any) => {
+    removeSavedSuggestion(suggestionId);
+    
+    // Clear the saved state for this suggestion if it exists in current suggestions
+    // We need to check current suggestions to find matching ones
+    setSavedStates(prev => {
+      const newStates = { ...prev };
+      
+      // Check each current suggestion to see if it matches the removed saved suggestion
+      suggestions.forEach((currentSuggestion, index) => {
+        const suggestionKey = `${currentSuggestion.title}-${index}`;
+        // If the current suggestion matches the removed saved suggestion, clear its saved state
+        if (currentSuggestion.title === suggestion.title && 
+            currentSuggestion.suggestion === suggestion.suggestion) {
+          delete newStates[suggestionKey];
+        }
+      });
+      
+      return newStates;
+    });
+  }, [removeSavedSuggestion, suggestions]);
 
   // Listen for profile changes and AI suggestions updates
   useEffect(() => {
@@ -137,50 +170,62 @@ export const AIFeature: React.FC<AIFeatureProps> = ({ budget }) => {
       <div className="mt-6 space-y-4">
         {!showSaved ? (
           // Current suggestions
-          suggestions.map((s, index) => (
-            <div key={index} className="p-4 bg-blue-50/50 border-l-4 border-accent rounded-r-lg">
-              <div className="flex items-start justify-between">
-                <div className="flex-1">
-                  <h4 className="font-bold text-primary flex items-center gap-2">
-                    <LightbulbIcon className="w-5 h-5"/>
-                    {s.title}
-                  </h4>
-                  <p className="mt-1 text-sm text-gray-600">{s.suggestion}</p>
-                </div>
-                <div className="flex gap-1 ml-3">
-                  <button
-                    onClick={() => saveSuggestion(s, false)}
-                    className="p-1 text-gray-400 hover:text-primary transition-colors"
-                    title={t('ai.save', 'Save suggestion')}
-                  >
-                    <BookmarkIcon className="w-4 h-4" />
-                  </button>
-                  <button
-                    onClick={() => saveSuggestion(s, true)}
-                    className="p-1 text-gray-400 hover:text-red-500 transition-colors"
-                    title={t('ai.favorite', 'Add to favorites')}
-                  >
-                    <HeartIcon className="w-4 h-4" />
-                  </button>
+          suggestions.map((s, index) => {
+            const suggestionKey = `${s.title}-${index}`;
+            const isLocalSaved = savedStates[suggestionKey];
+            // Also check if this suggestion already exists in saved suggestions
+            const isAlreadySaved = savedSuggestions.some(saved => 
+              saved.title === s.title && saved.suggestion === s.suggestion
+            );
+            const isSaved = isLocalSaved || isAlreadySaved;
+            
+            return (
+              <div key={index} className={`p-4 border-l-4 rounded-r-lg transition-colors duration-300 ${
+                isSaved 
+                  ? 'bg-green-50/50 border-green-400' 
+                  : 'bg-blue-50/50 border-accent'
+              }`}>
+                <div className="flex items-start justify-between">
+                  <div className="flex-1">
+                    <h4 className={`font-bold flex items-center gap-2 transition-colors duration-300 ${
+                      isSaved ? 'text-green-600' : 'text-primary'
+                    }`}>
+                      <LightbulbIcon className="w-5 h-5"/>
+                      {s.title}
+                      {isSaved && <span className="text-xs bg-green-100 text-green-700 px-2 py-1 rounded-full ml-2">
+                        {t('ai.savedLabel', 'Saved')}
+                      </span>}
+                    </h4>
+                    <p className="mt-1 text-sm text-gray-600">{s.suggestion}</p>
+                  </div>
+                  <div className="flex gap-1 ml-3">
+                    <button
+                      onClick={() => handleSaveSuggestion(s, index)}
+                      disabled={isSaved}
+                      className={`p-1 transition-colors ${
+                        isSaved 
+                          ? 'text-green-500 cursor-not-allowed' 
+                          : 'text-gray-400 hover:text-primary'
+                      }`}
+                      title={isSaved ? t('ai.alreadySaved', 'Already saved') : t('ai.save', 'Save suggestion')}
+                    >
+                      <BookmarkIcon className="w-4 h-4" filled={isSaved} />
+                    </button>
+                  </div>
                 </div>
               </div>
-            </div>
-          ))
+            );
+          })
         ) : (
           // Saved suggestions
           savedSuggestions.length > 0 ? (
             savedSuggestions.map((s) => (
-              <div key={s.id} className={`p-4 border-l-4 rounded-r-lg ${
-                s.isFavorite 
-                  ? 'bg-red-50/50 border-red-400' 
-                  : 'bg-blue-50/50 border-accent'
-              }`}>
+              <div key={s.id} className="p-4 bg-blue-50/50 border-l-4 border-accent rounded-r-lg">
                 <div className="flex items-start justify-between">
                   <div className="flex-1">
                     <h4 className="font-bold text-primary flex items-center gap-2">
                       <LightbulbIcon className="w-5 h-5"/>
                       {s.title}
-                      {s.isFavorite && <HeartIcon className="w-4 h-4 text-red-500" filled />}
                     </h4>
                     <p className="mt-1 text-sm text-gray-600">{s.suggestion}</p>
                     <p className="mt-2 text-xs text-gray-400">
@@ -189,18 +234,7 @@ export const AIFeature: React.FC<AIFeatureProps> = ({ budget }) => {
                   </div>
                   <div className="flex gap-1 ml-3">
                     <button
-                      onClick={() => toggleFavorite(s.id)}
-                      className={`p-1 transition-colors ${
-                        s.isFavorite 
-                          ? 'text-red-500 hover:text-red-600' 
-                          : 'text-gray-400 hover:text-red-500'
-                      }`}
-                      title={s.isFavorite ? t('ai.unfavorite', 'Remove from favorites') : t('ai.favorite', 'Add to favorites')}
-                    >
-                      <HeartIcon className="w-4 h-4" filled={s.isFavorite} />
-                    </button>
-                    <button
-                      onClick={() => removeSavedSuggestion(s.id)}
+                      onClick={() => handleRemoveSuggestion(s.id, s)}
                       className="p-1 text-gray-400 hover:text-red-500 transition-colors"
                       title={t('ai.delete', 'Delete suggestion')}
                     >
