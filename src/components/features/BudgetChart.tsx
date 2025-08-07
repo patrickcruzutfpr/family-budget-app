@@ -245,7 +245,7 @@ export const BudgetChart: React.FC<BudgetChartProps> = ({ data }) => {
                 : 'text-gray-600 hover:text-gray-900'
             }`}
           >
-            📊 {t('chart.barChart', 'Bar Chart')}
+            📊 {t('chart.bar', 'Bar')}
           </button>
           <button
             onClick={() => setChartType('pie')}
@@ -255,7 +255,7 @@ export const BudgetChart: React.FC<BudgetChartProps> = ({ data }) => {
                 : 'text-gray-600 hover:text-gray-900'
             }`}
           >
-            🥧 {t('chart.pieChart', 'Pie Chart')}
+            🥧 {t('chart.pie', 'Pie')}
           </button>
         </div>
       </div>
