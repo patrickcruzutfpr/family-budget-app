@@ -95,7 +95,7 @@ export const BudgetChart: React.FC<BudgetChartProps> = ({ data }) => {
       const categoryIcon = category.icon || getCategoryIcon(category.name, category.type);
       
       return {
-        name: chartType === 'bar' ? categoryIcon : translatedName, // Icon for bar, name for pie
+        name: categoryIcon, // Always use icon for both charts
         value: category.items.reduce((sum, item) => sum + item.actual, 0),
         originalName: translatedName,
         icon: categoryIcon // Store icon separately
@@ -194,7 +194,6 @@ export const BudgetChart: React.FC<BudgetChartProps> = ({ data }) => {
             ))}
           </Pie>
           <Tooltip content={customTooltip} />
-          <Legend />
         </PieChart>
       );
     }
