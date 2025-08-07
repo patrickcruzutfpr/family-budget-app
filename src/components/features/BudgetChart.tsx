@@ -135,6 +135,32 @@ export const BudgetChart: React.FC<BudgetChartProps> = ({ data }) => {
     return null;
   };
 
+  // Custom label function for pie chart to render icons in the center of each slice
+  const renderPieLabel = (entry: any) => {
+    const RADIAN = Math.PI / 180;
+    const { cx, cy, midAngle, innerRadius, outerRadius, name } = entry;
+    const radius = innerRadius + (outerRadius - innerRadius) * 0.5;
+    const x = cx + radius * Math.cos(-midAngle * RADIAN);
+    const y = cy + radius * Math.sin(-midAngle * RADIAN);
+
+    return (
+      <text 
+        x={x} 
+        y={y} 
+        fill="#ffffff" 
+        textAnchor={x > cx ? 'start' : 'end'} 
+        dominantBaseline="middle"
+        fontSize="18"
+        style={{ 
+          filter: 'drop-shadow(1px 1px 2px rgba(0,0,0,0.8))',
+          fontFamily: 'system-ui, -apple-system, sans-serif'
+        }}
+      >
+        {name}
+      </text>
+    );
+  };
+
   const renderChart = () => {
     if (chartType === 'bar') {
       return (
@@ -184,7 +210,7 @@ export const BudgetChart: React.FC<BudgetChartProps> = ({ data }) => {
             fill="#8884d8"
             dataKey="value"
             nameKey="name"
-            label={({ name, percent }) => `${name} ${formatPercentage(percent * 100)}`}
+            label={renderPieLabel}
           >
             {chartData.map((_, index) => (
               <Cell 
