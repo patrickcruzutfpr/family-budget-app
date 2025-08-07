@@ -1,14 +1,17 @@
-import React, { useMemo } from 'react';
+import React, { useMemo, useState } from 'react';
 import {
   BarChart,
   Bar,
+  PieChart,
+  Pie,
   XAxis,
   YAxis,
   CartesianGrid,
   Tooltip,
   ResponsiveContainer,
   Cell,
-  LabelList
+  LabelList,
+  Legend
 } from 'recharts';
 import { Category, CategoryType } from '@/types';
 import { useI18n } from '@/i18n';
@@ -84,6 +87,7 @@ export const BudgetChart: React.FC<BudgetChartProps> = ({ data }) => {
   const { t } = useI18n();
   const { translateCategoryName } = useCategoryTranslations();
   const { formatCurrency, formatPercentage } = useFormatters();
+  const [chartType, setChartType] = useState<'bar' | 'pie'>('bar'); // Default to BarChart
   
   const chartData = data
     .map(category => {
@@ -91,7 +95,7 @@ export const BudgetChart: React.FC<BudgetChartProps> = ({ data }) => {
       const categoryIcon = category.icon || getCategoryIcon(category.name, category.type);
       
       return {
-        name: categoryIcon, // Only show icon on X-axis
+        name: chartType === 'bar' ? categoryIcon : translatedName, // Icon for bar, name for pie
         value: category.items.reduce((sum, item) => sum + item.actual, 0),
         originalName: translatedName,
         icon: categoryIcon // Store icon separately
@@ -131,44 +135,101 @@ export const BudgetChart: React.FC<BudgetChartProps> = ({ data }) => {
     return null;
   };
 
+  const renderChart = () => {
+    if (chartType === 'bar') {
+      return (
+        <BarChart
+          data={chartData}
+          margin={{ top: 20, right: 30, left: 20, bottom: 50 }}
+        >
+          <CartesianGrid strokeDasharray="3 3" stroke="#e5e7eb" opacity={0.6} />
+          <XAxis 
+            type="category" 
+            dataKey="name"
+            stroke="#6b7280"
+            fontSize={20}
+            textAnchor="middle"
+            height={40}
+            interval={0}
+          />
+          <YAxis 
+            type="number"
+            tickFormatter={(value) => formatCurrency(Number(value))}
+            stroke="#6b7280"
+            fontSize={12}
+          />
+          <Tooltip content={customTooltip} />
+          <Bar 
+            dataKey="value" 
+            radius={[4, 4, 0, 0]}
+          >
+            {chartData.map((_, index) => (
+              <Cell 
+                key={`cell-${index}`} 
+                fill={COLOR_ARRAY[index % COLOR_ARRAY.length]} 
+              />
+            ))}
+          </Bar>
+        </BarChart>
+      );
+    } else {
+      return (
+        <PieChart>
+          <Pie
+            data={chartData}
+            cx="50%"
+            cy="50%"
+            labelLine={false}
+            outerRadius={120}
+            fill="#8884d8"
+            dataKey="value"
+            nameKey="name"
+            label={({ name, percent }) => `${name} ${formatPercentage(percent * 100)}`}
+          >
+            {chartData.map((_, index) => (
+              <Cell 
+                key={`cell-${index}`} 
+                fill={COLOR_ARRAY[index % COLOR_ARRAY.length]} 
+              />
+            ))}
+          </Pie>
+          <Tooltip content={customTooltip} />
+          <Legend />
+        </PieChart>
+      );
+    }
+  };
+
   return (
     <div className="bg-white p-6 rounded-2xl shadow-lg shadow-gray-200/50">
-      <h3 className="text-xl font-bold text-gray-700 mb-4">{t('budget.expenseDistribution', 'Expense Distribution')}</h3>
+      <div className="flex items-center justify-between mb-4">
+        <h3 className="text-xl font-bold text-gray-700">{t('budget.expenseDistribution', 'Expense Distribution')}</h3>
+        <div className="flex bg-gray-100 rounded-lg p-1">
+          <button
+            onClick={() => setChartType('bar')}
+            className={`px-3 py-1 rounded-md text-sm font-medium transition-colors ${
+              chartType === 'bar'
+                ? 'bg-white text-gray-900 shadow-sm'
+                : 'text-gray-600 hover:text-gray-900'
+            }`}
+          >
+            📊 {t('chart.barChart', 'Bar Chart')}
+          </button>
+          <button
+            onClick={() => setChartType('pie')}
+            className={`px-3 py-1 rounded-md text-sm font-medium transition-colors ${
+              chartType === 'pie'
+                ? 'bg-white text-gray-900 shadow-sm'
+                : 'text-gray-600 hover:text-gray-900'
+            }`}
+          >
+            🥧 {t('chart.pieChart', 'Pie Chart')}
+          </button>
+        </div>
+      </div>
       <div style={{ width: '100%', height: 400 }}>
         <ResponsiveContainer>
-          <BarChart
-            data={chartData}
-            margin={{ top: 20, right: 30, left: 20, bottom: 50 }}
-          >
-            <CartesianGrid strokeDasharray="3 3" stroke="#e5e7eb" opacity={0.6} />
-            <XAxis 
-              type="category" 
-              dataKey="name"
-              stroke="#6b7280"
-              fontSize={20}
-              textAnchor="middle"
-              height={40}
-              interval={0}
-            />
-            <YAxis 
-              type="number"
-              tickFormatter={(value) => formatCurrency(Number(value))}
-              stroke="#6b7280"
-              fontSize={12}
-            />
-            <Tooltip content={customTooltip} />
-            <Bar 
-              dataKey="value" 
-              radius={[4, 4, 0, 0]}
-            >
-              {chartData.map((_, index) => (
-                <Cell 
-                  key={`cell-${index}`} 
-                  fill={COLOR_ARRAY[index % COLOR_ARRAY.length]} 
-                />
-              ))}
-            </Bar>
-          </BarChart>
+          {renderChart()}
         </ResponsiveContainer>
       </div>
     </div>
