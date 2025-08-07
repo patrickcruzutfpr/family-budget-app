@@ -102,7 +102,7 @@ const createDefaultProfile = (): BudgetProfile => {
           { id: generateId(), name: t.groceries, projected: 600, actual: 650 },
           { id: generateId(), name: t.diningOut, projected: 200, actual: 180 },
         ],
-        icon: '🍕',
+        icon: '🍽️',
         color: '#10B981'
       },
       {

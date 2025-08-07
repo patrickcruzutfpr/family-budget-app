@@ -29,7 +29,7 @@ O sistema de gerenciamento de categorias permite o controle completo (CRUD) das 
 ### 💸 Categorias de Gastos
 1. **Habitação** 🏠
 2. **Transporte** 🚗
-3. **Alimentação** 🍕
+3. **Alimentação** 🍽️
 4. **Pessoal e Família** 👨‍👩‍👧‍👦
 5. **Poupança e Investimentos** 💰
 

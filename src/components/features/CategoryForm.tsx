@@ -98,7 +98,7 @@ export const CategoryForm: React.FC<CategoryFormProps> = ({
   const availableIcons = [
     { value: '🏠', label: t('categoryManager.icons.house', 'Casa') },
     { value: '🚗', label: t('categoryManager.icons.transport', 'Transporte') },
-    { value: '🍕', label: t('categoryManager.icons.food', 'Alimentação') },
+    { value: '🍽️', label: t('categoryManager.icons.food', 'Alimentação') },
     { value: '👨‍👩‍👧‍👦', label: t('categoryManager.icons.family', 'Família') },
     { value: '💰', label: t('categoryManager.icons.money', 'Dinheiro') },
     { value: '🎯', label: 'Meta' },

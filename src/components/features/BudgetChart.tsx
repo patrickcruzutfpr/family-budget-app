@@ -61,7 +61,7 @@ const getCategoryIcon = (categoryName: string, categoryType?: CategoryType): str
     return '🚗';
   }
   if (lowerName.includes('alimentação') || lowerName.includes('food') || lowerName.includes('comida') || lowerName.includes('supermercado')) {
-    return '🍕';
+    return '🍽️';
   }
   if (lowerName.includes('pessoal') || lowerName.includes('família') || lowerName.includes('personal') || lowerName.includes('family')) {
     return '👨‍👩‍👧‍👦';

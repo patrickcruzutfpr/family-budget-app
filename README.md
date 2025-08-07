@@ -294,7 +294,7 @@ Complete internationalization system supporting Portuguese (Brazil) and English,
 **🏠 Expense Categories**
 - 🏠 Housing/Habitação - Blue (#3B82F6)
 - 🚗 Transportation/Transporte - Red (#EF4444)
-- 🍕 Food/Alimentação - Green (#10B981)
+- 🍽️ Food/Alimentação - Green (#10B981)
 - 👨‍👩‍👧‍👦 Personal & Family/Pessoal e Família - Yellow (#F59E0B)
 - 🎯 Savings & Investments/Poupança e Investimentos - Purple (#8B5CF6)
 

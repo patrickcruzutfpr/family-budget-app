@@ -95,7 +95,7 @@ export class CategoryService {
     const defaultExpenseCategories = [
       { name: t.housing, icon: '🏠', color: '#3B82F6' },
       { name: t.transportation, icon: '🚗', color: '#EF4444' },
-      { name: t.food, icon: '🍕', color: '#10B981' },
+      { name: t.food, icon: '🍽️', color: '#10B981' },
       { name: t.personalFamily, icon: '👨‍👩‍👧‍👦', color: '#F59E0B' },
       { name: t.savingsInvestments, icon: '🎯', color: '#8B5CF6' }
     ];
