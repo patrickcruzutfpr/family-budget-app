@@ -277,5 +277,9 @@
     "step4": "Syncs profile language with detected/saved language",
     "step5": "Creates default categories in correct language",
     "currentBrowser": "Your Browser Info"
+  },
+  "chart": {
+    "bar": "Bar",
+    "pie": "Pie"
   }
 }

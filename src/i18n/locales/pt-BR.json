@@ -278,5 +278,9 @@
     "step4": "Sincroniza idioma do perfil com idioma detectado/salvo",
     "step5": "Cria categorias padrão no idioma correto",
     "currentBrowser": "Informações do Seu Navegador"
+  },
+  "chart": {
+    "bar": "Barra",
+    "pie": "Pizza"
   }
 }

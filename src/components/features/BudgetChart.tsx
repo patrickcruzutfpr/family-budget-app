@@ -255,7 +255,7 @@ export const BudgetChart: React.FC<BudgetChartProps> = ({ data }) => {
                 : 'text-gray-600 hover:text-gray-900'
             }`}
           >
-            🥧 {t('chart.pie', 'Pie')}
+            🍕 {t('chart.pie', 'Pie')}
           </button>
         </div>
       </div>
