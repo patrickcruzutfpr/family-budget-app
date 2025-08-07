@@ -138,7 +138,7 @@ export const BudgetChart: React.FC<BudgetChartProps> = ({ data }) => {
   // Custom label function for pie chart to render icons in the center of each slice
   const renderPieLabel = (entry: any) => {
     const RADIAN = Math.PI / 180;
-    const { cx, cy, midAngle, innerRadius, outerRadius, name } = entry;
+    const { cx, cy, midAngle, innerRadius, outerRadius, name, percent } = entry;
     const radius = innerRadius + (outerRadius - innerRadius) * 0.5;
     const x = cx + radius * Math.cos(-midAngle * RADIAN);
     const y = cy + radius * Math.sin(-midAngle * RADIAN);
@@ -148,15 +148,16 @@ export const BudgetChart: React.FC<BudgetChartProps> = ({ data }) => {
         x={x} 
         y={y} 
         fill="#ffffff" 
-        textAnchor={x > cx ? 'start' : 'end'} 
+        textAnchor="middle" 
         dominantBaseline="middle"
-        fontSize="18"
+        fontSize="14"
         style={{ 
           filter: 'drop-shadow(1px 1px 2px rgba(0,0,0,0.8))',
           fontFamily: 'system-ui, -apple-system, sans-serif'
         }}
       >
-        {name}
+        <tspan x={x} dy="-0.8em" fontSize="16">{name}</tspan>
+        <tspan x={x} dy="1.8em" fontSize="12">{formatPercentage(percent * 100)}</tspan>
       </text>
     );
   };
@@ -166,7 +167,7 @@ export const BudgetChart: React.FC<BudgetChartProps> = ({ data }) => {
       return (
         <BarChart
           data={chartData}
-          margin={{ top: 20, right: 30, left: 20, bottom: 50 }}
+          margin={{ top: 40, right: 30, left: 20, bottom: 50 }}
         >
           <CartesianGrid strokeDasharray="3 3" stroke="#e5e7eb" opacity={0.6} />
           <XAxis 
@@ -188,6 +189,12 @@ export const BudgetChart: React.FC<BudgetChartProps> = ({ data }) => {
           <Bar 
             dataKey="value" 
             radius={[4, 4, 0, 0]}
+            label={{ 
+              position: 'top', 
+              fill: '#374151',
+              fontSize: 12,
+              formatter: (value: number) => formatCurrency(value)
+            }}
           >
             {chartData.map((_, index) => (
               <Cell 
