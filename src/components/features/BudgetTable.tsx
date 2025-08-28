@@ -4,6 +4,7 @@ import { BudgetRow } from './BudgetRow';
 import { PlusCircleIcon } from '@/assets/icons/PlusCircleIcon';
 import { useI18n } from '@/i18n';
 import { useCategoryTranslations, useFormatters } from '@/hooks';
+import { StaticCell } from '@/components/ui/StaticCell';
 
 interface BudgetTableProps {
   categories: Category[];
@@ -20,22 +21,22 @@ export const BudgetTable: React.FC<BudgetTableProps> = ({ categories, updateItem
   
   return (
     <div className="overflow-x-auto">
-      <table className="min-w-full divide-y divide-gray-200">
+      <table className="min-w-full divide-y divide-gray-200 budget-table">
         <thead className="bg-gray-50">
           <tr>
-            <th scope="col" className="px-6 py-3 text-left text-xs font-bold text-gray-500 uppercase tracking-wider w-2/5">
+            <th scope="col" className="px-6 py-3 text-left text-xs font-bold text-gray-500 uppercase tracking-wider w-2/5" style={{ verticalAlign: 'bottom' }}>
               {t('budget.name', 'Item')}
             </th>
-            <th scope="col" className="px-6 py-3 text-right text-xs font-bold text-gray-500 uppercase tracking-wider">
-              {t('budget.projected', 'Projected')}
+            <th scope="col" className="px-6 py-3 text-right text-xs font-bold text-gray-500 uppercase tracking-wider" style={{ verticalAlign: 'bottom' }}>
+              {t('budget.projected', 'Projetado')}
             </th>
-            <th scope="col" className="px-6 py-3 text-right text-xs font-bold text-gray-500 uppercase tracking-wider">
-              {t('budget.actual', 'Actual')}
+            <th scope="col" className="px-6 py-3 text-right text-xs font-bold text-gray-500 uppercase tracking-wider" style={{ verticalAlign: 'bottom' }}>
+              {t('budget.actual', 'Real')}
             </th>
-            <th scope="col" className="px-6 py-3 text-right text-xs font-bold text-gray-500 uppercase tracking-wider">
-              {t('budget.difference', 'Difference')}
+            <th scope="col" className="px-6 py-3 text-right text-xs font-bold text-gray-500 uppercase tracking-wider" style={{ verticalAlign: 'bottom' }}>
+              {t('budget.difference', 'Diferença')}
             </th>
-            <th scope="col" className="relative px-6 py-3">
+            <th scope="col" className="relative px-6 py-3 action-cell" style={{ verticalAlign: 'bottom' }}>
               <span className="sr-only">Actions</span>
             </th>
           </tr>
@@ -66,19 +67,23 @@ export const BudgetTable: React.FC<BudgetTableProps> = ({ categories, updateItem
             return (
               <React.Fragment key={category.id}>
                 <tr className="bg-gray-100">
-                    <td className="px-6 py-4 whitespace-nowrap text-sm font-bold text-gray-800" colSpan={1}>
+                    <td className="px-6 py-4 whitespace-nowrap text-sm font-bold text-gray-800">
                       <div className="flex items-center gap-2">
                         {category.icon && <span className="text-lg">{category.icon}</span>}
                         {translateCategoryName(category.name)}
                       </div>
                     </td>
-                    <td className="px-6 py-4 whitespace-nowrap text-sm font-semibold text-gray-600 text-right">{formatCurrency(categoryTotals.projected)}</td>
-                    <td className="px-6 py-4 whitespace-nowrap text-sm font-semibold text-gray-600 text-right">{formatCurrency(categoryTotals.actual)}</td>
-                    <td className={`px-6 py-4 whitespace-nowrap text-sm font-semibold text-right ${differenceColorClass}`}>
-                        {formatCurrency(categoryDifference)}
+                    <td className="whitespace-nowrap text-sm font-semibold text-gray-600 text-right numeric-cell">
+                      <StaticCell value={formatCurrency(categoryTotals.projected)} className="text-right" />
                     </td>
-                    <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
-                        <button onClick={() => addItem(category.id)} className="text-primary hover:text-secondary transition-colors duration-200 flex items-center justify-center ml-auto" title={t('budget.addItem', 'Add')}>
+                    <td className="whitespace-nowrap text-sm font-semibold text-gray-600 text-right numeric-cell">
+                      <StaticCell value={formatCurrency(categoryTotals.actual)} className="text-right" />
+                    </td>
+                    <td className={`whitespace-nowrap text-sm font-semibold text-right numeric-cell ${differenceColorClass}`}>
+                      <StaticCell value={formatCurrency(categoryDifference)} className="text-right" />
+                    </td>
+                    <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium action-cell">
+                        <button onClick={() => addItem(category.id)} className="text-primary hover:text-secondary transition-colors duration-200 flex items-center justify-center ml-auto no-print" title={t('budget.addItem', 'Add')}>
                            <PlusCircleIcon className="w-4 h-4"/>
                         </button>
                     </td>

@@ -49,23 +49,25 @@ export const EditableCell: React.FC<EditableCellProps> = ({ value, onSave }) => 
 
   if (isEditing) {
     return (
-      <input
-        type="text"
-        value={currentValue}
-        onChange={handleInputChange}
-        onBlur={handleSave}
-        onKeyDown={handleKeyDown}
-        placeholder={t('formats.currency.placeholder')}
-        className="w-32 py-1 px-2 text-right bg-white border border-secondary rounded-md shadow-sm focus:ring-primary focus:border-primary text-sm"
-        autoFocus
-      />
+      <div className="py-1 px-2">
+        <input
+          type="text"
+          value={currentValue}
+          onChange={handleInputChange}
+          onBlur={handleSave}
+          onKeyDown={handleKeyDown}
+          placeholder={t('formats.currency.placeholder')}
+          className="w-full text-right bg-white border border-secondary rounded-md shadow-sm focus:ring-primary focus:border-primary text-sm"
+          autoFocus
+        />
+      </div>
     );
   }
 
   return (
     <div
       onClick={() => setIsEditing(true)}
-      className="cursor-pointer w-32 py-1 px-2 text-right rounded-md hover:bg-gray-200 transition-colors text-sm"
+      className="cursor-pointer py-1 px-2 text-right rounded-md hover:bg-gray-200 transition-colors text-sm"
       title={t('validation.invalidCurrency')}
     >
       {formatCurrency(value)}

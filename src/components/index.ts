@@ -1,6 +1,8 @@
 // Re-export all components for cleaner imports
 export { Header } from './layout/Header';
 export { EditableCell } from './ui/EditableCell';
+export { EditableTextCell } from './ui/EditableTextCell';
+export { StaticCell } from './ui/StaticCell';
 export { LanguageSelector } from './ui/LanguageSelector';
 export { DateInput, LocalizedDateDisplay } from './ui/DateInput';
 export { NotificationProvider, useNotification } from './ui/Notification';

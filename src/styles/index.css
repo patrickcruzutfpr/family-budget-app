@@ -1,0 +1,58 @@
+/* Global styles for the Family Budget App */
+
+/* Table header alignment */
+.budget-table th {
+  vertical-align: bottom;
+  padding-bottom: 0.75rem;
+}
+
+/* Ensure consistent vertical alignment across all table cells */
+.budget-table td {
+  vertical-align: middle;
+}
+
+/* Ensure number columns are properly aligned */
+.numeric-cell {
+  font-variant-numeric: tabular-nums;
+  letter-spacing: -0.025em;
+}
+
+/* Better hover states for interactive elements */
+.budget-row:hover {
+  background-color: rgba(249, 250, 251, 0.5);
+}
+
+/* Ensure consistent spacing for action buttons */
+.action-cell {
+  width: 3rem;
+  text-align: center;
+}
+
+/* Responsive table adjustments */
+@media (max-width: 768px) {
+  .budget-table {
+    font-size: 0.875rem;
+  }
+  
+  .budget-table th,
+  .budget-table td {
+    padding: 0.5rem;
+  }
+}
+
+/* Print styles */
+@media print {
+  .no-print {
+    display: none !important;
+  }
+  
+  .budget-table {
+    border: 1px solid #e5e7eb;
+  }
+  
+  .budget-table th {
+    background-color: #f9fafb !important;
+    -webkit-print-color-adjust: exact;
+    print-color-adjust: exact;
+  }
+}
