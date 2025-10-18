@@ -155,6 +155,4 @@ O sistema agora funciona como uma unidade coesa, onde mudanças em categorias s�
 
 ---
 
-**Implementado por**: Patrick Cruz  
-**Data**: Agosto 2025  
-**Status**: ✅ Concluído e Testado
+© 2025 Patrick Motin Cruz. All rights reserved under AGPL-3.0.

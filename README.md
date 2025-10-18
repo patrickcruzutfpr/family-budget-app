@@ -1,4 +1,4 @@
-# 💰 Family Budget App 
+# 💰 Family Budget App
 
 [![License: AGPL-3.0](https://img.shields.io/badge/License-AGPL%203.0-blue.svg)](https://opensource.org/licenses/AGPL-3.0)
 [![React](https://img.shields.io/badge/React-19.1.1-61dafb.svg?logo=react&logoColor=white)](https://react.dev)
@@ -8,103 +8,78 @@
 [![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg)](http://makeapullrequest.com)
 [![Maintenance](https://img.shields.io/badge/Maintained%3F-yes-green.svg)](https://github.com/patrickcruzutfpr/family-budget-app/graphs/commit-activity)
 [![Code Style: Prettier](https://img.shields.io/badge/Code_Style-Prettier-ff69b4.svg?logo=prettier&logoColor=white)](https://prettier.io)
-[![i18n: English & Portuguese](https://img.shields.io/badge/i18n-🇺🇸%20🇧🇷-success.svg)](https://github.com/patrickcruzutfpr/family-budget-app/tree/main/src/i18n/locales)
+[![i18n: English & Portuguese](https://img.shields.io/badge/i18n-EN%20%2F%20PT-success.svg)](https://github.com/patrickcruzutfpr/family-budget-app/tree/main/src/i18n/locales)
 
-A modern React TypeScript application for managing family budgets with AI-powered suggestions, multi-language support, profile management, and real-time financial insights.
+A modern React + TypeScript application for managing family budgets with profile-aware AI suggestions, multi-language support, and visual insights.
 
-## 📋 Index
+---
 
-- [Key Features](#-key-features)
-- [Getting Started](#-getting-started)
-  - [Prerequisites](#prerequisites)
-  - [Local Development](#local-development)
-  - [Environment Variables](#environment-variables)
-  - [Troubleshooting Installation](#troubleshooting-installation)
-- [Features in Detail](#-features-in-detail)
-  - [Budget Management](#budget-management)
-  - [Category Management](#category-management)
-  - [Profile System](#profile-system)
-  - [AI-Powered Suggestions](#ai-powered-suggestions)
-  - [Multi-Language Support](#multi-language-support)
-  - [Visual Charts](#visual-charts)
-  - [Responsive Design and Theming](#responsive-design-and-theming)
-  - [Data and Type Safety](#data-and-type-safety)
-- [Project Structure](#-project-structure)
-- [AI Service Abstraction](#-ai-service-abstraction)
-  - [Core Components](#core-components)
-  - [Features](#features)
-- [Tech Stack](#-tech-stack)
-- [Development](#-development)
-  - [Available Scripts](#available-scripts)
-  - [Development Workflow](#development-workflow)
-  - [Path Mapping](#path-mapping)
-- [Build & Deployment](#-build--deployment)
-  - [Production Build](#production-build)
-  - [Build Output](#build-output)
-  - [Deployment Options](#deployment-options)
-  - [Performance Optimization](#performance-optimization)
-- [Troubleshooting](#-troubleshooting)
-  - [Common Issues](#common-issues)
-- [Documentation](#-documentation)
-- [License](#-license)
-- [Contributing](#-contributing)
-- [Support](#-support)
-- [Credits](#-credits)
-- [Acknowledgments](#-acknowledgments)
+## 📑 Index
 
-## ✨ Key Features
+- [Overview](#overview)
+- [Key features](#key-features)
+- [Architecture](#architecture)
+   - [Project structure](#project-structure)
+   - [Key architectural concepts](#key-architectural-concepts)
+- [Technical details](#technical-details)
+   - [Tech stack](#tech-stack)
+   - [Available scripts](#available-scripts)
+- [Development](#development)
+   - [Getting started (local)](#getting-started-local)
+   - [Environment variables](#environment-variables)
+   - [Troubleshooting (quick)](#troubleshooting-quick)
+- [Features (detailed)](#features-detailed)
+   - [Budget management](#budget-management)
+   - [Category management](#category-management)
+   - [Profile management](#profile-management)
+   - [Visualizations](#visualizations)
+   - [AI-powered suggestions](#ai-powered-suggestions)
+- [AI integration](#ai-integration)
+- [Documentation](#documentation)
+- [License & Credits](#license--credits)
+- [Support](#support)
 
-- 📊 **Budget Tracking**: Track income and expenses with projected vs actual amounts with intelligent color-coding
-- 🏷️ **Category Management**: Complete CRUD system for custom expense categories with default icons and colors
-- 👥 **Profile Management**: Multi-profile support with individual budgets and AI suggestions
-- 🌍 **Multi-Language Support**: Full internationalization (i18n) with Portuguese and English support
-- 🎨 **Visual Categories**: Default emoji icons and color schemes for intuitive category recognition
-- 🤖 **AI Suggestions**: Profile-specific personalized financial advice powered by Gemini AI
-- 📈 **Visual Charts**: Interactive pie charts and expense visualization with Recharts
-- 💾 **Data Persistence**: Profile-based data storage with import/export functionality
-- 🎨 **Modern UI**: Clean, responsive design with intelligent status indicators and visual feedback
-- 📱 **Mobile Responsive**: Optimized for desktop, tablet, and mobile devices
-- 🔐 **Type Safety**: Full TypeScript support for robust development
-- ⚡ **Fast Performance**: Built with Vite for lightning-fast development and builds
-- 🌐 **PWA Ready**: Progressive Web App capabilities for offline usage
-- 🔄 **Real-time Updates**: Live synchronization between profile changes, categories, and budget calculations
-- 💰 **Smart Status Indicators**: Color-coded balance and difference displays for instant financial health overview
+---
 
-## 🏗️ Project Structure
+## 🌟 Overview
+
+This project provides a small, local-first budgeting web app with profile and category management, budget tracking, simple visualizations, and optional AI-powered suggestions via Google Gemini. It is implemented in React + TypeScript with Vite.
+
+## 🔑 Key features
+
+- Budget tracking (projected vs actual)
+- Category CRUD with icons and colors
+- Multiple profiles with import/export
+- Interactive charts (Recharts)
+- Multi-language support (EN/PT)
+- AI-powered suggestions (Gemini) with a mock fallback
+- Type-safe codebase (TypeScript)
+
+## 🏛️ Architecture
+
+The application follows a modern component-driven architecture with clear separation of concerns:
+
+- **Frontend**: Single-page React app with TypeScript support
+- **State**: Local state management using React hooks
+- **Storage**: Browser's LocalStorage with profile system
+- **AI**: Google Gemini integration with fallback options
+- **i18n**: Context-based translation system
+
+### Project structure
 
 ```
 src/
-├── components/
-│   ├── features/     # Feature-specific components
-│   │   ├── budget/   # Budget management with color-coded status indicators
-│   │   ├── categories/ # Complete CRUD category management with icons
-│   │   ├── profiles/ # Profile management with import/export functionality
-│   │   ├── expenses/ # Expense tracking with visual enhancements
-│   │   └── ai/       # Profile-specific AI suggestions and favorites
-│   ├── layout/       # Layout components (Header with language selector, Footer)
-│   └── ui/           # Reusable UI components (modals, forms, language selector)
-├── hooks/            # Custom React hooks (useBudget, useCategories, useProfileManager, useCategoryTranslations)
-├── i18n/             # Internationalization system
-│   ├── context.tsx   # i18n React context provider
-│   ├── locales/      # Translation files (pt-BR.json, en.json)
-│   └── types.ts      # i18n TypeScript definitions
-├── services/         # Business logic and API calls
-│   ├── CategoryService.ts # Category CRUD with icon/color support
-│   ├── ProfileService.ts  # Profile management with AI integration
-│   └── budgetService.ts   # Budget calculations with status indicators
-├── types/            # TypeScript type definitions
-│   ├── index.ts      # Core types (Category, Profile, BudgetState)
-│   └── i18n.ts       # Internationalization types
-├── utils/            # Helper functions and migration utilities
-│   ├── categoryMigration.ts # Category migration with icon assignment
-│   ├── profileMigration.ts  # Profile data migration utilities
-│   └── formatters.ts        # Currency and date formatting utilities
-├── assets/           # Static files
-│   └── icons/        # Custom SVG icon components
-└── main.tsx          # App entry point with i18n provider
+├── components/       # React components (features, layout, ui)
+├── hooks/            # Custom hooks (useBudget, useCategories, ...)
+├── i18n/             # Internationalization provider and locales
+├── services/         # Business logic and external integrations
+├── types/            # Shared TypeScript types
+├── utils/            # Helpers and migration utilities
+├── assets/           # Static assets and icons
+└── main.tsx          # App entry point
 ```
 
-### Key Architectural Concepts
+### Key architectural concepts
 
 - **Frontend**: React 19.1.1 with TypeScript for type-safe development
 - **Build Tool**: Vite 6.3.5 for fast development and builds
@@ -121,77 +96,45 @@ src/
 - **Package Manager**: npm with Node.js 18+
 - **Translation System**: Dynamic category name translation with fallback support
 
-### Available Scripts
+
+## 🛠️ Technical details
+
+### Tech stack
+
+- React 19.x
+- TypeScript 5.x
+- Vite as the build tooling
+- Recharts for charts
+- Google Gemini for AI suggestions (optional)
+- Vitest + Testing Library for tests
+
+### Available scripts
 
 ```bash
 # Development
-npm run dev          # Start development server (http://localhost:5173)
-npm run build        # Build for production
-npm run preview      # Preview production build locally
+npm run dev
 
-# Utilities
-npm run lint         # Run ESLint (if configured)
-npm run type-check   # Run TypeScript compiler check
-npm audit            # Check for security vulnerabilities
+# Build / preview
+npm run build
+npm run preview
+
+# Quality
+npm run lint
+npm run type-check
 ```
 
-## ⚙️ Getting Started
+## ⌨️ Development
 
 ### Prerequisites
 - Node.js 18+ or higher
 - npm 8+ or yarn 1.22+
 - Modern web browser (Chrome, Firefox, Safari, Edge)
-- Google Gemini API key for AI features
 - Git for version control
+- Google Gemini API key for AI features
 
-### Local Development
+#### Getting Your Gemini API Key 
 
-1. **Clone the repository:**
-```bash
-git clone https://github.com/patrickcruzutfpr/family-budget-app.git
-cd family-budget-app
-```
-
-2. **Install dependencies:**
-```bash
-npm install
-```
-
-3. **Set up environment variables:**
-```bash
-# For Windows (PowerShell)
-copy .env.local.example .env.local
-
-# For macOS/Linux
-cp .env.local.example .env.local
-
-# Edit .env.local and add your Gemini API key
-```
-
-4. **Start the development server:**
-```bash
-npm run dev
-```
-
-5. **Open your browser:**
-   Navigate to [http://localhost:5173](http://localhost:5173) to see the app running.
-
-## 🔧 Configuration
-
-### Environment Variables
-
-Create a `.env.local` file in the root directory with the following variables:
-
-```bash
-# Required: Gemini AI API Key for smart budget suggestions
-GEMINI_API_KEY=your_gemini_api_key_here
-
-# Optional: App configuration
-VITE_APP_TITLE="Family Budget App"
-VITE_APP_VERSION="1.0.0"
-```
-
-### Getting Your Gemini API Key
+> ⚠️ **Attention:** You can do this later, but without a Gemini API key, AI-powered features will be disabled.
 
 1. Visit [Google Gemini](https://ai.google.dev/gemini-api/docs)
 2. Sign in with your Google account
@@ -199,7 +142,41 @@ VITE_APP_VERSION="1.0.0"
 4. Copy the generated key
 5. Add it to your `.env.local` file
 
-### Troubleshooting Installation
+### Getting started (local)
+
+1. Clone the repository
+
+```powershell
+git clone https://github.com/patrickcruzutfpr/family-budget-app.git
+cd family-budget-app
+npm install
+```
+
+2. Copy environment variables (optional)
+
+```powershell
+copy .env.local.example .env.local
+```
+
+3. Start dev server
+
+```powershell
+npm run dev
+```
+
+Open http://localhost:5173
+
+### Environment variables
+
+- VITE_APP_TITLE, VITE_APP_VERSION: optional metadata
+- GEMINI_API_KEY: (optional) API key for Google Gemini AI
+> ⚠️ **Attention:** You can do this later, but without a Gemini API key, AI-powered features will be disabled.
+
+
+### Troubleshooting 
+
+- If npm installs fail: try clearing cache or deleting node_modules and reinstalling
+- If AI calls fail: ensure `GEMINI_API_KEY` is set and network access is available
 
 **SSL Certificate Issues (Corporate Networks):**
 ```bash
@@ -213,6 +190,46 @@ npm install
 # Run PowerShell as Administrator
 Set-ExecutionPolicy -ExecutionPolicy RemoteSigned -Scope CurrentUser
 ```
+
+## 🔩 Features (detailed)
+
+### Budget management
+
+- Track monthly income and expenses
+- Compare projected vs actual values
+- Color-coded status per category and overall
+
+### Category management
+
+- Create, edit, delete categories
+- Default icons and colors are provided
+- Categories translate with the chosen language for default sets
+
+### Profile management
+
+- Create multiple profiles
+- Export / import profile data
+- Profile-specific settings and AI history
+
+### Visualizations
+
+- Interactive pie charts and simple trend visuals using Recharts
+
+### AI-powered suggestions
+
+- Requests are routed to `services/geminiService` (or a mock implementation in tests)
+- Suggestions are profile-aware and multilingual
+
+## AI integration
+
+The AI layer is abstracted behind a service interface. Implementations include:
+
+- `geminiService.ts` — production adapter to Google Gemini APIs
+- `geminiServiceMock.ts` — local fallback for offline development/tests
+
+This keeps the UI decoupled from the provider and makes testing deterministic.
+
+---
 
 ## 📝 Usage Guide
 
@@ -605,25 +622,6 @@ Our application leverages modern technologies for optimal performance and develo
 - **Internationalization**: Custom i18n system
 - **Package Manager**: npm
 - **Development Tools**: ESLint, Prettier
-
-## 🏗️ Project Structure
-
-### Key Architectural Concepts
-
-- **Frontend**: React 19.1.1 with TypeScript for type-safe development
-- **Build Tool**: Vite 6.3.5 for fast development and builds
-- **Charts**: Recharts 3.1.2 for data visualization with category icons
-- **AI Integration**: Google Gemini AI (@google/genai) with profile-specific suggestions
-- **Internationalization**: Custom i18n system with React Context for multi-language support
-- **Profile Management**: Custom profile system with import/export functionality
-- **State Management**: Custom hooks pattern with event-driven updates and profile synchronization
-- **Data Persistence**: LocalStorage with profile system, migration utilities, and backup capabilities
-- **UI Components**: Modal system, form validation, language selector, and responsive design
-- **Icon System**: Custom SVG components and emoji-based category icons
-- **Visual Design**: Color-coded status indicators and coordinated category color schemes
-- **Styling**: Modern CSS with responsive design and intelligent visual feedback
-- **Package Manager**: npm with Node.js 18+
-- **Translation System**: Dynamic category name translation with fallback support
 
 ### Available Scripts
 

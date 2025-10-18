@@ -183,3 +183,7 @@ Foi implementada a integração completa do sistema de internacionalização (i1
 O sistema de gerenciamento de categorias agora está **100% integrado** com o sistema de i18n da aplicação. Todos os textos, mensagens, validações e interfaces são traduzidos dinamicamente quando o usuário altera o idioma, proporcionando uma experiência completamente localizada e profissional.
 
 **Status**: ✅ **CONCLUÍDO** - Sistema totalmente funcional e testado.
+
+---
+
+© 2025 Patrick Motin Cruz. All rights reserved under AGPL-3.0.

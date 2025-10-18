@@ -169,6 +169,4 @@ O sistema de CRUD de categorias fornece uma base sólida e flexível para gerenc
 
 ---
 
-**Desenvolvido por**: Patrick Cruz  
-**Data**: Agosto 2025  
-**Versão**: 1.0.0
+© 2025 Patrick Motin Cruz. All rights reserved under AGPL-3.0.

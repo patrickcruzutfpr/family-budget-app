@@ -121,3 +121,7 @@ The project uses path mapping configured in `tsconfig.json`:
 - The development server automatically handles the new paths
 - No breaking changes to the application functionality
 - Environment variables and configuration remain unchanged
+
+---
+
+© 2025 Patrick Motin Cruz. All rights reserved under AGPL-3.0.
