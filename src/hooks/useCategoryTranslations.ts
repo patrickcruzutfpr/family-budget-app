@@ -36,6 +36,7 @@ export const useCategoryTranslations = () => {
       'Outras Rendas': t('items.otherIncome', 'Outras Rendas'),
       
       // Housing items
+      'Rent/Mortgage': t('items.mortgageRent', 'Rent/Mortgage'),
       'Mortgage/Rent': t('items.mortgageRent', 'Mortgage/Rent'),
       'Utilities': t('items.utilities', 'Utilities'),
       'Internet': t('items.internet', 'Internet'),
