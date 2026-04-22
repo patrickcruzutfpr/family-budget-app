@@ -1,0 +1,15 @@
+FROM gemma3:27b
+
+# Janela de contexto ideal para 24GB de VRAM
+PARAMETER num_ctx 32768
+
+# Otimização para os 24 núcleos do Threadripper PRO
+PARAMETER num_thread 24
+
+# Força o modelo a permanecer na memória
+PARAMETER use_mlock true
+
+# Parâmetros de inferência para o Gemma 3
+PARAMETER temperature 0.7
+PARAMETER top_p 0.9
+PARAMETER repeat_penalty 1.1
