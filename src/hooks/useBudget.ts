@@ -8,7 +8,7 @@ import { useI18n } from '@/i18n';
 
 export const useBudget = () => {
   const [budget, setBudget] = useState<BudgetState>([]);
-  const { promptItemName, confirmDelete, confirmReset } = useBudgetMessages();
+  const { confirmDelete, confirmReset } = useBudgetMessages();
   const { t } = useI18n();
 
   // Load budget from current profile

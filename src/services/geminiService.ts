@@ -12,6 +12,14 @@ if (!API_KEY) {
 
 const ai = new GoogleGenAI({ apiKey: API_KEY || "" });
 
+const getErrorMessage = (error: unknown): string => {
+  if (error instanceof Error) {
+    return error.message;
+  }
+
+  return String(error);
+};
+
 export const getBudgetSuggestions = async (budget: BudgetState, language: SupportedLanguage = 'pt-BR'): Promise<AISuggestion[]> => {
   if (!API_KEY) {
     throw new Error("Gemini API key is not configured.");
@@ -102,7 +110,11 @@ export const getBudgetSuggestions = async (budget: BudgetState, language: Suppor
       },
     });
 
-    const jsonText = response.text.trim();
+    const jsonText = response.text?.trim();
+    if (!jsonText) {
+      return [];
+    }
+
     const result = JSON.parse(jsonText);
 
     if (result.suggestions && Array.isArray(result.suggestions)) {
@@ -114,7 +126,7 @@ export const getBudgetSuggestions = async (budget: BudgetState, language: Suppor
     console.error("Error fetching suggestions from Gemini API:", error);
     
     // Check if it's an API key suspension error
-    if (error.message && error.message.includes("suspended")) {
+    if (getErrorMessage(error).includes("suspended")) {
       console.warn("API key suspended, falling back to mock suggestions");
       return await getBudgetSuggestionsMock(budget, language);
     }

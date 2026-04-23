@@ -1,19 +1,5 @@
 import React, { useMemo, useState } from 'react';
-import {
-  BarChart,
-  Bar,
-  PieChart,
-  Pie,
-  XAxis,
-  YAxis,
-  CartesianGrid,
-  Tooltip,
-  ResponsiveContainer,
-  Cell,
-  LabelList,
-  Legend
-} from 'recharts';
-import { Category, CategoryType } from '@/types';
+import { Category } from '@/types';
 import { useI18n } from '@/i18n';
 import { useCategoryTranslations, useFormatters } from '@/hooks';
 
@@ -21,39 +7,35 @@ interface BudgetChartProps {
   data: Category[];
 }
 
-// Professional color palette with better contrast and accessibility
-const COLORS = {
-  primary: '#1e40af',     // Blue 700
-  secondary: '#059669',   // Emerald 600
-  accent: '#dc2626',      // Red 600
-  warning: '#d97706',     // Amber 600
-  info: '#7c3aed',        // Violet 600
-  success: '#16a34a',     // Green 600
-  neutral: '#6b7280',     // Gray 500
-  dark: '#374151'         // Gray 700
-};
+interface ChartDatum {
+  icon: string;
+  label: string;
+  value: number;
+  percent: number;
+  color: string;
+}
 
-const COLOR_ARRAY = [
-  COLORS.primary,
-  COLORS.secondary, 
-  COLORS.accent,
-  COLORS.warning,
-  COLORS.info,
-  COLORS.success,
-  COLORS.neutral,
-  COLORS.dark
+const CHART_COLORS = [
+  '#1e40af',
+  '#059669',
+  '#dc2626',
+  '#d97706',
+  '#7c3aed',
+  '#16a34a',
+  '#6b7280',
+  '#374151',
 ];
 
-// Icon mapping for category types
-const getCategoryIcon = (categoryName: string, categoryType?: CategoryType): string => {
+const SVG_SIZE = 280;
+const PIE_RADIUS = 92;
+const PIE_CIRCUMFERENCE = 2 * Math.PI * PIE_RADIUS;
+
+const getCategoryIcon = (categoryName: string): string => {
   const lowerName = categoryName.toLowerCase();
-  
-  // Income categories
+
   if (lowerName.includes('renda') || lowerName.includes('income')) {
     return '💰';
   }
-  
-  // Expense categories
   if (lowerName.includes('habitação') || lowerName.includes('housing') || lowerName.includes('aluguel') || lowerName.includes('rent')) {
     return '🏠';
   }
@@ -78,159 +60,56 @@ const getCategoryIcon = (categoryName: string, categoryType?: CategoryType): str
   if (lowerName.includes('entretenimento') || lowerName.includes('entertainment') || lowerName.includes('lazer') || lowerName.includes('diversão')) {
     return '🎮';
   }
-  
-  // Default icon
+
   return '📊';
 };
+
+const EmptyState: React.FC<{ title: string; message: string }> = ({ title, message }) => (
+  <div className="bg-white p-6 rounded-2xl shadow-lg shadow-gray-200/50">
+    <h3 className="text-xl font-bold text-gray-700 mb-4">{title}</h3>
+    <div className="flex items-center justify-center h-64 text-gray-500">{message}</div>
+  </div>
+);
 
 export const BudgetChart: React.FC<BudgetChartProps> = ({ data }) => {
   const { t } = useI18n();
   const { translateCategoryName } = useCategoryTranslations();
   const { formatCurrency, formatPercentage } = useFormatters();
-  const [chartType, setChartType] = useState<'bar' | 'pie'>('bar'); // Default to BarChart
-  
-  const chartData = data
-    .map(category => {
-      const translatedName = translateCategoryName(category.name);
-      const categoryIcon = category.icon || getCategoryIcon(category.name, category.type);
-      
-      return {
-        name: categoryIcon, // Always use icon for both charts
-        value: category.items.reduce((sum, item) => sum + item.actual, 0),
-        originalName: translatedName,
-        icon: categoryIcon // Store icon separately
-      };
-    })
-    .filter(d => d.value > 0);
+  const [chartType, setChartType] = useState<'bar' | 'pie'>('bar');
+
+  const chartData = useMemo<ChartDatum[]>(() => {
+    const rawData = data
+      .map((category, index) => {
+        const value = category.items.reduce((sum, item) => sum + item.actual, 0);
+
+        return {
+          icon: category.icon || getCategoryIcon(category.name),
+          label: translateCategoryName(category.name),
+          value,
+          color: CHART_COLORS[index % CHART_COLORS.length],
+        };
+      })
+      .filter(item => item.value > 0);
+
+    const total = rawData.reduce((sum, item) => sum + item.value, 0);
+
+    return rawData.map(item => ({
+      ...item,
+      percent: total > 0 ? item.value / total : 0,
+    }));
+  }, [data, translateCategoryName]);
 
   if (chartData.length === 0) {
     return (
-        <div className="bg-white p-6 rounded-2xl shadow-lg shadow-gray-200/50">
-            <h3 className="text-xl font-bold text-gray-700 mb-4">{t('budget.expenseDistribution', 'Expense Distribution')}</h3>
-            <div className="flex items-center justify-center h-64 text-gray-500">
-                {t('budget.noExpenseData', 'No expense data to display.')}
-            </div>
-        </div>
+      <EmptyState
+        title={t('budget.expenseDistribution', 'Expense Distribution')}
+        message={t('budget.noExpenseData', 'No expense data to display.')}
+      />
     );
   }
 
-  const totalExpenses = chartData.reduce((sum, item) => sum + item.value, 0);
-
-  const customTooltip = ({ active, payload }: any) => {
-    if (active && payload && payload.length) {
-      const data = payload[0];
-      const percentage = totalExpenses > 0 ? ((data.value / totalExpenses) * 100) : 0;
-      return (
-        <div className="bg-white p-3 border border-gray-200 rounded-lg shadow-lg">
-          <p className="font-semibold text-gray-800 mb-1">{data.payload.originalName}</p>
-          <p className="text-sm text-gray-600">
-            <span className="font-medium">{t('total', 'Total')}:</span> {formatCurrency(data.value)}
-          </p>
-          <p className="text-sm text-gray-600">
-            <span className="font-medium">{t('percentage', 'Percentage')}:</span> {formatPercentage(percentage)}
-          </p>
-        </div>
-      );
-    }
-    return null;
-  };
-
-  // Custom label function for pie chart to render icons in the center of each slice
-  const renderPieLabel = (entry: any) => {
-    const RADIAN = Math.PI / 180;
-    const { cx, cy, midAngle, innerRadius, outerRadius, name, percent } = entry;
-    const radius = innerRadius + (outerRadius - innerRadius) * 0.5;
-    const x = cx + radius * Math.cos(-midAngle * RADIAN);
-    const y = cy + radius * Math.sin(-midAngle * RADIAN);
-
-    return (
-      <text 
-        x={x} 
-        y={y} 
-        fill="#ffffff" 
-        textAnchor="middle" 
-        dominantBaseline="middle"
-        fontSize="14"
-        style={{ 
-          filter: 'drop-shadow(1px 1px 2px rgba(0,0,0,0.8))',
-          fontFamily: 'system-ui, -apple-system, sans-serif'
-        }}
-      >
-        <tspan x={x} dy="-0.8em" fontSize="16">{name}</tspan>
-        <tspan x={x} dy="1.8em" fontSize="12">{formatPercentage(percent * 100)}</tspan>
-      </text>
-    );
-  };
-
-  const renderChart = () => {
-    if (chartType === 'bar') {
-      return (
-        <BarChart
-          data={chartData}
-          margin={{ top: 40, right: 30, left: 20, bottom: 50 }}
-        >
-          <CartesianGrid strokeDasharray="3 3" stroke="#e5e7eb" opacity={0.6} />
-          <XAxis 
-            type="category" 
-            dataKey="name"
-            stroke="#6b7280"
-            fontSize={20}
-            textAnchor="middle"
-            height={40}
-            interval={0}
-          />
-          <YAxis 
-            type="number"
-            tickFormatter={(value) => formatCurrency(Number(value))}
-            stroke="#6b7280"
-            fontSize={12}
-          />
-          <Tooltip content={customTooltip} />
-          <Bar 
-            dataKey="value" 
-            radius={[4, 4, 0, 0]}
-            label={{ 
-              position: 'top', 
-              fill: '#374151',
-              fontSize: 12,
-              formatter: (value: number) => formatCurrency(value)
-            }}
-          >
-            {chartData.map((_, index) => (
-              <Cell 
-                key={`cell-${index}`} 
-                fill={COLOR_ARRAY[index % COLOR_ARRAY.length]} 
-              />
-            ))}
-          </Bar>
-        </BarChart>
-      );
-    } else {
-      return (
-        <PieChart>
-          <Pie
-            data={chartData}
-            cx="50%"
-            cy="50%"
-            labelLine={false}
-            outerRadius={120}
-            fill="#8884d8"
-            dataKey="value"
-            nameKey="name"
-            label={renderPieLabel}
-          >
-            {chartData.map((_, index) => (
-              <Cell 
-                key={`cell-${index}`} 
-                fill={COLOR_ARRAY[index % COLOR_ARRAY.length]} 
-              />
-            ))}
-          </Pie>
-          <Tooltip content={customTooltip} />
-        </PieChart>
-      );
-    }
-  };
+  const maxValue = Math.max(...chartData.map(item => item.value), 0);
+  let accumulatedPercent = 0;
 
   return (
     <div className="bg-white p-6 rounded-2xl shadow-lg shadow-gray-200/50">
@@ -259,11 +138,123 @@ export const BudgetChart: React.FC<BudgetChartProps> = ({ data }) => {
           </button>
         </div>
       </div>
-      <div style={{ width: '100%', height: 400 }}>
-        <ResponsiveContainer>
-          {renderChart()}
-        </ResponsiveContainer>
-      </div>
+
+      {chartType === 'bar' ? (
+        <div className="space-y-4">
+          {chartData.map(item => (
+            <div key={item.label} className="space-y-2">
+              <div className="flex items-center justify-between gap-3 text-sm">
+                <div className="flex items-center gap-2 min-w-0">
+                  <span className="text-lg leading-none">{item.icon}</span>
+                  <span className="font-medium text-gray-700 truncate">{item.label}</span>
+                </div>
+                <div className="text-right shrink-0">
+                  <div className="font-semibold text-gray-800">{formatCurrency(item.value)}</div>
+                  <div className="text-xs text-gray-500">{formatPercentage(item.percent * 100)}</div>
+                </div>
+              </div>
+              <div className="h-12 rounded-xl bg-gray-100 overflow-hidden relative">
+                <div
+                  className="h-full rounded-xl transition-[width] duration-500"
+                  style={{
+                    width: `${maxValue > 0 ? (item.value / maxValue) * 100 : 0}%`,
+                    background: `linear-gradient(90deg, ${item.color}, ${item.color}CC)`,
+                  }}
+                  title={`${item.label}: ${formatCurrency(item.value)} (${formatPercentage(item.percent * 100)})`}
+                />
+                <div className="absolute inset-0 flex items-center justify-between px-3 pointer-events-none">
+                  <span className="text-white font-semibold drop-shadow">{item.icon}</span>
+                </div>
+              </div>
+            </div>
+          ))}
+        </div>
+      ) : (
+        <div className="flex flex-col items-center gap-6">
+          <svg
+            viewBox={`0 0 ${SVG_SIZE} ${SVG_SIZE}`}
+            className="w-full max-w-[280px] h-auto"
+            role="img"
+            aria-label={t('budget.expenseDistribution', 'Expense Distribution')}
+          >
+            <circle
+              cx={SVG_SIZE / 2}
+              cy={SVG_SIZE / 2}
+              r={PIE_RADIUS}
+              fill="none"
+              stroke="#e5e7eb"
+              strokeWidth="44"
+            />
+            {chartData.map(item => {
+              const strokeDasharray = `${item.percent * PIE_CIRCUMFERENCE} ${PIE_CIRCUMFERENCE}`;
+              const strokeDashoffset = -accumulatedPercent * PIE_CIRCUMFERENCE;
+              accumulatedPercent += item.percent;
+
+              return (
+                <circle
+                  key={item.label}
+                  cx={SVG_SIZE / 2}
+                  cy={SVG_SIZE / 2}
+                  r={PIE_RADIUS}
+                  fill="none"
+                  stroke={item.color}
+                  strokeWidth="44"
+                  strokeDasharray={strokeDasharray}
+                  strokeDashoffset={strokeDashoffset}
+                  transform={`rotate(-90 ${SVG_SIZE / 2} ${SVG_SIZE / 2})`}
+                  strokeLinecap="butt"
+                >
+                  <title>{`${item.label}: ${formatCurrency(item.value)} (${formatPercentage(item.percent * 100)})`}</title>
+                </circle>
+              );
+            })}
+            <circle
+              cx={SVG_SIZE / 2}
+              cy={SVG_SIZE / 2}
+              r="58"
+              fill="white"
+            />
+            <text
+              x="50%"
+              y="46%"
+              textAnchor="middle"
+              className="fill-gray-500 text-[12px] font-medium"
+            >
+              {t('total', 'Total')}
+            </text>
+            <text
+              x="50%"
+              y="56%"
+              textAnchor="middle"
+              className="fill-gray-800 text-[15px] font-bold"
+            >
+              {formatCurrency(chartData.reduce((sum, item) => sum + item.value, 0))}
+            </text>
+          </svg>
+
+          <div className="grid w-full gap-3">
+            {chartData.map(item => (
+              <div
+                key={item.label}
+                className="flex items-center justify-between gap-3 rounded-xl bg-gray-50 px-3 py-2"
+              >
+                <div className="flex items-center gap-3 min-w-0">
+                  <span
+                    className="inline-block h-3 w-3 rounded-full shrink-0"
+                    style={{ backgroundColor: item.color }}
+                  />
+                  <span className="text-lg leading-none shrink-0">{item.icon}</span>
+                  <span className="truncate text-sm font-medium text-gray-700">{item.label}</span>
+                </div>
+                <div className="text-right shrink-0">
+                  <div className="text-sm font-semibold text-gray-800">{formatCurrency(item.value)}</div>
+                  <div className="text-xs text-gray-500">{formatPercentage(item.percent * 100)}</div>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      )}
     </div>
   );
 };

@@ -3,22 +3,26 @@ Stabilize architecture with low-disruption fixes focused on bootstrap correctnes
 
 **Steps**
 1. Phase A: Bootstrap correctness fix in profile service.
-2. Update profile bootstrap flow to remove recursive call paths between getAllProfiles and saveProfile by introducing a non-recursive initialization path that persists default profile and current profile id exactly once. This blocks all later steps.
-3. Add defensive behavior in getCurrentProfile to reuse initialized profiles and avoid secondary fallback recursion paths. Depends on step 2.
-4. Add concise English docstrings/comments only where flow is non-obvious (bootstrap guard/initializer rationale). Parallel with step 3.
-5. Phase B: Data integrity fix for category deletion.
-6. Refactor CategoryService.deleteCategory to preserve items by transferring them to an appropriate Other category before deletion. Depends on step 2 only for stable profile persistence.
-7. Add explicit handling for edge cases: deleting a category with no items, missing Other category (create one), and preventing destructive behavior if transfer target cannot be resolved. Depends on step 6.
-8. Keep UI behavior and copy aligned with service behavior (DeleteConfirmationModal warning remains valid). Verify no copy changes needed; only update if behavior/copy mismatch remains. Parallel with step 7.
-9. Phase C: Test implementation (unit + integration).
-10. Add unit tests for profileService bootstrap logic: empty storage initialization, no recursion/re-entry, current profile id assignment, and stable return behavior. Depends on steps 2-4.
-11. Add unit tests for CategoryService.deleteCategory: transfer items to Other, preserve totals, no item loss, correct behavior when Other missing, and category-type-safe transfer. Depends on steps 6-7.
-12. Add integration tests at hook/service boundary (useCategories and/or useBudget interactions) validating that delete flow keeps data consistent after syncCategoryChanges and callback execution. Depends on steps 10-11.
-13. Ensure test tooling exists in package scripts/devDependencies (Vitest + Testing Library) and is runnable in CI/local context without changing app runtime behavior. Parallel with steps 10-12.
-14. Phase D: Verification and documentation.
-15. Run type-check and targeted/full test suites; fix any regressions until green. Depends on steps 10-13.
-16. Update architecture docs to mark Phase 1 completed items and add evidence links to tests/files changed. Depends on step 15.
-17. Update README testing section only if scripts/commands changed. Parallel with step 16.
+
+1.1. Update profile bootstrap flow to remove recursive call paths between getAllProfiles and saveProfile by introducing a non-recursive initialization path that persists default profile and current profile id exactly once. This blocks all later steps.
+1.2. Add defensive behavior in getCurrentProfile to reuse initialized profiles and avoid secondary fallback recursion paths. Depends on step 2.
+1.3. Add concise English docstrings/comments only where flow is non-obvious (bootstrap guard/initializer rationale). Parallel with step 3.
+
+2. Phase B: Data integrity fix for category deletion.
+2.1 Refactor CategoryService.deleteCategory to preserve items by transferring them to an appropriate Other category before deletion. Depends on step 2 only for stable profile persistence.
+2.2 Add explicit handling for edge cases: deleting a category with no items, missing Other category (create one), and preventing destructive behavior if transfer target cannot be resolved. Depends on step 6.
+2.3. Keep UI behavior and copy aligned with service behavior (DeleteConfirmationModal warning remains valid). Verify no copy changes needed; only update if behavior/copy mismatch remains. Parallel with step 7.
+
+3. Phase C: Test implementation (unit + integration).
+3.1 Add unit tests for profileService bootstrap logic: empty storage initialization, no recursion/re-entry, current profile id assignment, and stable return behavior. Depends on steps 2-4.
+3.2 Add unit tests for CategoryService.deleteCategory: transfer items to Other, preserve totals, no item loss, correct behavior when Other missing, and category-type-safe transfer. Depends on steps 6-7.
+3.3 Add integration tests at hook/service boundary (useCategories and/or useBudget interactions) validating that delete flow keeps data consistent after syncCategoryChanges and callback execution. Depends on steps 10-11.
+3.4 Ensure test tooling exists in package scripts/devDependencies (Vitest + Testing Library) and is runnable in CI/local context without changing app runtime behavior. Parallel with steps 10-12.
+
+4. Phase D: Verification and documentation.
+4.1 Run type-check and targeted/full test suites; fix any regressions until green. Depends on steps 10-13.
+4.2 Update architecture docs to mark Phase 1 completed items and add evidence links to tests/files changed. Depends on step 15.
+4.4 Update README testing section only if scripts/commands changed. Parallel with step 16.
 
 **Relevant files**
 - c:/Users/patrickcruz/Documents/2026/Pessoal/Github/family-budget-app/src/services/profileService.ts — fix bootstrap initialization path and recursion risks in getAllProfiles, saveProfile interactions, and getCurrentProfile fallback.

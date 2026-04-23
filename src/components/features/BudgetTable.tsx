@@ -1,4 +1,4 @@
-import React, { useMemo } from 'react';
+import React from 'react';
 import { Category, CategoryType } from '@/types';
 import { BudgetRow } from './BudgetRow';
 import { PlusCircleIcon } from '@/assets/icons/PlusCircleIcon';

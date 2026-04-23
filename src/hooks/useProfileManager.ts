@@ -5,7 +5,6 @@ import {
   BudgetState 
 } from '@/types';
 import {
-  getAllProfiles,
   getProfileSummaries,
   getCurrentProfile,
   setCurrentProfileId,

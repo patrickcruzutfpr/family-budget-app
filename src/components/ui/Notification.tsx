@@ -11,7 +11,7 @@ interface NotificationProps {
 }
 
 interface NotificationContextType {
-  showNotification: (type: NotificationType, messageKey: string, params?: Record<string, string | number>) => void;
+  showNotification: (type: NotificationType, messageKey: string, _params?: Record<string, string | number>) => void;
   notifications: Array<{
     id: string;
     type: NotificationType;
@@ -137,7 +137,7 @@ export const NotificationProvider: React.FC<{ children: React.ReactNode }> = ({ 
   const showNotification = (
     type: NotificationType, 
     messageKey: string, 
-    params?: Record<string, string | number>
+    _params?: Record<string, string | number>
   ) => {
     const id = Date.now().toString();
     const message = t(messageKey, messageKey);

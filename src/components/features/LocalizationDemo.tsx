@@ -4,7 +4,7 @@ import { useI18n } from '../../i18n';
 import { useNotification } from '../ui/Notification';
 
 export const LocalizationDemo: React.FC = () => {
-  const [testAmount, setTestAmount] = useState(1234.56);
+  const [testAmount] = useState(1234.56);
   const [testDate] = useState(new Date());
   const { formatCurrency, formatDate, formatPercentage, getCurrencySymbol, getDateFormatPattern } = useFormatters();
   const { t, language } = useI18n();

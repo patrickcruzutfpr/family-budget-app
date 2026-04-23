@@ -15,7 +15,7 @@ Phase 1 is considered complete only when all conditions below are met.
 4. Build succeeds after implementation.
 
 ## Documentation Completion
-1. Plan artifact exists and is current: .github/consulting/20260423/recommended-refactoring/phase-1-plan.md.
+1. Plan artifact exists and is current: .github/consulting/20260423/recommended-refactoring/phase-1/phase-1-plan.md.
 2. Roadmap is updated with completed quick wins and evidence links.
 3. Risk register updates mitigation status for R1 and R3 with test evidence.
 4. README test section is updated if scripts were changed.

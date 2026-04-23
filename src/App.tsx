@@ -1,15 +1,25 @@
-import React, { useMemo, useState, useEffect } from 'react';
+import React, { Suspense, lazy, useMemo, useState, useEffect } from 'react';
 import { useBudget } from '@/hooks';
-import { BudgetTable, Summary, BudgetChart, AIFeature, Header, ProfileManager, CategoryManager } from '@/components';
+import { BudgetTable, Summary, Header, ProfileManager, CategoryManager } from '@/components';
 import { CategoryType } from '@/types';
 import { useI18n } from '@/i18n';
 import { migrateCategoryData, ensureDefaultCategories, migrateCategoriesToIncludeIcons } from '@/utils/categoryMigration';
 import { useProfileCategoriesLanguageSync } from '@/hooks/useProfileCategoriesLanguageSync';
 
+const BudgetChart = lazy(async () => {
+  const module = await import('@/components/features/BudgetChart');
+  return { default: module.BudgetChart };
+});
+
+const AIFeature = lazy(async () => {
+  const module = await import('@/components/features/AIFeature');
+  return { default: module.AIFeature };
+});
+
 function App(): React.ReactNode {
   const [showProfileManager, setShowProfileManager] = useState(false);
   const [showCategoryManager, setShowCategoryManager] = useState(false);
-  const { t, language, isLoading } = useI18n();
+  const { t, isLoading } = useI18n();
   
   // Use the new hook to sync profile categories with language changes
   useProfileCategoriesLanguageSync();
@@ -24,9 +34,7 @@ function App(): React.ReactNode {
     reloadBudget,
   } = useBudget();
 
-  const { totalProjected, totalActual, totalIncome, totalExpenses } = useMemo(() => {
-    let totalProjected = 0;
-    let totalActual = 0;
+  const { totalIncome, totalExpenses } = useMemo(() => {
     let totalIncome = 0;
     let totalExpenses = 0;
 
@@ -36,13 +44,11 @@ function App(): React.ReactNode {
           totalIncome += item.actual;
         } else {
           totalExpenses += item.actual;
-          totalProjected += item.projected;
-          totalActual += item.actual;
         }
       });
     });
 
-    return { totalProjected, totalActual, totalIncome, totalExpenses };
+    return { totalIncome, totalExpenses };
   }, [budget]);
   
   const balance = totalIncome - totalExpenses;
@@ -80,6 +86,13 @@ function App(): React.ReactNode {
       </div>
     );
   }
+
+  const sidePanelFallback = (
+    <div className="bg-white p-6 rounded-2xl shadow-lg shadow-gray-200/50">
+      <div className="h-6 w-40 bg-gray-200 rounded animate-pulse mb-4"></div>
+      <div className="h-64 bg-gray-100 rounded animate-pulse"></div>
+    </div>
+  );
 
 
   return (
@@ -174,8 +187,12 @@ function App(): React.ReactNode {
             </div>
           </div>
           <div className="space-y-8">
-            <BudgetChart data={expenseCategories} />
-            <AIFeature budget={budget} />
+            <Suspense fallback={sidePanelFallback}>
+              <BudgetChart data={expenseCategories} />
+            </Suspense>
+            <Suspense fallback={sidePanelFallback}>
+              <AIFeature budget={budget} />
+            </Suspense>
           </div>
         </div>
       </main>

@@ -33,6 +33,7 @@
 - tests/hooks/useCategories.test.ts
 
 ### 3) Harden reset logic to explicit key whitelist
+- Status: Completed (2026-04-23)
 - Effort: Small
 - Dependencies: budgetService tests
 - Measurable outcome:
@@ -40,8 +41,10 @@
 
 #### Evidence
 - src/services/budgetService.ts
+- tests/services/budgetService.test.ts
 
 ### 4) Add minimum CI pipeline
+- Status: Completed (2026-04-23)
 - Effort: Small to Medium
 - Dependencies: scripts in package.json + workflow yaml
 - Measurable outcome:
@@ -51,6 +54,7 @@
 - package.json
 - vitest.config.ts
 - .github/
+- .github/workflows/ci.yml
 
 ## Near-term (1-2 months)
 

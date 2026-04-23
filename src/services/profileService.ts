@@ -247,7 +247,6 @@ export const createProfile = (name: string, description?: string, basedOn?: Budg
 export const deleteProfile = (id: string): boolean => {
   try {
     const profiles = getAllProfiles();
-    const profileToDelete = profiles.find(p => p.id === id);
     
     // Don't allow deleting the last profile
     if (profiles.length <= 1) {
@@ -358,39 +357,6 @@ const getProfileAISuggestions = (profileId: string) => {
           flatSuggestions.push(...allSuggestions[language]);
         }
       });
-      
-      const favoritesCount = flatSuggestions.filter(s => s.isFavorite).length;
-      
-      return flatSuggestions;
-    }
-  } catch (error) {
-    console.error('Error getting AI suggestions for export:', error);
-  }
-  return [];
-};
-
-// Helper function to get AI suggestions for export
-const getAISuggestionsForExport = (profileId?: string) => {
-  try {
-    // Use profile-specific storage key
-    const storageKey = profileId 
-      ? `family-budget-saved-suggestions-${profileId}`
-      : 'family-budget-saved-suggestions'; // Fallback for backward compatibility
-      
-    const stored = localStorage.getItem(storageKey);
-    
-    if (stored) {
-      const allSuggestions = JSON.parse(stored);
-      
-      // Flatten all language suggestions into single array for export
-      const flatSuggestions: any[] = [];
-      Object.keys(allSuggestions).forEach(language => {
-        if (allSuggestions[language] && Array.isArray(allSuggestions[language])) {
-          flatSuggestions.push(...allSuggestions[language]);
-        }
-      });
-      
-      const favoritesCount = flatSuggestions.filter(s => s.isFavorite).length;
       
       return flatSuggestions;
     }

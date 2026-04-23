@@ -1,6 +1,11 @@
-import { BudgetState, Category, CategoryType } from '@/types';
+import { BudgetState, CategoryType } from '@/types';
 
 const STORAGE_KEY = 'familyBudget';
+const RESETTABLE_STORAGE_KEYS = [
+  STORAGE_KEY,
+  'budget',
+  'family-budget-language',
+] as const;
 
 const initialBudget: BudgetState = [
   {
@@ -84,28 +89,11 @@ export const saveBudget = (budget: BudgetState) => {
 };
 
 export const resetBudgetToDefault = (): BudgetState => {
-    try {
-        // Clear all possible storage keys
-        localStorage.removeItem(STORAGE_KEY);
-        localStorage.removeItem('familyBudget');
-        localStorage.removeItem('budget');
-        localStorage.removeItem('family-budget-language'); // Force language reset too
-        
-        // Clear any profile-related data that might interfere
-        const keys = Object.keys(localStorage);
-        keys.forEach(key => {
-            if (key.includes('budget') || key.includes('Budget') || key.includes('profile')) {
-                localStorage.removeItem(key);
-            }
-        });
-        
-        // Force page reload to clear any cached state
-        setTimeout(() => {
-            window.location.reload();
-        }, 100);
-        
-    } catch (error) {
-        console.error('Failed to clear localStorage', error);
-    }
-    return JSON.parse(JSON.stringify(initialBudget)); // Return a deep copy
-}
+  try {
+    // Remove only known legacy/current budget keys to avoid collateral data loss.
+    RESETTABLE_STORAGE_KEYS.forEach(key => localStorage.removeItem(key));
+  } catch (error) {
+    console.error('Failed to clear localStorage', error);
+  }
+  return JSON.parse(JSON.stringify(initialBudget)); // Return a deep copy
+};

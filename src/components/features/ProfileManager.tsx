@@ -93,7 +93,7 @@ export const ProfileManager: React.FC<ProfileManagerProps> = ({ onProfileChange 
     }
   };
 
-  const handleUpdateProfile = async (profileId: string, name: string, description?: string) => {
+  const handleUpdateProfile = async (_profileId: string, name: string, description?: string) => {
     try {
       await updateProfile({ name, description });
       setEditingProfile(null);

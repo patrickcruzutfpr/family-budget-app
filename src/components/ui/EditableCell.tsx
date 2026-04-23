@@ -10,7 +10,7 @@ interface EditableCellProps {
 export const EditableCell: React.FC<EditableCellProps> = ({ value, onSave }) => {
   const [isEditing, setIsEditing] = useState(false);
   const [currentValue, setCurrentValue] = useState('');
-  const { formatCurrency, parseCurrency, getCurrencySymbol, isValidCurrencyFormat } = useFormatters();
+  const { formatCurrency, parseCurrency, isValidCurrencyFormat } = useFormatters();
   const { t } = useI18n();
 
   useEffect(() => {

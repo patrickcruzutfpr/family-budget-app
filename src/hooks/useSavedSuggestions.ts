@@ -13,10 +13,6 @@ interface SavedSuggestionsState {
   [language: string]: SavedSuggestion[];
 }
 
-interface ProfileSuggestionsState {
-  [profileId: string]: SavedSuggestionsState;
-}
-
 const STORAGE_KEY = 'family-budget-saved-suggestions';
 
 export const useSavedSuggestions = (currentLanguage: SupportedLanguage, profileId?: string) => {

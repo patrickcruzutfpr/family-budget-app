@@ -4,8 +4,6 @@ import { generateId } from '../utils/generateId';
 import { getInitialLanguage } from '../i18n/utils';
 
 export class CategoryService {
-  private static readonly STORAGE_KEY = 'budget_categories';
-
   private static getOtherCategoryName(type: CategoryType): string {
     const currentLanguage = this.getDefaultTranslations();
 
@@ -162,7 +160,7 @@ export class CategoryService {
         createdAt: new Date(),
         updatedAt: new Date()
       },
-      ...defaultExpenseCategories.map((categoryData, index) => ({
+      ...defaultExpenseCategories.map(categoryData => ({
         id: generateId(),
         name: categoryData.name,
         type: CategoryType.EXPENSE,

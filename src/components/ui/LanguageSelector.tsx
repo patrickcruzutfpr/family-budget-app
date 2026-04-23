@@ -30,7 +30,7 @@ export const LanguageSelector: React.FC = () => {
   };
 
   const handleSaveAndConfirm = async () => {
-    const savedCount = saveAllCurrent();
+    saveAllCurrent();
     setShowModal(false);
     await setLanguageWithConfirmation(targetLanguage, async () => true);
   };
