@@ -59,15 +59,19 @@
 ## Near-term (1-2 months)
 
 ### 1) Move Gemini integration to backend proxy
+- Status: Completed (2026-04-23)
 - Effort: Medium
 - Dependencies: lightweight backend endpoint, secret management
 - Measurable outcome:
   - Gemini key removed from frontend runtime.
-  - AI success/failure telemetry available.
+  - AI calls route through a backend-owned proxy with stable app-level error codes.
 
 #### Evidence
-- vite.config.ts
+- server/app.ts
+- server/aiProxyService.ts
 - src/services/geminiService.ts
+- tests/server/aiProxyService.test.ts
+- tests/services/geminiService.test.ts
 
 ### 2) Consolidate persistence model
 - Effort: Medium
@@ -119,7 +123,7 @@
   - documented controls for data retention, privacy, and secret handling.
 
 #### Evidence
-- local persistence and key exposure patterns across services
+- local persistence and backend AI proxy patterns across services
 
 ## Trade-offs
 - Stabilize first vs redesign now:

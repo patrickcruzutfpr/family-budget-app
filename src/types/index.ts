@@ -79,6 +79,15 @@ export interface DeleteConfirmationState {
   category?: Category;
 }
 
+export type {
+  AppApiError,
+  AppApiErrorCode,
+  AISuggestionsResponse,
+  BudgetExpenseSummary,
+  BudgetSummary,
+  BudgetSummaryRequest,
+} from './api';
+
 // Default expense categories
 export const DEFAULT_EXPENSE_CATEGORIES = [
   'Habitação',

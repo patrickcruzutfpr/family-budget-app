@@ -12,8 +12,11 @@
   - Requests and saves AI suggestions.
 
 ## External systems
+- In-repo Node AI proxy
+  - Exposes `/api/ai/suggestions` to the SPA.
+  - Owns Gemini secret handling, prompt construction, and provider error mapping.
 - Google Gemini API
-  - Provides AI-generated budget suggestions.
+  - Provides AI-generated budget suggestions to the backend proxy.
 - Optional Flask backend API (integration module present)
   - Exposes users/categories endpoints in service layer.
   - Appears supplementary, not the source of truth for budget/profile domain.
@@ -27,7 +30,7 @@
    |\
    | \__ localStorage (profiles, budget, language, saved suggestions)
    |
-   \____ HTTPS -> [Google Gemini API]
+   \____ HTTP -> [Node AI Proxy /api/ai/suggestions] ---- HTTPS -> [Google Gemini API]
 
 (Optional path)
 [Family Budget App SPA] ---- HTTP -> [Flask API /api/v1 users/categories]
@@ -52,7 +55,7 @@
 - Domain description and feature list: README.md
 - SPA bootstrap and providers: src/main.tsx
 - Functional composition and user operations: src/App.tsx
-- Gemini integration: src/services/geminiService.ts
+- AI proxy integration: src/services/geminiService.ts, server/app.ts, server/aiProxyService.ts
 - Optional backend integration client: src/services/apiService.ts
 - Local storage-driven profile model: src/services/profileService.ts
 - Saved suggestion local persistence by profile/language: src/hooks/useSavedSuggestions.ts

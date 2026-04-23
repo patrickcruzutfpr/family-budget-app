@@ -1,4 +1,5 @@
-// API service to communicate with the Flask backend
+// Legacy/demo API service for an optional Flask-style backend.
+// It is not the authoritative integration path for the Phase 3 AI proxy work.
 const API_BASE_URL = process.env.REACT_APP_API_BASE_URL || 'http://localhost:5000/api/v1';
 
 export interface Category {

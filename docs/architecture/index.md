@@ -41,6 +41,8 @@ This folder was generated from the architecture-analyses prompt in artifacts mod
 - package.json
 - vite.config.ts
 - vitest.config.ts
+- server/app.ts
+- server/aiProxyService.ts
 - src/main.tsx
 - src/App.tsx
 - src/types/index.ts

@@ -29,16 +29,17 @@
 ## Reliability
 ### Assessment
 - Resilient fallback exists for profile load and Gemini suspension case.
+- AI suggestion generation now has an explicit backend boundary and stable error taxonomy.
 - Event-based synchronization is brittle and may be hard to reason about.
 
 ### Gaps
-- Potential recursion in profile initialization path.
-- Inconsistent behavior between warning text and delete implementation.
+- No telemetry or quota controls around the new AI proxy.
+- Mixed persistence model still exists for budget state.
 
 ### Evidence
-- getAllProfiles and saveProfile interaction: src/services/profileService.ts
+- profile-first plus legacy fallback: src/hooks/useBudget.ts, src/services/budgetService.ts
+- AI proxy service and tests: server/aiProxyService.ts, tests/server/aiProxyService.test.ts
 - custom window event coupling: src/App.tsx, src/hooks/useBudget.ts, src/hooks/useSavedSuggestions.ts
-- category deletion mismatch: src/components/features/DeleteConfirmationModal.tsx, src/services/categoryService.ts
 
 ## Maintainability
 ### Assessment
@@ -56,28 +57,27 @@
 
 ## Security
 ### Assessment
-- Basic client-side validation and error handling only.
-- No robust secret isolation in current AI integration path.
+- Better than earlier phases because Gemini secrets now live server-side.
+- Main application domain still has no authn/authz because budgets and profiles remain local-first.
 
 ### Gaps
-- Gemini key exposed to frontend runtime via Vite define.
 - No authn/authz in main application domain.
+- AI proxy still lacks abuse controls such as quotas or rate limiting.
 
 ### Evidence
-- API key mapping: vite.config.ts
-- Gemini API use in client: src/services/geminiService.ts
+- AI proxy boundary: server/app.ts, server/aiProxyService.ts, src/services/geminiService.ts
 - backend client without auth headers: src/services/apiService.ts
 
 ## Cost efficiency
 ### Assessment
-- Low infra cost for frontend-only architecture.
+- Low infra cost for a frontend-first architecture with one narrow backend service.
 - AI calls can introduce variable external cost.
 
 ### Gaps
 - No cost guardrails (rate limiting, quotas, or budget-aware fallback policy).
 
 ### Evidence
-- direct Gemini request path and model selection: src/services/geminiService.ts
+- Gemini request path and model selection: server/aiProxyService.ts
 
 ## Observability maturity
 ### Assessment

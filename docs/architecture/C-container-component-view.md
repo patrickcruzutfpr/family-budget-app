@@ -15,12 +15,19 @@
   - Store profiles, current profile ID, language, and saved suggestions.
   - Retain client data across sessions.
 
-### Container 3: External AI provider
-- Tech: Google Gemini API via @google/genai.
+### Container 3: Node AI proxy
+- Tech: Node + Express + @google/genai.
+- Responsibilities:
+  - Accept sanitized budget summaries from the SPA.
+  - Own Gemini secret handling and provider request execution.
+  - Normalize structured AI responses and map provider failures to stable app errors.
+
+### Container 4: External AI provider
+- Tech: Google Gemini API.
 - Responsibilities:
   - Return structured suggestion payloads from budget summaries.
 
-### Container 4 (optional/incomplete): Flask backend API integration
+### Container 5 (optional/incomplete): Flask backend API integration
 - Tech: HTTP fetch wrapper.
 - Responsibilities:
   - Health, users, and categories endpoints.
@@ -41,13 +48,14 @@
 ### Domain/service layer
 - profileService: profile lifecycle, current profile management, import/export.
 - categoryService: category CRUD on current profile budget.
-- geminiService: AI request construction and parsing.
+- geminiService: frontend AI proxy client and summary builder.
 - apiService: optional backend HTTP client.
 
 ### Support layer
 - i18n utilities and locale resources.
 - migration utilities for category legacy keys and icon enrichment.
 - shared TypeScript types.
+- server/: backend AI proxy app and provider integration logic.
 
 ## Coupling and hidden dependencies
 - Event-based coupling via window events:
@@ -71,6 +79,6 @@
 - App orchestration and feature composition: src/App.tsx
 - Bootstrap/providers: src/main.tsx
 - Hook boundaries: src/hooks/useBudget.ts, src/hooks/useSavedSuggestions.ts
-- Service boundaries: src/services/profileService.ts, src/services/categoryService.ts, src/services/geminiService.ts, src/services/apiService.ts
+- Service boundaries: src/services/profileService.ts, src/services/categoryService.ts, src/services/geminiService.ts, src/services/apiService.ts, server/app.ts, server/aiProxyService.ts
 - Migration/event behavior: src/utils/categoryMigration.ts
 - Type contracts: src/types/index.ts

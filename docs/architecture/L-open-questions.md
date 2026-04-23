@@ -28,9 +28,9 @@
 - Evidence needed: privacy policy and vendor risk assessment.
 
 ## Engineering and operations
-7. Is there an intended production backend for core domain ownership?
-- Why needed: to decide between modular frontend evolution and service extraction.
-- Evidence needed: architecture roadmap or backend repo plans.
+7. Should the backend expand beyond the AI proxy into core domain ownership?
+- Why needed: to decide whether profiles/budgets remain local-first or migrate toward sync and centralized governance.
+- Evidence needed: product roadmap, backend repo plans, or ADRs.
 
 8. What deployment model and release process should be used (cloud, static host, rollback expectations)?
 - Why needed: to define CI/CD and runbooks.

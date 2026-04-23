@@ -3,7 +3,7 @@
 | ID | Risk | Severity | Likelihood | Impact | Mitigation | Evidence |
 |---|---|---|---|---|---|---|
 | R1 | Profile bootstrap recursion between getAllProfiles and saveProfile on empty storage | Critical | Medium | App initialization failure in first-run scenarios | Implemented: bootstrap now uses a non-recursive initializeProfiles path and is covered by unit tests (2026-04-23) | src/services/profileService.ts, tests/services/profileService.test.ts |
-| R2 | Gemini API key exposed in frontend build/runtime | High | High | Key abuse, billing leakage, service suspension | Move AI call to backend proxy; keep key server-side only | vite.config.ts, src/services/geminiService.ts |
+| R2 | Gemini API key exposed in frontend build/runtime | High | High | Key abuse, billing leakage, service suspension | Implemented (2026-04-23): Gemini calls now go through the Node AI proxy and the key stays server-side | server/app.ts, server/aiProxyService.ts, src/services/geminiService.ts, vite.config.ts |
 | R3 | Category deletion behavior mismatches warning text (items not moved to Other) | High | High | Data loss and trust erosion | Implemented: delete flow now transfers items to a type-safe Other category before removal, with unit+integration coverage (2026-04-23) | src/services/categoryService.ts, src/hooks/useCategories.ts, tests/services/categoryService.test.ts, tests/hooks/useCategories.test.ts, src/components/features/DeleteConfirmationModal.tsx |
 | R4 | Broad reset strategy can delete unintended localStorage keys | Medium | Medium | Unintended local data loss | Implemented: reset now removes only explicit budget keys and is covered by regression tests (2026-04-23) | src/services/budgetService.ts, tests/services/budgetService.test.ts |
 | R5 | Mixed persistence model (profile-first with legacy fallback) increases complexity | Medium | High | Harder debugging, inconsistent behavior | Deprecate legacy path with migration flag and remove fallback after safe window | src/hooks/useBudget.ts, src/services/budgetService.ts, src/services/profileService.ts |
@@ -15,10 +15,10 @@
 
 ## Bottlenecks
 - localStorage-centric architecture limits horizontal scaling and shared-account workflows.
-- direct external AI calls from browser introduce external dependency latency and key exposure risk.
+- the AI proxy is still a thin service with no auth, quotas, or telemetry.
 
 ## Debt themes
-- Security debt: secret management in client.
+- Security debt: backend AI proxy still needs operational hardening.
 - Consistency debt: dual persistence and UI/service mismatch.
 - Operability debt: CI/CD and observability gaps.
 

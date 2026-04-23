@@ -96,7 +96,8 @@ Extract key capabilities to backend services: AI proxy, profile/budget persisten
 ## Recommendation
 - Adopt Option 2 as default trajectory.
 - Execute Option 1 actions immediately as prerequisites.
-- Move to Option 3 only when concrete drivers are confirmed (security policy, sync requirements, compliance obligations, or scale).
+- Phase 3 has already implemented the narrowest justified slice of Option 3 for AI secret isolation.
+- Expand beyond that only when concrete drivers are confirmed (sync requirements, compliance obligations, shared data governance, or scale).
 
 ## Evidence
 - Combined evidence from files cited per option above.

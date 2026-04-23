@@ -1,14 +1,14 @@
 # I. Operational Architecture
 
 ## Deploy topology (current)
-- Primary deployment model: static frontend bundle (Vite build) served to browser.
+- Primary deployment model: static frontend bundle (Vite build) plus a minimal Node AI proxy service.
 - Core business state remains in browser localStorage.
-- External runtime dependency: Gemini API endpoint for AI suggestions.
+- External runtime dependency: Gemini API endpoint accessed only by the Node AI proxy.
 - Optional local/dev dependency: Flask API endpoint for users/categories demo integration.
 
 ## Environments
 - Confirmed:
-  - Development workflow via npm run dev.
+  - Development workflow via `npm run dev:client`, `npm run dev:server`, and `npm run dev:full`.
   - Production-like local preview via npm run preview.
 - Unknown:
   - formal stage/prod environments and promotion strategy.
@@ -24,6 +24,7 @@
 ## Rollback strategy
 - Current inferred rollback:
   - redeploy previous static frontend artifact.
+  - redeploy previous Node AI proxy artifact/config if AI path regresses.
 - Gaps:
   - no documented rollback runbook.
   - no migration versioning strategy for localStorage schema changes.
@@ -33,9 +34,10 @@
 ### Runbook 1: AI provider outage or key suspension
 - Symptoms: AI feature errors, fallback usage spike.
 - Steps:
-  1. Verify key status and provider quota.
-  2. Confirm fallback behavior path is functioning.
-  3. Communicate degraded mode to users.
+  1. Check Node AI proxy health and logs.
+  2. Verify key status and provider quota.
+  3. Confirm fallback behavior path is functioning in the frontend.
+  4. Communicate degraded mode to users.
 - Exit criteria: AI success rate returns above defined threshold.
 
 ### Runbook 2: Data inconsistency in local profile state
@@ -74,8 +76,8 @@
 
 ## Evidence
 - Scripts and build flow: package.json
-- Runtime/build setup: vite.config.ts
+- Runtime/build setup: vite.config.ts, server/index.ts
 - Optional API base URL and endpoints: src/services/apiService.ts
-- AI runtime dependency and fallback: src/services/geminiService.ts
+- AI runtime dependency and fallback: src/services/geminiService.ts, server/app.ts, server/aiProxyService.ts
 - CI workflow: .github/workflows/ci.yml
 - Current styling runtime dependency: index.html

@@ -54,16 +54,21 @@ sequenceDiagram
   participant U as User
   participant AIUI as AIFeature
   participant GS as geminiService
+  participant AP as AI Proxy
   participant G as Gemini API
   participant S as useSavedSuggestions
 
   U->>AIUI: Click Get Suggestions
   AIUI->>GS: getBudgetSuggestions(budget, language)
-  GS->>G: generateContent(JSON schema)
+  GS->>GS: build sanitized budget summary
+  GS->>AP: POST /api/ai/suggestions
+  AP->>G: generateContent(JSON schema)
   alt success
-    G-->>GS: suggestions JSON
+    G-->>AP: suggestions JSON
+    AP-->>GS: suggestions[]
     GS-->>AIUI: suggestions[]
-  else API suspended
+  else provider unavailable
+    AP-->>GS: AI_UNAVAILABLE
     GS->>GS: fallback to mock
     GS-->>AIUI: mock suggestions[]
   end
@@ -74,7 +79,7 @@ sequenceDiagram
 
 ### Evidence
 - AI UI trigger and save operations: src/components/features/AIFeature.tsx
-- Gemini contract and fallback: src/services/geminiService.ts
+- Gemini proxy contract and fallback: src/services/geminiService.ts, server/app.ts, server/aiProxyService.ts
 - saved suggestion persistence: src/hooks/useSavedSuggestions.ts
 
 ## Flow 4: Profile import and switch
