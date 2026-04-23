@@ -15,10 +15,11 @@
 
 ## CI/CD
 - Current state:
-  - No visible CI workflow files in .github besides agents/prompts customizations.
-  - package.json does not expose test/lint/type-check scripts currently.
+  - GitHub Actions workflow exists in `.github/workflows/ci.yml`.
+  - `package.json` exposes `type-check`, `test`, `test:watch`, `test:coverage`, and build scripts.
 - Impact:
-  - quality gates are likely manual.
+  - baseline quality gates now run automatically on push/PR for the configured branches.
+  - linting is still not part of the automated gate because no lint script is configured.
 
 ## Rollback strategy
 - Current inferred rollback:
@@ -68,10 +69,13 @@
   - Evidence needed: infrastructure configuration and deployment docs.
 - Unknown: release frequency and change management process.
   - Evidence needed: release notes history and team operating model.
+- Unknown: when the project will migrate from Tailwind CDN runtime injection to a local Tailwind build pipeline.
+  - Evidence needed: styling/tooling roadmap or implementation issue.
 
 ## Evidence
 - Scripts and build flow: package.json
 - Runtime/build setup: vite.config.ts
 - Optional API base URL and endpoints: src/services/apiService.ts
 - AI runtime dependency and fallback: src/services/geminiService.ts
-- Repository .github contents (no CI workflow found): .github/
+- CI workflow: .github/workflows/ci.yml
+- Current styling runtime dependency: index.html

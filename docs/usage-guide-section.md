@@ -64,7 +64,7 @@ This project provides a small, local-first budgeting web app with profile and ca
 - Budget tracking (projected vs actual)
 - Category CRUD with icons and colors
 - Multiple profiles with import/export
-- Interactive charts (Recharts)
+- Interactive charts with native React/SVG rendering
 - Multi-language support (EN/PT)
 - AI-powered suggestions (Gemini) with a mock fallback
 - Type-safe codebase (TypeScript)
@@ -108,7 +108,7 @@ This project provides a small, local-first budgeting web app with profile and ca
    - Get spending pattern analysis tailored to your profile
 
 7. **📊 Analyze with Charts**
-   - View interactive pie charts with category icons
+   - View bar and pie charts with category icons
    - Identify spending trends and patterns with visual enhancements
    - Make data-driven financial decisions with color-coded feedback
 
@@ -125,7 +125,7 @@ This project provides a small, local-first budgeting web app with profile and ca
 - **Category Manager**: Complete CRUD system for expense categories with default icons
 - **Expense Tracker**: Detailed expense management with intelligent color coding
 - **AI Assistant**: Profile-specific smart financial recommendations
-- **Visual Analytics**: Charts and graphs for insights with category icons
+- **Visual Analytics**: Native charts and graphs for insights with category icons
 - **Language Selector**: Switch between Portuguese and English with automatic category translation
 
 ## 🧭 Features in Detail
@@ -161,7 +161,7 @@ This project provides a small, local-first budgeting web app with profile and ca
 - Language-specific currency formatting
 
 ### Visual Charts
-- Interactive pie charts with Recharts
+- Lightweight native React/SVG charts
 - Category-based expense visualization
 - Visual budget breakdowns
 - Icon-enhanced data presentation
@@ -416,7 +416,6 @@ For more details, see the [LICENSE](LICENSE) file or visit [GNU AGPL v3.0](https
 ## 🙏 Acknowledgments
 
 - [Google Gemini AI](https://ai.google.dev/gemini-api/docs/) for intelligent budget suggestions
-- [Recharts](https://recharts.org/) for beautiful data visualization
 - [React](https://react.dev/) and [TypeScript](https://www.typescriptlang.org/) communities
 - [Vite](https://vitejs.dev/) for the excellent development experience
 

@@ -19,18 +19,18 @@ This analysis reverse-engineers the current architecture of Family Budget App fr
 - Clear code organization by features, hooks, services, and i18n.
 - Good UX baseline for profiles, categories, charts, and AI suggestions.
 - Type-safe model definitions for budget, profile, and suggestions.
-- Existing unit-test setup with Vitest + jsdom.
+- Existing automated validation stack with Vitest + jsdom + TypeScript checks.
+- Minimum CI workflow now validates install, type-check, tests, and build.
 
 ## Key risks and gaps
 - High security risk: Gemini API key is injected into frontend build variables.
-- Reliability risk: profile bootstrap logic can recurse between getAllProfiles and saveProfile in empty-storage scenarios.
-- Data integrity gap: category delete behavior conflicts with UI warning that items will be moved to Other.
-- Operational gap: no CI/CD workflows in repository and no production observability instrumentation.
+- Operational gap: no production observability instrumentation despite CI now being present.
 - NFR gap: no explicit SLO/SLA targets and no validated scale assumptions.
+- Styling/runtime debt: the application still depends on the Tailwind CDN in `index.html` because there is no local Tailwind build pipeline yet.
 
 ## Recommended direction
-- Phase 1: stabilize current architecture with low-disruption fixes (security, data integrity, bootstrap correctness).
-- Phase 2: modularize frontend domain boundaries and deprecate legacy persistence paths.
+- Phase 1: completed stability fixes for bootstrap correctness and category deletion integrity.
+- Phase 2: completed reset hardening, CI baseline, TypeScript cleanup, and bundle/runtime warning cleanup.
 - Phase 3: extract backend responsibilities only when justified by concrete drivers (security, multi-user sync, compliance, analytics).
 
 ## Assumptions
@@ -48,4 +48,5 @@ This analysis reverse-engineers the current architecture of Family Budget App fr
 - Category delete implementation: src/services/categoryService.ts
 - UI warning for category delete behavior: src/components/features/DeleteConfirmationModal.tsx
 - Test tooling and setup: vitest.config.ts, tests/hooks/useBudget.test.ts
-- Missing CI workflows in repository root: .github/
+- CI workflow and scripts: .github/workflows/ci.yml, package.json
+- Current Tailwind runtime dependency: index.html

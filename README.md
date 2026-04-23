@@ -63,7 +63,7 @@ This project provides a small, local-first budgeting web app with profile and ca
 - Budget tracking (projected vs actual)
 - Category CRUD with icons and colors
 - Multiple profiles with import/export
-- Interactive charts (Recharts)
+- Interactive charts with native React/SVG rendering
 - Multi-language support (EN/PT)
 - AI-powered suggestions (Gemini) with a mock fallback
 - Type-safe codebase (TypeScript)
@@ -96,7 +96,7 @@ src/
 
 - **Frontend**: React 19.1.1 with TypeScript for type-safe development
 - **Build Tool**: Vite 6.3.5 for fast development and builds
-- **Charts**: Recharts 3.1.2 for data visualization with category icons
+- **Charts**: native React/SVG charts with lazy loading for data visualization
 - **AI Integration**: Google Gemini AI (@google/genai) with profile-specific suggestions
 - **Internationalization**: Custom i18n system with React Context for multi-language support
 - **Profile Management**: Custom profile system with import/export functionality
@@ -120,13 +120,14 @@ Our application leverages modern technologies for optimal performance and develo
 - **Build System**: Vite 6.3.5
 - **State Management**: Custom hooks pattern
 - **UI Components**: Custom component library
-- **Data Visualization**: Recharts 3.1.2
+- **Data Visualization**: native React/SVG charts
 - **AI Integration**: Google Gemini AI
 - **Styling**: Modern CSS with CSS Modules
 - **Testing**: Vitest with React Testing Library
 - **Internationalization**: Custom i18n system
 - **Package Manager**: npm
 - **Development Tools**: ESLint, Prettier
+- **Quality Gates**: GitHub Actions CI running type-check, tests, and build
 
 ### Available Scripts
 
@@ -189,6 +190,9 @@ npm run dev
 ```
 
 Open http://localhost:5173
+
+Note:
+- The current styling setup still depends on the Tailwind CDN injected in `index.html`. The project does not yet have a local Tailwind build pipeline.
 
 ### Environment variables
 
@@ -421,7 +425,6 @@ For more details, see the [LICENSE](LICENSE) file or visit [GNU AGPL v3.0](https
 ## 🙏 Acknowledgments
 
 - [Google Gemini AI](https://ai.google.dev/gemini-api/docs/) for intelligent budget suggestions
-- [Recharts](https://recharts.org/) for beautiful data visualization
 - [React](https://react.dev/) and [TypeScript](https://www.typescriptlang.org/) communities
 - [Vite](https://vitejs.dev/) for the excellent development experience
 

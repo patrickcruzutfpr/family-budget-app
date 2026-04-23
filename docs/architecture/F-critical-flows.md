@@ -110,19 +110,23 @@ sequenceDiagram
   participant CM as CategoryManager
   participant DM as DeleteConfirmationModal
   participant CS as CategoryService
+  participant P as profileService
 
   U->>CM: Request delete category
   CM->>DM: Open confirmation modal
   DM-->>U: Warning says items move to Other
   U->>CM: Confirm delete
   CM->>CS: deleteCategory(categoryId)
-  CS->>CS: Filter out category from budget
+  CS->>CS: Resolve or create type-safe Other category
+  CS->>CS: Move items from source category to Other
+  CS->>P: Persist updated budget
   CS-->>CM: Save updated budget
 ```
 
 ### Observation
-- UI warning and backend behavior are inconsistent.
+- Flow is now aligned with the warning copy: items are preserved and moved to Other before deletion.
 
 ### Evidence
 - warning message in modal and i18n text: src/components/features/DeleteConfirmationModal.tsx, src/i18n/locales/en.json
 - actual delete behavior: src/services/categoryService.ts
+- hook-level state refresh after delete: src/hooks/useCategories.ts
