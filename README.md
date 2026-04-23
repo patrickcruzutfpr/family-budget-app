@@ -196,13 +196,6 @@ Deployment guidance:
 
 Project documentation:
 
-- [Usage Guide](./docs/usage-guide-section.md)
-- [Architecture Index](./docs/architecture/index.md)
-- [Project Structure](./docs/project-structure.md)
-- [Category Budget Integration](./docs/category-budget-integration.md)
-- [Category i18n Integration](./docs/i18n-category-integration.md)
-- [Category Management Guide](./docs/user-guide-category-management.md)
-
 Refactoring artifacts:
 
 - [Phase 1 Walkthrough](./.github/consulting/20260423/recommended-refactoring/phase-1/6-walkthrough.md)

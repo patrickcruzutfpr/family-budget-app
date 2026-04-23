@@ -1,12 +1,7 @@
 import express, { type NextFunction, type Request, type Response } from 'express';
 import type { AppApiError, BudgetSummaryRequest } from '../src/types/index';
-import {
-  AppApiError as ApiError,
-  getAiSuggestions,
-  isBudgetSummary,
-  isSupportedLanguage,
-  isObject,
-} from './aiProxyService';
+import { AppApiError as ApiError, getAiSuggestions, isBudgetSummary, isSupportedLanguage, isObject } from './aiProxyService';
+import { loadProvider } from './providers';
 
 const jsonError = (code: AppApiError['error']['code'], message: string): AppApiError => ({
   error: {
@@ -33,8 +28,50 @@ export const createServer = () => {
     }),
   );
 
-  app.get('/api/health', (_request: Request, response: Response) => {
-    response.json({ status: 'ok' });
+  app.get('/api/health', async (request: Request, response: Response) => {
+    // Basic OK response
+    const basic = { status: 'ok' } as Record<string, unknown>;
+
+    // Optional deep provider check: ?deep=true
+    const deep = String(request.query.deep || '').toLowerCase() === 'true';
+    const providerName = (process.env.AI_PROVIDER ?? 'gemini').toLowerCase();
+
+    if (!deep) {
+      response.json(basic);
+      return;
+    }
+
+    // Perform minimal provider readiness checks without making network calls when possible.
+    const providerInfo: Record<string, unknown> = { name: providerName };
+
+    try {
+      const provider = await loadProvider(providerName);
+      providerInfo.status = 'loaded';
+
+      // If provider exposes a lightweight `healthCheck` method, call it.
+      if (typeof (provider as any).healthCheck === 'function' && process.env.NODE_ENV !== 'test') {
+        try {
+          const ok = await (provider as any).healthCheck();
+          providerInfo.status = ok ? 'ok' : 'unavailable';
+        } catch (err: any) {
+          providerInfo.status = 'unavailable';
+          providerInfo.details = err?.message ?? String(err);
+        }
+      } else {
+        // No explicit healthCheck: do a lightweight sanity check of required config
+        if (providerName === 'gemini' && !process.env.GEMINI_API_KEY) {
+          providerInfo.status = 'misconfigured';
+          providerInfo.details = 'GEMINI_API_KEY missing';
+        } else {
+          providerInfo.status = 'ok';
+        }
+      }
+    } catch (err: any) {
+      providerInfo.status = 'failed_to_load';
+      providerInfo.details = err?.message ?? String(err);
+    }
+
+    response.json({ ...basic, provider: providerInfo });
   });
 
   app.post('/api/ai/suggestions', async (request: Request, response: Response) => {
