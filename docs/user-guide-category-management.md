@@ -116,7 +116,7 @@ interface CategoryFormData {
 ### 4. Excluir Categoria
 - Clique no ícone de **exclusão** (🗑️) no card da categoria
 - Confirme a ação no modal de confirmação
-- ⚠️ **Atenção**: Todos os itens da categoria serão perdidos
+- ⚠️ **Atenção**: Os itens da categoria serão movidos automaticamente para `Other/Outros`
 
 ## 📊 Funcionalidades Avançadas
 
@@ -162,6 +162,7 @@ Cada categoria exibe:
 - **Sistema existente**: Totalmente integrado com orçamentos atuais
 - **Migração automática**: Categorias padrão criadas automaticamente
 - **Retrocompatibilidade**: Dados existentes preservados
+- **Exclusão segura**: Itens não são perdidos ao remover categorias com movimentação
 
 ## 🎉 Conclusão
 

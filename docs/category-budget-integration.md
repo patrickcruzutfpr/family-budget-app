@@ -9,7 +9,7 @@ A integração entre o sistema de CRUD de categorias e o detalhamento de orçame
 ### 🔄 Sincronização Automática
 - **Criação de categoria**: Aparece instantaneamente no orçamento
 - **Edição de categoria**: Nome, descrição, ícone e cor são atualizados no orçamento
-- **Exclusão de categoria**: Remove do orçamento com todos os itens
+- **Exclusão de categoria**: Remove a categoria e transfere os itens para uma categoria `Other/Outros`
 - **Atualização em tempo real**: Sem necessidade de recarregar a página
 
 ### 🏗️ Arquitetura de Sincronização
@@ -90,6 +90,7 @@ graph TD
 - Orçamento é atualizado com novas categorias
 - Todas as tabelas e gráficos refletem as mudanças
 - Estado sincronizado em toda a aplicação
+- Itens preservados em exclusões passam a aparecer na categoria `Other/Outros`
 
 ## 🛡️ Compatibilidade e Migração
 
@@ -135,7 +136,7 @@ graph TD
 1. Exclua uma categoria com itens
 2. Confirme no modal de aviso
 3. Verifique que a categoria sumiu do orçamento
-4. Confirme que os itens também foram removidos
+4. Confirme que os itens foram transferidos para a categoria `Other/Outros`
 
 ### 4. **Teste de Migração**
 1. Use dados de uma versão anterior
@@ -148,6 +149,7 @@ graph TD
 ✅ **Integração completa** entre CRUD de categorias e detalhamento de orçamento  
 ✅ **Sincronização em tempo real** sem necessidade de recarregar  
 ✅ **Compatibilidade total** com dados existentes  
+✅ **Preservação de itens durante exclusão de categorias**  
 ✅ **Experiência unificada** para o usuário  
 ✅ **Código limpo e manutenível** para desenvolvedores  
 

@@ -395,11 +395,11 @@ import { BudgetService } from '@/services';
 
 Comprehensive documentation is available in the `/docs` directory:
 - [Usage Guide](./docs/usage-guide-section.md)
-- API Documentation
-- Component Library
-- Development Guidelines
-- Testing Procedures
-- Deployment Guide
+- [Architecture Index](./docs/architecture/index.md)
+- [Project Structure](./docs/project-structure.md)
+- [Category Budget Integration](./docs/category-budget-integration.md)
+- [Category i18n Integration](./docs/i18n-category-integration.md)
+- [Category Management Guide](./docs/user-guide-category-management.md)
 
 ### 🔨 Credits
 
