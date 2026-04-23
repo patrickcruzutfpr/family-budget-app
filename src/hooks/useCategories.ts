@@ -105,7 +105,7 @@ export const useCategories = (props?: UseCategoriesProps): UseCategoriesReturn =
     try {
       setError(null);
       CategoryService.deleteCategory(categoryId);
-      setCategories(prev => prev.filter(cat => cat.id !== categoryId));
+      setCategories(CategoryService.getCategories());
       
       // Sync changes with budget system
       syncCategoryChanges();

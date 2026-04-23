@@ -51,6 +51,7 @@ describe('useBudget', () => {
 
   beforeEach(() => {
     vi.clearAllMocks();
+    vi.spyOn(window, 'confirm').mockReturnValue(true);
     vi.mocked(profileService.getCurrentProfile).mockReturnValue(mockProfile);
     vi.mocked(profileService.updateCurrentProfileBudget).mockImplementation(() => {});
     vi.mocked(budgetService.loadBudget).mockReturnValue(mockBudget);
@@ -72,8 +73,8 @@ describe('useBudget', () => {
     });
 
     const updatedItem = result.current.budget
-      .find(c => c.id === 'housing')
-      ?.items.find(i => i.id === 'housing-1');
+      .find((c: { id: string }) => c.id === 'housing')
+      ?.items.find((i: { id: string }) => i.id === 'housing-1');
     
     expect(updatedItem?.actual).toBe(1600);
     expect(profileService.updateCurrentProfileBudget).toHaveBeenCalled();
@@ -82,13 +83,13 @@ describe('useBudget', () => {
   it('should add new item to category', async () => {
     const { result } = renderHook(() => useBudget());
     
-    await act(async () => {
-      await result.current.addItem('housing');
+    act(() => {
+      result.current.addItem('housing');
     });
 
-    const housingCategory = result.current.budget.find(c => c.id === 'housing');
+    const housingCategory = result.current.budget.find((c: { id: string }) => c.id === 'housing');
     expect(housingCategory?.items).toHaveLength(2);
-    expect(housingCategory?.items[1].name).toBe('New Item');
+    expect(housingCategory?.items[1].name).toBe('budget.newItem');
   });
 
   it('should delete item from category', async () => {
@@ -98,7 +99,7 @@ describe('useBudget', () => {
       await result.current.deleteItem('housing', 'housing-1');
     });
 
-    const housingCategory = result.current.budget.find(c => c.id === 'housing');
+    const housingCategory = result.current.budget.find((c: { id: string }) => c.id === 'housing');
     expect(housingCategory?.items).toHaveLength(0);
   });
 

@@ -136,6 +136,11 @@ npm run dev          # Start development server (http://localhost:5173)
 npm run build        # Build for production
 npm run preview      # Preview production build locally
 
+# Testing
+npm run test          # Run unit/integration tests once
+npm run test:watch    # Run tests in watch mode
+npm run test:coverage # Run tests with coverage
+
 # Utilities
 npm run lint         # Run ESLint (if configured)
 npm run type-check   # Run TypeScript compiler check

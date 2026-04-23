@@ -1,10 +1,60 @@
 import { Category, CategoryType, CategoryFormData, BudgetState } from '../types';
-import { getCurrentProfile, updateCurrentProfileBudget, saveProfile } from './profileService';
+import { getCurrentProfile, updateCurrentProfileBudget } from './profileService';
 import { generateId } from '../utils/generateId';
 import { getInitialLanguage } from '../i18n/utils';
 
 export class CategoryService {
   private static readonly STORAGE_KEY = 'budget_categories';
+
+  private static getOtherCategoryName(type: CategoryType): string {
+    const currentLanguage = this.getDefaultTranslations();
+
+    if (type === CategoryType.INCOME) {
+      return currentLanguage.income === 'Income' ? 'Other Income' : 'Outras Rendas';
+    }
+
+    return currentLanguage.income === 'Income' ? 'Other' : 'Outros';
+  }
+
+  private static isOtherCategoryName(name: string, type: CategoryType): boolean {
+    const normalized = name.trim().toLowerCase();
+    const expenseNames = ['other', 'other expenses', 'outros'];
+    const incomeNames = ['other income', 'outro rendimento', 'outras rendas'];
+
+    return type === CategoryType.INCOME
+      ? incomeNames.includes(normalized)
+      : expenseNames.includes(normalized);
+  }
+
+  private static resolveOrCreateOtherCategory(
+    budget: BudgetState,
+    type: CategoryType,
+    excludedCategoryId: string
+  ): { target: Category; workingBudget: BudgetState } {
+    const existingOther = budget.find(cat =>
+      cat.id !== excludedCategoryId &&
+      cat.type === type &&
+      this.isOtherCategoryName(cat.name, type)
+    );
+
+    if (existingOther) {
+      return { target: existingOther, workingBudget: budget };
+    }
+
+    const createdOther: Category = {
+      id: generateId(),
+      name: this.getOtherCategoryName(type),
+      type,
+      items: [],
+      description: type === CategoryType.INCOME ? 'Default other income category' : 'Default other expense category',
+      icon: '📦',
+      color: '#6B7280',
+      createdAt: new Date(),
+      updatedAt: new Date(),
+    };
+
+    return { target: createdOther, workingBudget: [...budget, createdOther] };
+  }
 
   // Get current budget from profile system
   private static getCurrentBudget(): BudgetState {
@@ -174,8 +224,38 @@ export class CategoryService {
   // Delete category
   static deleteCategory(categoryId: string): void {
     const budget = this.getCurrentBudget();
-    const filteredBudget = budget.filter(cat => cat.id !== categoryId);
-    this.saveBudgetToProfile(filteredBudget);
+    const categoryToDelete = budget.find(cat => cat.id === categoryId);
+
+    if (!categoryToDelete) {
+      return;
+    }
+
+    if (!categoryToDelete.items || categoryToDelete.items.length === 0) {
+      this.saveBudgetToProfile(budget.filter(cat => cat.id !== categoryId));
+      return;
+    }
+
+    const { target, workingBudget } = this.resolveOrCreateOtherCategory(
+      budget,
+      categoryToDelete.type,
+      categoryId
+    );
+
+    const updatedBudget = workingBudget
+      .filter(cat => cat.id !== categoryId)
+      .map(cat => {
+        if (cat.id !== target.id) {
+          return cat;
+        }
+
+        return {
+          ...cat,
+          items: [...cat.items, ...categoryToDelete.items],
+          updatedAt: new Date(),
+        };
+      });
+
+    this.saveBudgetToProfile(updatedBudget);
   }
 
   // Get category by ID

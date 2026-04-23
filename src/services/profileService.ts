@@ -1,9 +1,32 @@
 import { BudgetProfile, BudgetState, ProfileSummary, CategoryType } from '@/types';
 import { generateId } from '@/utils/generateId';
-import { getInitialLanguage, loadTranslations, getTranslation } from '@/i18n/utils';
+import { getInitialLanguage } from '@/i18n/utils';
 
 const PROFILES_STORAGE_KEY = 'familyBudgetProfiles';
 const CURRENT_PROFILE_KEY = 'currentProfileId';
+
+/**
+ * Parses stored profile payload and restores date fields.
+ */
+const parseStoredProfiles = (stored: string): BudgetProfile[] => {
+  const profiles = JSON.parse(stored) as BudgetProfile[];
+  return profiles.map(profile => ({
+    ...profile,
+    createdAt: new Date(profile.createdAt),
+    updatedAt: new Date(profile.updatedAt),
+  }));
+};
+
+/**
+ * Creates and persists a single default profile without calling saveProfile,
+ * avoiding recursive bootstrap paths.
+ */
+const initializeProfiles = (): BudgetProfile[] => {
+  const defaultProfile = createDefaultProfile();
+  localStorage.setItem(PROFILES_STORAGE_KEY, JSON.stringify([defaultProfile]));
+  setCurrentProfileId(defaultProfile.id);
+  return [defaultProfile];
+};
 
 // Get translations synchronously for default data
 const getDefaultTranslations = () => {
@@ -128,24 +151,17 @@ export const getAllProfiles = (): BudgetProfile[] => {
   try {
     const stored = localStorage.getItem(PROFILES_STORAGE_KEY);
     if (!stored) {
-      // Create default profile if none exist
-      const defaultProfile = createDefaultProfile();
-      saveProfile(defaultProfile);
-      setCurrentProfileId(defaultProfile.id);
-      return [defaultProfile];
+      return initializeProfiles();
     }
-    
-    const profiles = JSON.parse(stored) as BudgetProfile[];
-    // Convert date strings back to Date objects
-    return profiles.map(profile => ({
-      ...profile,
-      createdAt: new Date(profile.createdAt),
-      updatedAt: new Date(profile.updatedAt),
-    }));
+
+    return parseStoredProfiles(stored);
   } catch (error) {
     console.error('Error loading profiles:', error);
-    const defaultProfile = createDefaultProfile();
-    return [defaultProfile];
+    try {
+      return initializeProfiles();
+    } catch {
+      return [createDefaultProfile()];
+    }
   }
 };
 
@@ -293,12 +309,8 @@ export const getCurrentProfile = (): BudgetProfile => {
     setCurrentProfileId(profiles[0].id);
     return profiles[0];
   }
-  
-  // Create and return default profile
-  const defaultProfile = createDefaultProfile();
-  saveProfile(defaultProfile);
-  setCurrentProfileId(defaultProfile.id);
-  return defaultProfile;
+
+  return initializeProfiles()[0];
 };
 
 // Update current profile's budget
@@ -484,12 +496,8 @@ export const importProfile = (profileData: string): BudgetProfile => {
 export const resetToDefault = (): BudgetProfile => {
   localStorage.removeItem(PROFILES_STORAGE_KEY);
   localStorage.removeItem(CURRENT_PROFILE_KEY);
-  
-  const defaultProfile = createDefaultProfile();
-  saveProfile(defaultProfile);
-  setCurrentProfileId(defaultProfile.id);
-  
-  return defaultProfile;
+
+  return initializeProfiles()[0];
 };
 
 // Update all profile categories to match current language

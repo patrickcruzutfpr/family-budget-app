@@ -7,6 +7,7 @@
 ## Quick wins (1-2 weeks)
 
 ### 1) Fix profile bootstrap recursion risk
+- Status: Completed (2026-04-23)
 - Effort: Small
 - Dependencies: profileService refactor + unit tests
 - Measurable outcome:
@@ -14,8 +15,10 @@
 
 #### Evidence
 - src/services/profileService.ts
+- tests/services/profileService.test.ts
 
 ### 2) Align category delete behavior with warning copy
+- Status: Completed (2026-04-23)
 - Effort: Small to Medium
 - Dependencies: categoryService + category tests + i18n confirmation checks
 - Measurable outcome:
@@ -23,8 +26,11 @@
 
 #### Evidence
 - src/services/categoryService.ts
+- src/hooks/useCategories.ts
 - src/components/features/DeleteConfirmationModal.tsx
 - src/i18n/locales/en.json
+- tests/services/categoryService.test.ts
+- tests/hooks/useCategories.test.ts
 
 ### 3) Harden reset logic to explicit key whitelist
 - Effort: Small
