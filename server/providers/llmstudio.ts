@@ -4,6 +4,30 @@ import type { AISuggestionsResponse, BudgetSummary } from '../../src/types/index
 
 const DEFAULT_BASE_URL = 'http://127.0.0.1:1234/v1';
 const DEFAULT_MODEL_NAME = 'qwen2.5-coder-32b';
+const SUGGESTIONS_JSON_SCHEMA = {
+  name: 'budget_suggestions',
+  schema: {
+    type: 'object',
+    additionalProperties: false,
+    properties: {
+      suggestions: {
+        type: 'array',
+        items: {
+          type: 'object',
+          additionalProperties: false,
+          properties: {
+            title: { type: 'string' },
+            suggestion: { type: 'string' },
+          },
+          required: ['title', 'suggestion'],
+        },
+      },
+    },
+    required: ['suggestions'],
+  },
+};
+
+const getModelName = (): string => process.env.LLMSTUDIO_MODEL ?? DEFAULT_MODEL_NAME;
 
 const buildEndpoint = (path: string): string => {
   const baseUrl = (process.env.LLMSTUDIO_BASE_URL ?? DEFAULT_BASE_URL).replace(/\/+$/, '');
@@ -44,56 +68,38 @@ const parseSuggestionPayload = (rawBody: unknown): AISuggestionsResponse => {
   return normalizeSuggestions(JSON.parse(choiceContent));
 };
 
+const buildSuggestionRequestBody = (model: string, prompt: string): string =>
+  JSON.stringify({
+    model,
+    temperature: 0.2,
+    response_format: {
+      type: 'json_schema',
+      json_schema: SUGGESTIONS_JSON_SCHEMA,
+    },
+    messages: [
+      {
+        role: 'system',
+        content: 'You are a financial assistant. Always return strictly valid JSON.',
+      },
+      {
+        role: 'user',
+        content: prompt,
+      },
+    ],
+  });
+
 export const getAiSuggestions = async (
   budgetSummary: BudgetSummary,
   language: SupportedLanguage,
 ): Promise<AISuggestionsResponse> => {
-  const model = process.env.LLMSTUDIO_MODEL ?? DEFAULT_MODEL_NAME;
+  const model = getModelName();
   const prompt = buildBudgetPrompt(budgetSummary, language);
 
   try {
     const response = await fetch(buildEndpoint('/chat/completions'), {
       method: 'POST',
       headers: getHeaders(),
-      body: JSON.stringify({
-        model,
-        temperature: 0.2,
-        response_format: {
-          type: 'json_schema',
-          json_schema: {
-            name: 'budget_suggestions',
-            schema: {
-              type: 'object',
-              additionalProperties: false,
-              properties: {
-                suggestions: {
-                  type: 'array',
-                  items: {
-                    type: 'object',
-                    additionalProperties: false,
-                    properties: {
-                      title: { type: 'string' },
-                      suggestion: { type: 'string' },
-                    },
-                    required: ['title', 'suggestion'],
-                  },
-                },
-              },
-              required: ['suggestions'],
-            },
-          },
-        },
-        messages: [
-          {
-            role: 'system',
-            content: 'You are a financial assistant. Always return strictly valid JSON.',
-          },
-          {
-            role: 'user',
-            content: prompt,
-          },
-        ],
-      }),
+      body: buildSuggestionRequestBody(model, prompt),
     });
 
     if (!response.ok) {

@@ -6,16 +6,26 @@ export type Provider = {
   healthCheck?: () => Promise<boolean>;
 };
 
-export const loadProvider = async (name?: string): Promise<Provider> => {
-  const provider = (name ?? process.env.AI_PROVIDER ?? 'gemini').toLowerCase();
-  switch (provider) {
-    case 'gemini':
-      return (await import('./gemini')).default;
-    case 'llmstudio':
-      return (await import('./llmstudio')).default;
-    // future: case 'openai': return (await import('./openai')).default;
-    // future: case 'ollama': return (await import('./ollama')).default;
-    default:
-      return (await import('./gemini')).default;
+type ProviderLoader = () => Promise<Provider>;
+type ProviderName = 'gemini' | 'llmstudio';
+
+const DEFAULT_PROVIDER: ProviderName = 'gemini';
+
+const providerLoaders: Record<ProviderName, ProviderLoader> = {
+  gemini: async () => (await import('./gemini')).default,
+  llmstudio: async () => (await import('./llmstudio')).default,
+};
+
+const resolveProviderName = (name?: string): ProviderName => {
+  const requestedName = (name ?? process.env.AI_PROVIDER ?? DEFAULT_PROVIDER).toLowerCase();
+  if (requestedName in providerLoaders) {
+    return requestedName as ProviderName;
   }
+
+  return DEFAULT_PROVIDER;
+};
+
+export const loadProvider = async (name?: string): Promise<Provider> => {
+  const providerName = resolveProviderName(name);
+  return providerLoaders[providerName]();
 };

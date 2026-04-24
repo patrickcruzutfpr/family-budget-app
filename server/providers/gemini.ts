@@ -5,14 +5,45 @@ import type { AISuggestionsResponse, BudgetSummary } from '../../src/types/index
 
 const MODEL_NAME = 'gemini-2.5-flash';
 
-export const getAiSuggestions = async (
-  budgetSummary: BudgetSummary,
-  language: SupportedLanguage,
-): Promise<AISuggestionsResponse> => {
+const getApiKey = (): string => {
   const apiKey = process.env.GEMINI_API_KEY;
   if (!apiKey) {
     throw new AppApiError('AI_MISCONFIGURED', 'AI service is not configured.', 500);
   }
+
+  return apiKey;
+};
+
+const RESPONSE_SCHEMA = {
+  type: Type.OBJECT,
+  properties: {
+    suggestions: {
+      type: Type.ARRAY,
+      items: {
+        type: Type.OBJECT,
+        properties: {
+          title: { type: Type.STRING },
+          suggestion: { type: Type.STRING },
+        },
+      },
+    },
+  },
+};
+
+const parseSuggestionPayload = (jsonText?: string): AISuggestionsResponse => {
+  const parsedText = jsonText?.trim();
+  if (!parsedText) {
+    throw new AppApiError('AI_BAD_RESPONSE', 'AI provider returned an empty response.', 502);
+  }
+
+  return normalizeSuggestions(JSON.parse(parsedText));
+};
+
+export const getAiSuggestions = async (
+  budgetSummary: BudgetSummary,
+  language: SupportedLanguage,
+): Promise<AISuggestionsResponse> => {
+  const apiKey = getApiKey();
 
   const ai = new GoogleGenAI({ apiKey });
   const prompt = buildBudgetPrompt(budgetSummary, language);
@@ -23,30 +54,11 @@ export const getAiSuggestions = async (
       contents: prompt,
       config: {
         responseMimeType: 'application/json',
-        responseSchema: {
-          type: Type.OBJECT,
-          properties: {
-            suggestions: {
-              type: Type.ARRAY,
-              items: {
-                type: Type.OBJECT,
-                properties: {
-                  title: { type: Type.STRING },
-                  suggestion: { type: Type.STRING },
-                },
-              },
-            },
-          },
-        },
+        responseSchema: RESPONSE_SCHEMA,
       },
     });
 
-    const jsonText = response.text?.trim();
-    if (!jsonText) {
-      throw new AppApiError('AI_BAD_RESPONSE', 'AI provider returned an empty response.', 502);
-    }
-
-    return normalizeSuggestions(JSON.parse(jsonText));
+    return parseSuggestionPayload(response.text);
   } catch (error) {
     if (error instanceof AppApiError) throw error;
     throw mapProviderError(error);
