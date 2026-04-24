@@ -1,11 +1,11 @@
-import type { SupportedLanguage } from '../src/i18n/index';
-import type { AISuggestion, AISuggestionsResponse, BudgetSummary } from '../src/types/index';
+import type { SupportedLanguage } from '../../src/i18n/index';
+import type { AISuggestion, AISuggestionsResponse, AppApiErrorCode, BudgetSummary } from '../../src/types/index';
 
 export class AppApiError extends Error {
-  public readonly code: string;
+  public readonly code: AppApiErrorCode;
   public readonly status: number;
 
-  constructor(code: string, message: string, status: number) {
+  constructor(code: AppApiErrorCode, message: string, status: number) {
     super(message);
     this.code = code;
     this.status = status;

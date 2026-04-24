@@ -15,6 +15,11 @@ How it works
 - The adapter receives already-validated `budgetSummary` and a `language` string (`en` or `pt-BR`).
 - Adapters should throw `AppApiError` for expected errors (e.g. misconfiguration) and let unexpected errors bubble so `aiProxyService` can map them to `AI_UNAVAILABLE` or `AI_BAD_RESPONSE`.
 
+Built-in providers
+
+- `gemini`: Uses `GEMINI_API_KEY`.
+- `llmstudio`: Uses `LLMSTUDIO_API_KEY`, optional `LLMSTUDIO_BASE_URL` (default `http://127.0.0.1:1234/v1`), and optional `LLMSTUDIO_MODEL` (default `qwen2.5-coder-32b`).
+
 Adapter skeleton
 
 ```ts

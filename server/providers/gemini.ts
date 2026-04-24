@@ -1,7 +1,7 @@
 import { GoogleGenAI, Type } from '@google/genai';
 import { buildBudgetPrompt, normalizeSuggestions, mapProviderError, AppApiError } from '../lib/aiHelpers';
-import type { SupportedLanguage } from '../src/i18n/index';
-import type { AISuggestionsResponse, BudgetSummary } from '../src/types/index';
+import type { SupportedLanguage } from '../../src/i18n/index';
+import type { AISuggestionsResponse, BudgetSummary } from '../../src/types/index';
 
 const MODEL_NAME = 'gemini-2.5-flash';
 

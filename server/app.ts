@@ -62,6 +62,9 @@ export const createServer = () => {
         if (providerName === 'gemini' && !process.env.GEMINI_API_KEY) {
           providerInfo.status = 'misconfigured';
           providerInfo.details = 'GEMINI_API_KEY missing';
+        } else if (providerName === 'llmstudio' && !process.env.LLMSTUDIO_API_KEY) {
+          providerInfo.status = 'misconfigured';
+          providerInfo.details = 'LLMSTUDIO_API_KEY missing';
         } else {
           providerInfo.status = 'ok';
         }

@@ -58,6 +58,9 @@ Define variables in root `.env` (or in your deployment environment):
 | Variable | Required | Default | Description |
 | --- | --- | --- | --- |
 | `GEMINI_API_KEY` | Yes (for real AI responses) | N/A | API key used by server-side provider adapter |
+| `LLMSTUDIO_API_KEY` | Yes (when `AI_PROVIDER=llmstudio`) | N/A | API key sent to LM Studio OpenAI-compatible endpoint |
+| `LLMSTUDIO_BASE_URL` | No | `http://127.0.0.1:1234/v1` | Base URL for LM Studio local server |
+| `LLMSTUDIO_MODEL` | No | `qwen2.5-coder-32b` | Model identifier used for completion requests |
 | `PORT` | No | `3001` | Backend listening port |
 | `AI_PROVIDER` | No | `gemini` | Active provider adapter key |
 
@@ -65,6 +68,9 @@ Example `.env`:
 
 ```env
 GEMINI_API_KEY=your_api_key_here
+LLMSTUDIO_API_KEY=your_llmstudio_api_key_here
+LLMSTUDIO_BASE_URL=http://127.0.0.1:1234/v1
+LLMSTUDIO_MODEL=qwen2.5-coder-32b
 PORT=3001
 AI_PROVIDER=gemini
 ```
