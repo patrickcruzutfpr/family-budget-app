@@ -111,8 +111,8 @@ For full details, see [docs/architecture/SYSTEM_DESIGN.md](docs/architecture/SYS
 3. `docs/{directory}` content:
    - [docs/architecture/SYSTEM_DESIGN.md](docs/architecture/SYSTEM_DESIGN.md)
    - [docs/automation/CI_CD.md](docs/automation/CI_CD.md)
-   - [docs/frontend/STATE.md](docs/frontend/STATE.md)
-   - [docs/frontend/STYLEGUIDE.md](docs/frontend/STYLEGUIDE.md)
+   - [docs/STATE.md](docs/STATE.md)
+   - [docs/STYLEGUIDE.md](docs/STYLEGUIDE.md)
 
 ## License
 

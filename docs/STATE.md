@@ -4,9 +4,9 @@ This document explains data fetching, state persistence, and cache behavior in t
 
 ## Navigation
 
-- Previous: [docs/automation/CI_CD.md](../automation/CI_CD.md)
+- Previous: [docs/automation/CI_CD.md](./automation/CI_CD.md)
 - Next: [docs/frontend/STYLEGUIDE.md](STYLEGUIDE.md)
-- Root: [README.md](../../README.md)
+- Root: [README.md](../README.md)
 
 ## 1. State Ownership Model
 
