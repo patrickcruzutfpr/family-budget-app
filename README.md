@@ -194,7 +194,10 @@ Deployment guidance:
 
 ## Documentation
 
-Project documentation:
+- **Root README:** [README.md](README.md)
+- **Project docs (overview, guides, architecture):** [docs/index.md](docs/index.md)
+- **Server (AI proxy) docs:** [server/docs/index.md](server/docs/index.md)
+- **Architecture artifacts:** [docs/architecture/index.md](docs/architecture/index.md)
 
 Refactoring artifacts:
 

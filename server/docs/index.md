@@ -2,6 +2,11 @@
 
 This folder documents the AI proxy server (`server/`) used by the Family Budget App.
 
+Navigation:
+
+- **Root README:** [README.md](../../README.md)
+- **Project docs index:** [docs/index.md](../../docs/index.md)
+
 Included pages:
 
 - [Architecture](./architecture.md)
