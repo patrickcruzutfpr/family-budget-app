@@ -1,6 +1,6 @@
 # CI/CD
 
-This document describes the current GitHub Actions automation available in this repository.
+This document describes the current GitHub Actions automation available in this repository and how it relates to the repository branch lifecycle.
 
 ## Navigation
 
@@ -14,6 +14,16 @@ Current workflow file:
 
 - `.github/workflows/ci.yml`
 
+## Branch Lifecycle Context
+
+The repository uses long-lived lifecycle branches:
+
+- `develop`
+- `staging`
+- `production`
+
+The branch policy itself is defined in [CONTRIBUTING.md](../../CONTRIBUTING.md). This CI/CD document should only describe how automation interacts with those branches.
+
 ## Workflow: CI
 
 ### Trigger rules
@@ -21,6 +31,8 @@ Current workflow file:
 - `pull_request` targeting `main`
 - `push` to `main`
 - `push` to `add-rent-key`
+
+These triggers reflect the workflow file as it exists today. If the project adopts branch-specific automation for `develop`, `staging`, or `production`, document that mapping here.
 
 ### Runtime
 
@@ -59,10 +71,10 @@ A pull request is considered merge-ready when all CI steps pass.
 Run these commands before pushing:
 
 ```bash
-npm ci
-npm run type-check
-npm run test
-npm run build
+npm ci: install dependencies
+npm run type-check: type checker
+npm run test: run vite automated tests
+npm run build: build frontend
 ```
 
 ## Related Documents

@@ -24,6 +24,30 @@ Examples:
 - `feature/profile-export-improvements`
 - `bugfix/ai-error-fallback`
 
+## Branch Lifecycle
+
+This repository uses long-lived environment branches to represent the delivery lifecycle:
+
+- `develop`: primary integration branch for ongoing development work
+- `staging`: pre-production branch for release candidate validation
+- `production`: stable production branch
+
+Use these branches as environment stages, not as feature branch names.
+
+Recommended flow:
+
+1. Create a short-lived branch from `develop`, such as `feature/profile-export-improvements`.
+2. Merge completed work back into `develop`.
+3. Promote approved changes from `develop` to `staging`.
+4. Promote the final release from `staging` to `production`.
+
+Guidelines:
+
+- Do day-to-day feature work in short-lived branches.
+- Keep promotion between long-lived branches intentional and reviewable.
+- Use `hotfix/*` branches only for urgent fixes, then back-merge them into the earlier lifecycle branches as needed.
+- Keep release notes and deployment notes aligned with promotions to `staging` and `production`.
+
 ## Commit Message Standard (Conventional Commits)
 
 Follow this format:
