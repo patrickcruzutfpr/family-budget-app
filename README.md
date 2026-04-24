@@ -78,21 +78,22 @@ npm run dev:client
 npm run dev:server
 ```
 
+- `npm run dev:client`: starts the Vite frontend development server.
+- `npm run dev:server`: starts the backend server in watch mode with `tsx`.
+
 ## Scripts
 
-```bash
-npm run dev
-npm run dev:client
-npm run dev:server
-npm run dev:full
-npm run server:start
-npm run type-check
-npm run test
-npm run test:watch
-npm run test:coverage
-npm run build
-npm run preview
-```
+- `npm run dev`: starts the frontend Vite development server.
+- `npm run dev:client`: starts the frontend Vite development server explicitly for split mode.
+- `npm run dev:server`: starts the backend with file watching for local backend development.
+- `npm run dev:full`: runs frontend and backend together in parallel.
+- `npm run server:start`: starts the backend once without watch mode.
+- `npm run type-check`: runs TypeScript type checking without emitting files.
+- `npm run test`: runs the Vitest suite once.
+- `npm run test:watch`: runs Vitest in watch mode for active development.
+- `npm run test:coverage`: runs tests once and generates a coverage report.
+- `npm run build`: creates the production frontend build with Vite.
+- `npm run preview`: serves the production frontend build locally for verification.
 
 ## Architecture Summary
 
