@@ -1,173 +1,87 @@
-# 🏷️ Sistema de Gerenciamento de Categorias - CRUD Completo
+# Category Management Guide
 
-## 📋 Visão Geral
+This document is the canonical reference for category CRUD behavior. It owns category-specific workflow and safeguards so that the main usage guide can stay focused on the overall app flow.
 
-O sistema de gerenciamento de categorias permite o controle completo (CRUD) das categorias de gastos e renda da aplicação de orçamento familiar. 
+## Navigation
 
-## ✨ Funcionalidades Implementadas
+- Previous: [docs/usage-guide-section.md](usage-guide-section.md)
+- Next: [docs/components-diagram.md](components-diagram.md)
+- Root: [README.md](../README.md)
 
-### 🔧 Operações CRUD
-- **✅ CREATE**: Criar novas categorias de gastos e renda
-- **✅ READ**: Visualizar todas as categorias organizadas por tipo
-- **✅ UPDATE**: Editar categorias existentes
-- **✅ DELETE**: Remover categorias com confirmação de segurança
+## 1. What Categories Control
 
-### 🎨 Interface do Usuário
-- **Modal de Formulário**: Interface intuitiva para criar/editar categorias
-- **Modal de Confirmação**: Diálogo de segurança para exclusão
-- **Cards Visuais**: Exibição rica com ícones, cores e estatísticas
-- **Responsivo**: Design adaptável para diferentes tamanhos de tela
+Categories group budget items into income and expense buckets. They affect:
 
-### 🔒 Validações e Segurança
-- **Validação de Nome**: Verificação de nomes únicos
-- **Confirmação de Exclusão**: Modal com aviso sobre itens vinculados
-- **Tratamento de Erros**: Feedback visual para operações
-- **Estados de Loading**: Indicadores visuais durante operações
+- the main budget table
+- summary totals
+- charts
+- profile-specific storage
+- AI budget summaries
 
-## 🗂️ Categorias Padrão
+## 2. Category Workflow
 
-### 💸 Categorias de Gastos
-1. **Habitação** 🏠
-2. **Transporte** 🚗
-3. **Alimentação** 🍽️
-4. **Pessoal e Família** 👨‍👩‍👧‍👦
-5. **Poupança e Investimentos** 💰
+### Open the manager
 
-### 💰 Categorias de Renda
-- **Renda** (categoria padrão)
+- Use the category action in the main interface.
+- The manager loads categories from the active profile.
 
-## 🏗️ Arquitetura Técnica
+### Create a category
 
-### 📁 Estrutura de Arquivos
+- Provide a unique name.
+- Choose whether the category is income or expense.
+- Optionally set a description, icon, and color.
+- Save the category to make it immediately available in the current profile.
 
-```
-src/
-├── types/
-│   └── index.ts                    # Tipos TypeScript expandidos
-├── services/
-│   └── categoryService.ts          # Lógica de negócio e persistência
-├── hooks/
-│   └── useCategories.ts           # Hook personalizado para gerenciamento
-├── components/
-│   └── features/
-│       ├── CategoryManager.tsx     # Componente principal
-│       ├── CategoryForm.tsx        # Formulário de categoria
-│       ├── CategoryModal.tsx       # Modal do formulário
-│       └── DeleteConfirmationModal.tsx # Modal de confirmação
-```
+### Edit a category
 
-### 🔧 Tecnologias Utilizadas
+- Update the name, description, icon, or color.
+- Changes are applied to the current profile budget in place.
+- The updated category is reflected in dependent views after synchronization.
 
-- **React 19.1.1**: Framework principal
-- **TypeScript**: Tipagem estática
-- **LocalStorage**: Persistência de dados
-- **CSS Moderno**: Estilização responsiva
-- **Custom Hooks**: Lógica reutilizável
+### Delete a category
 
-## 📝 Tipos de Dados
+- Confirm the deletion before it is applied.
+- Empty categories are removed directly.
+- Categories with linked items are not dropped. Their items are moved into a fallback category such as `Other` or `Other Income`.
 
-### Category Interface
-```typescript
-interface Category {
-  id: string;
-  name: string;
-  type: CategoryType;
-  items: BudgetItem[];
-  description?: string;
-  icon?: string;
-  color?: string;
-  createdAt?: Date;
-  updatedAt?: Date;
-}
-```
+## 3. Validation and Safety Rules
 
-### CategoryFormData Interface
-```typescript
-interface CategoryFormData {
-  name: string;
-  type: CategoryType;
-  description?: string;
-  icon?: string;
-  color?: string;
-}
-```
+- Category names must be unique across the current profile.
+- Category data is stored through the current profile rather than a separate category database.
+- Deletion is designed to preserve linked budget items.
+- Category changes trigger synchronization so summaries and related views stay aligned.
 
-## 🎯 Como Usar
+## 4. Default and Translated Categories
 
-### 1. Acessar o Gerenciador
-- Clique no botão **"Categorias"** no cabeçalho da aplicação
-- O modal de gerenciamento será aberto
+- The app creates a default income category and a core set of expense categories for new profiles.
+- Default names follow the active language.
+- Language synchronization can update known default category names across profiles.
+- Custom category names stay under user control.
 
-### 2. Criar Nova Categoria
-- Clique em **"Nova Categoria"**
-- Preencha o formulário:
-  - **Nome**: Nome único da categoria
-  - **Tipo**: Gasto ou Renda
-  - **Descrição**: Informação opcional
-  - **Ícone**: Selecione um emoji
-  - **Cor**: Escolha uma cor identificadora
-- Clique em **"Criar Categoria"**
+## 5. Technical Ownership
 
-### 3. Editar Categoria
-- Clique no ícone de **edição** (✏️) no card da categoria
-- Modifique os campos desejados
-- Clique em **"Salvar Alterações"**
+These files own category behavior:
 
-### 4. Excluir Categoria
-- Clique no ícone de **exclusão** (🗑️) no card da categoria
-- Confirme a ação no modal de confirmação
-- ⚠️ **Atenção**: Os itens da categoria serão movidos automaticamente para `Other/Outros`
+- UI: `src/components/features/CategoryManager.tsx`
+- Form and modal flow: `src/components/features/CategoryForm.tsx`, `src/components/features/CategoryModal.tsx`
+- Delete confirmation: `src/components/features/DeleteConfirmationModal.tsx`
+- Hook orchestration: `src/hooks/useCategories.ts`
+- Persistence and safeguards: `src/services/categoryService.ts`
+- Profile-backed storage: `src/services/profileService.ts`
 
-## 📊 Funcionalidades Avançadas
+## 6. Implementation Notes
 
-### 📈 Estatísticas por Categoria
-Cada categoria exibe:
-- **Número de itens** vinculados
-- **Total projetado** da categoria
-- **Total realizado** da categoria
-- **Indicador visual** de orçamento (verde/vermelho)
+- Categories are loaded from the current profile budget.
+- Creating and editing categories updates the active profile immediately.
+- Deleting a category with items resolves or creates a fallback category before the original one is removed.
+- Statistics such as item count, projected total, and actual total are derived from the category items already stored in the profile budget.
 
-### 🎨 Personalização Visual
-- **12 ícones** pré-definidos disponíveis
-- **10 cores** personalizáveis
-- **Preview em tempo real** das alterações
+## Related Documents
 
-### 🔍 Validações Inteligentes
-- **Nomes únicos**: Não permite categorias com nomes duplicados
-- **Validação de comprimento**: Mínimo 2 caracteres
-- **Feedback imediato**: Erros exibidos em tempo real
-
-## 🚀 Benefícios da Implementação
-
-### Para o Usuário
-- **Flexibilidade total**: Crie categorias personalizadas
-- **Organização visual**: Ícones e cores para identificação rápida
-- **Segurança**: Confirmações antes de exclusões importantes
-- **Facilidade de uso**: Interface intuitiva e responsiva
-
-### Para o Desenvolvedor
-- **Código limpo**: Separação clara de responsabilidades
-- **Type Safety**: TypeScript completo em toda a implementação
-- **Reutilização**: Hooks e componentes modulares
-- **Manutenibilidade**: Código bem documentado e estruturado
-
-## 🔄 Integração com o Sistema
-
-### Persistência
-- **LocalStorage**: Dados salvos automaticamente
-- **Sincronização**: Atualizações em tempo real
-- **Backup**: Dados mantidos entre sessões
-
-### Compatibilidade
-- **Sistema existente**: Totalmente integrado com orçamentos atuais
-- **Migração automática**: Categorias padrão criadas automaticamente
-- **Retrocompatibilidade**: Dados existentes preservados
-- **Exclusão segura**: Itens não são perdidos ao remover categorias com movimentação
-
-## 🎉 Conclusão
-
-O sistema de CRUD de categorias fornece uma base sólida e flexível para gerenciamento de categorias de orçamento, oferecendo todas as funcionalidades essenciais com uma experiência de usuário excepcional e arquitetura robusta para futuras expansões.
+- End-user workflow: [usage-guide-section.md](usage-guide-section.md)
+- Frontend state and persistence: [frontend/STATE.md](frontend/STATE.md)
+- Runtime architecture: [architecture/SYSTEM_DESIGN.md](architecture/SYSTEM_DESIGN.md)
 
 ---
 
-© 2025 Patrick Motin Cruz. All rights reserved under AGPL-3.0.
+Next: [docs/components-diagram.md](components-diagram.md)

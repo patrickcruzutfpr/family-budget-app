@@ -1,18 +1,29 @@
 # Server Documentation Index
 
-This folder documents the AI proxy server (`server/`) used by the Family Budget App.
+This folder is the backend documentation hub.
 
-Navigation:
+## Navigation
 
-- **Root README:** [README.md](../../README.md)
-- **Project docs index:** [docs/index.md](../../docs/index.md)
+- Previous: [server/README.md](../README.md)
+- Next: [server/docs/API.md](API.md)
+- Root: [README.md](../../README.md)
+- Project docs hub: [docs/index.md](../../docs/index.md)
 
-Included pages:
+## Core backend docs
 
-- [Architecture](./architecture.md)
-- [Workflows](./workflows.md)
-- [Mermaid Diagrams](./diagrams.md)
-- [User Interactions](./user-interactions.md)
-- [Requirements](./requirements.md)
+- [API.md](API.md)
+- [DATABASE.md](DATABASE.md)
 
-Purpose: provide a single place for server design, operational runbook, and contributors' guidance.
+## Existing reference docs
+
+- [architecture.md](architecture.md)
+- [workflows.md](workflows.md)
+- [diagrams.md](diagrams.md)
+- [user-interactions.md](user-interactions.md)
+- [requirements.md](requirements.md)
+- [integration.md](integration.md)
+- [provider-guide.md](provider-guide.md)
+
+---
+
+Next: [API.md](API.md)
