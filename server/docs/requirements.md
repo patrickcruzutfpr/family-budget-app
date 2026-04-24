@@ -4,9 +4,11 @@
 
 - Accept a sanitized `BudgetSummary` and `language` via `POST /api/ai/suggestions`.
 - Validate incoming payloads and return clear error codes for invalid input.
-- Call Google Gemini via `@google/genai` using a server-side `GEMINI_API_KEY`.
+- Support pluggable provider adapters selected by `AI_PROVIDER`.
+- Support `gemini` and `llmstudio` adapters with server-side credentials.
 - Normalize provider responses to `AISuggestionsResponse` shape.
 - Provide a health endpoint: `GET /api/health`.
+- Provide provider-aware readiness checks via `GET /api/health?deep=true`.
 - Support mocked responses for automated tests.
 
 ## Non-functional requirements
@@ -19,6 +21,6 @@
 
 ## Security
 
-- Require server-side storage of `GEMINI_API_KEY` in environment/secret store.
+- Require server-side storage of provider credentials in environment/secret store.
 - Sanitize prompts to avoid exposing sensitive user data to the provider.
 - Rate-limit and monitor outgoing provider calls in production.

@@ -5,6 +5,7 @@
 - Install dependencies at repo root: `npm install`
 - Start server only: `npm run dev:server`
 - Start frontend + server: `npm run dev:full`
+- For local LM Studio provider checks, start LM Studio API first (example: `lms server start`).
 - Use `pwsh scripts/run-ai-integration-tests.ps1` for an end-to-end local smoke test.
 
 ## Testing
@@ -23,5 +24,5 @@
 ## Release / Deployment
 
 - Build and package server as part of the deployment artifact or deploy the server as a small Node service.
-- Use environment secrets for `GEMINI_API_KEY`.
+- Use environment secrets for the selected provider credentials (`GEMINI_API_KEY` or `LLMSTUDIO_API_KEY`).
 - Monitor provider usage and error rates in production.

@@ -46,10 +46,25 @@ npm install
 Create `.env` in the project root:
 
 ```env
-GEMINI_API_KEY=your_api_key_here
+# Cloud provider (Gemini)
+GEMINI_API_KEY=your_gemini_api_key_here
+
+# Local provider (LM Studio)
+LLMSTUDIO_API_KEY=your_lm_studio_api_key_here
+LLMSTUDIO_BASE_URL=http://127.0.0.1:1234/v1
+LLMSTUDIO_MODEL=qwen2.5-coder-32b
+
 PORT=3001
-AI_PROVIDER=gemini
+
+# Active adapter: gemini | llmstudio
+AI_PROVIDER=llmstudio
 ```
+
+Notes:
+
+- `AI_PROVIDER=gemini` uses `GEMINI_API_KEY`.
+- `AI_PROVIDER=llmstudio` uses LM Studio's OpenAI-compatible local server.
+- For LM Studio local runs, start the local API before requesting suggestions (for example: `lms server start`).
 
 Optional frontend metadata (`.env` or `.env.local`):
 

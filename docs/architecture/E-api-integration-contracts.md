@@ -22,17 +22,24 @@
   - `error.code` in `AI_BAD_REQUEST | AI_UNAVAILABLE | AI_MISCONFIGURED | AI_BAD_RESPONSE`
   - `error.message` safe for UI/logging
 
-### External contract 2: Google Gemini
-- Provider owner: backend `server/aiProxyService.ts`
-- Request style:
+### External contract 2: Provider adapters (Gemini and LM Studio)
+- Provider owner: backend `server/aiProxyService.ts` via `server/providers/index.ts`
+- Selection:
+  - `AI_PROVIDER=gemini` -> `server/providers/gemini.ts`
+  - `AI_PROVIDER=llmstudio` -> `server/providers/llmstudio.ts`
+- Gemini request style:
   - model: `gemini-2.5-flash`
   - prompt built from sanitized budget summary
   - response requested as JSON schema
-- Response expectation:
+- LM Studio request style:
+  - endpoint: `/chat/completions` on `LLMSTUDIO_BASE_URL` (default `http://127.0.0.1:1234/v1`)
+  - model: `LLMSTUDIO_MODEL` (default `qwen2.5-coder-32b`)
+  - `response_format.type = json_schema`
+- Response expectation (both adapters):
   - object with `suggestions[]` each containing `title` and `suggestion`
 - Error behavior:
-  - missing key -> `AI_MISCONFIGURED`
-  - suspended/unavailable provider -> `AI_UNAVAILABLE`
+  - missing/invalid key or credentials -> `AI_MISCONFIGURED`
+  - unavailable/overloaded/quota/network failure -> `AI_UNAVAILABLE`
   - malformed/empty provider payload -> `AI_BAD_RESPONSE`
 
 ### External contract 3: Optional Flask API wrapper
@@ -61,8 +68,8 @@
 - Non-AI areas still rely mostly on simple `Error` message strings.
 
 ## Security and secrets
-- `GEMINI_API_KEY` is now backend-owned and loaded only by the Node AI proxy.
-- The browser sends sanitized budget summaries and no longer receives injected Gemini secrets.
+- Provider credentials are backend-owned and loaded only by the Node AI proxy.
+- The browser sends sanitized budget summaries and never receives provider secrets.
 
 ## Unknowns
 - Unknown: authoritative OpenAPI spec for backend integration.
@@ -71,9 +78,10 @@
   - Evidence needed: auth architecture docs.
 
 ## Evidence
-- Gemini integration contract: src/services/geminiService.ts
+- Frontend integration contract: src/services/geminiService.ts
 - Mock fallback behavior: src/services/geminiServiceMock.ts
 - Backend AI proxy contract: server/app.ts, server/aiProxyService.ts, src/types/api.ts
+- Provider adapters: server/providers/gemini.ts, server/providers/llmstudio.ts, server/providers/index.ts
 - Optional backend API wrapper: src/services/apiService.ts
 - Frontend type contracts: src/types/index.ts
 - Suggestion dedupe logic and persistence: src/hooks/useSavedSuggestions.ts

@@ -14,9 +14,11 @@
 ## External systems
 - In-repo Node AI proxy
   - Exposes `/api/ai/suggestions` to the SPA.
-  - Owns Gemini secret handling, prompt construction, and provider error mapping.
-- Google Gemini API
-  - Provides AI-generated budget suggestions to the backend proxy.
+  - Owns provider secret handling, prompt construction, and provider error mapping.
+- Google Gemini API (cloud provider option)
+  - Provides AI-generated budget suggestions to the backend proxy when `AI_PROVIDER=gemini`.
+- LM Studio local API (local provider option)
+  - Provides OpenAI-compatible local model responses when `AI_PROVIDER=llmstudio`.
 - Optional Flask backend API (integration module present)
   - Exposes users/categories endpoints in service layer.
   - Appears supplementary, not the source of truth for budget/profile domain.
@@ -30,7 +32,9 @@
    |\
    | \__ localStorage (profiles, budget, language, saved suggestions)
    |
-   \____ HTTP -> [Node AI Proxy /api/ai/suggestions] ---- HTTPS -> [Google Gemini API]
+  \____ HTTP -> [Node AI Proxy /api/ai/suggestions]
+       |---- HTTPS -> [Google Gemini API]
+       \---- HTTP -> [LM Studio Local API]
 
 (Optional path)
 [Family Budget App SPA] ---- HTTP -> [Flask API /api/v1 users/categories]
@@ -40,7 +44,7 @@
 - Inside boundary:
   - UI components, hooks, services, i18n, local persistence logic.
 - Outside boundary:
-  - Gemini provider.
+  - External provider endpoints (Gemini cloud and/or LM Studio local API).
   - Optional external API backend.
 
 ## Unknowns

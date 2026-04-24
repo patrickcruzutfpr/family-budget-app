@@ -16,14 +16,14 @@
   - Retain client data across sessions.
 
 ### Container 3: Node AI proxy
-- Tech: Node + Express + @google/genai.
+- Tech: Node + Express + provider adapters (`@google/genai` and HTTP fetch).
 - Responsibilities:
   - Accept sanitized budget summaries from the SPA.
-  - Own Gemini secret handling and provider request execution.
+  - Own provider secret handling and provider request execution.
   - Normalize structured AI responses and map provider failures to stable app errors.
 
 ### Container 4: External AI provider
-- Tech: Google Gemini API.
+- Tech: Google Gemini API or LM Studio OpenAI-compatible local API.
 - Responsibilities:
   - Return structured suggestion payloads from budget summaries.
 

@@ -31,13 +31,11 @@ graph LR
 
   subgraph External
     Gemini[Google Gemini]
-    OpenAI[OpenAI API]
-    Ollama[Ollama]
+    LMStudio[LM Studio Local API]
   end
 
   Providers --> Gemini
-  Providers --> OpenAI
-  Providers --> Ollama
+  Providers --> LMStudio
 
   CI[CI and Vitest] -->|mocks provider| Loader
   Health[GET /api/health] -.-> App

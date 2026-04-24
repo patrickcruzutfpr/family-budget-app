@@ -10,7 +10,7 @@ sequenceDiagram
   participant Proxy as Node AI Proxy
   participant Loader as Provider Loader
   participant Provider as Active Provider Adapter
-  participant External as External Provider (e.g. Gemini)
+  participant External as External Provider Endpoint
 
   SPA->>Proxy: POST /api/ai/suggestions { language, budgetSummary }
   Proxy-->>Proxy: validate & sanitize payload
@@ -20,6 +20,10 @@ sequenceDiagram
   alt provider == gemini
     Provider->>External: generateContent(prompt)
     External-->>Provider: response (json text)
+    Provider-->>Loader: normalizedSuggestions
+  else provider == llmstudio
+    Provider->>External: POST /chat/completions (json_schema)
+    External-->>Provider: choices[0].message.content (json text)
     Provider-->>Loader: normalizedSuggestions
   else mocked provider (tests/CI)
     Provider-->>Loader: normalizedSuggestions (mock)
@@ -42,9 +46,11 @@ flowchart LR
   Browser -->|HTTP| CDN[Static Frontend]
   Browser -->|HTTP| Proxy[Node AI Proxy]
   Proxy -->|HTTPS| Gemini[Google Gemini API]
+  Proxy -->|HTTP| LMStudio[LM Studio Local API]
   subgraph Local
     CDN
     Proxy
+    LMStudio
   end
 ```
 
@@ -57,8 +63,7 @@ flowchart LR
   SPA[Frontend SPA] -->|POST /api/ai/suggestions| Proxy[Node AI Proxy]
   Proxy -->|select provider via AI_PROVIDER| Loader[Provider Loader]
   Loader --> Gemini[gemini]
-  Loader --> OpenAI[openai]
-  Loader --> Ollama[ollama]
+  Loader --> LLMStudio[llmstudio]
   Loader -->|calls| ActiveProvider
   ActiveProvider -->|returns normalized| Proxy
   Proxy -->|200| SPA

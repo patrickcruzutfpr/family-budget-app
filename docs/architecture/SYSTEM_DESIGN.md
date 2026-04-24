@@ -53,6 +53,8 @@ For the runtime component map, see [docs/components-diagram.md](../components-di
 
 - `server/providers/index.ts` loads the active adapter from `AI_PROVIDER`.
 - `gemini` is the current default provider.
+- `llmstudio` is available for local model execution through LM Studio's OpenAI-compatible API.
+- The loader uses a registry/fallback pattern to keep adapter selection predictable.
 - Providers return normalized suggestions and may expose lightweight health checks.
 
 ### External AI provider

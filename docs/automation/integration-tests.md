@@ -5,13 +5,17 @@ Purpose: Describe how to run the AI-proxy integration checks locally and where i
 Files
 
 - `scripts/run-ai-integration-tests.ps1` — PowerShell runner that starts the backend AI proxy, waits for health, posts a sample payload, prints the response, and stops the proxy.
-- `server/tests/integration/aiProxy.integration.test.ts` — Vitest integration tests that exercise `POST /api/ai/suggestions` (the Gemini call is mocked in tests).
+- `server/tests/integration/aiProxy.integration.test.ts` — Vitest integration tests that exercise `POST /api/ai/suggestions` (provider call is mocked in tests).
+- `tests/server/providerLoader.test.ts` — Unit tests for provider selection and fallback behavior.
+- `tests/server/llmstudioProvider.test.ts` — Unit tests for the LM Studio provider adapter.
 
 Prerequisites
 
 - Node.js 18+ and `npm` installed
 - Run `npm install` to install dev dependencies
-- Optional: a valid `GEMINI_API_KEY` in `.env` to test real Gemini responses (not required for the mocked integration test)
+- Optional real-provider checks:
+	- Gemini: `GEMINI_API_KEY` and `AI_PROVIDER=gemini`
+	- LM Studio: `LLMSTUDIO_API_KEY`, `AI_PROVIDER=llmstudio`, and local LM Studio server running
 
 Run the PowerShell runner
 
@@ -31,7 +35,7 @@ What it does:
 
 Run Vitest integration tests
 
-The repository uses Vitest for integration and unit tests. To run the tests (includes the integration test that mocks the Gemini provider):
+The repository uses Vitest for integration and unit tests. To run all tests (including integration and provider adapter tests):
 
 ```bash
 npm run test
@@ -40,11 +44,11 @@ npm run test
 Notes about the test design:
 
 - `server/tests/integration/aiProxy.integration.test.ts` starts the server programmatically on an ephemeral port and mocks `getAiSuggestions` so tests remain hermetic.
-- This approach verifies the HTTP validation and response normalization while avoiding network calls to Gemini.
+- This approach verifies HTTP validation and response normalization while avoiding network calls to external providers.
 
 CI / Automation
 
-- The existing GitHub Actions CI runs `npm run test` (see `.github/workflows/ci.yml`). The integration tests are safe to run in CI because external Gemini calls are mocked.
+- The existing GitHub Actions CI runs `npm run test` (see `.github/workflows/ci.yml`). Integration tests are safe in CI because external provider calls are mocked.
 
 Debugging tips
 

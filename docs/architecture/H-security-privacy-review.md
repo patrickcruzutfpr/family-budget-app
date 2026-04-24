@@ -5,7 +5,7 @@
 ### Assets
 - Budget and profile financial data stored locally.
 - Saved AI suggestions and language preferences.
-- Backend Gemini API key and sanitized AI request payloads.
+- Backend provider credentials and sanitized AI request payloads.
 
 ### Threat actors
 - Malicious script running in browser context.
@@ -15,7 +15,7 @@
 ### Entry points
 - Browser localStorage.
 - `/api/ai/suggestions` requests from client to backend proxy.
-- Gemini API requests from backend proxy.
+- Provider API requests from backend proxy (Gemini cloud or LM Studio local API).
 - Optional backend API fetch calls.
 - Profile JSON import path.
 
@@ -30,16 +30,17 @@
   - Profile import validates basic shape but lacks strict schema and size controls.
 
 ## Secrets handling
-- Current state: `GEMINI_API_KEY` is loaded only by the backend proxy.
+- Current state: provider credentials are loaded only by the backend proxy.
 - Recommended baseline:
-  - keep Gemini calls in backend proxy
+  - keep provider calls in backend proxy
   - move from `.env.local` to managed secret storage in hosted environments
   - add request quotas and abuse protections
 
 ## Privacy considerations
 - Current behavior:
   - financial data remains in browser localStorage by default.
-  - only sanitized budget summaries are sent to Gemini via the backend proxy.
+  - sanitized budget summaries are sent through the backend proxy to the selected provider.
+  - when `AI_PROVIDER=llmstudio`, data can stay on local infrastructure depending on LM Studio setup.
   - no explicit consent or privacy policy workflow in codebase.
 - Risks:
   - local shared-device exposure
@@ -66,6 +67,7 @@
 
 ## Evidence
 - AI proxy secret boundary: server/app.ts, server/aiProxyService.ts, src/services/geminiService.ts
+- Provider adapter boundaries: server/providers/gemini.ts, server/providers/llmstudio.ts
 - Import/export profile path: src/services/profileService.ts
 - Local persistence keys and suggestion storage: src/services/profileService.ts, src/hooks/useSavedSuggestions.ts
 - Optional backend wrapper without auth contract in client: src/services/apiService.ts

@@ -17,6 +17,24 @@ Usage (PowerShell):
 pwsh .\scripts\run-ai-integration-tests.ps1
 ```
 
+Provider setup before smoke tests
+
+- Gemini mode:
+	- Set `AI_PROVIDER=gemini`
+	- Ensure `GEMINI_API_KEY` is set
+- LM Studio mode:
+	- Set `AI_PROVIDER=llmstudio`
+	- Ensure `LLMSTUDIO_API_KEY` is set
+	- Start LM Studio API server (for example: `lms server start`)
+	- Optional overrides: `LLMSTUDIO_BASE_URL`, `LLMSTUDIO_MODEL`
+
+Quick readiness checks:
+
+```powershell
+Invoke-RestMethod -Uri http://localhost:3001/api/health
+Invoke-RestMethod -Uri http://localhost:3001/api/health?deep=true
+```
+
 Notes about PowerShell & `curl.exe`
 
 - PowerShell's `curl` is an alias to `Invoke-WebRequest` on some systems; `curl.exe` can be used, but be careful with quoting. For JSON payloads prefer `Invoke-RestMethod` or write the payload to a file and use `-d @payload.json` with `curl.exe`.

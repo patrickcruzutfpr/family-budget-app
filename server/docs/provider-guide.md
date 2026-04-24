@@ -11,6 +11,7 @@ Location
 How it works
 
 - The server selects a provider via the `AI_PROVIDER` environment variable (defaults to `gemini`).
+- Provider loading is implemented as a registry with explicit fallback to `gemini` for unknown values.
 - Provider adapters must export a default object with an async function `getAiSuggestions(budgetSummary, language)` that returns `{ suggestions: [{ title, suggestion }] }`.
 - The adapter receives already-validated `budgetSummary` and a `language` string (`en` or `pt-BR`).
 - Adapters should throw `AppApiError` for expected errors (e.g. misconfiguration) and let unexpected errors bubble so `aiProxyService` can map them to `AI_UNAVAILABLE` or `AI_BAD_RESPONSE`.
@@ -45,6 +46,9 @@ Testing adapters
 
 - Unit test the adapter in isolation by mocking the provider SDK or HTTP client.
 - Integration tests under `server/tests/integration` should mock `getAiSuggestions` to avoid network calls.
+- Provider loader and adapter tests:
+  - `tests/server/providerLoader.test.ts`
+  - `tests/server/llmstudioProvider.test.ts`
 - Use `AI_PROVIDER` to switch providers for local manual testing. In PowerShell:
 
 ```powershell
