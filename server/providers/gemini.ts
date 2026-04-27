@@ -5,6 +5,8 @@ import type { AISuggestionsResponse, BudgetSummary } from '../../src/types/index
 
 const MODEL_NAME = 'gemini-2.5-flash';
 
+export const getModelName = (): string => MODEL_NAME;
+
 const getApiKey = (): string => {
   const apiKey = process.env.GEMINI_API_KEY;
   if (!apiKey) {
@@ -12,6 +14,14 @@ const getApiKey = (): string => {
   }
 
   return apiKey;
+};
+
+export const validateConfig = (): { ok: boolean; details?: string } => {
+  if (!process.env.GEMINI_API_KEY) {
+    return { ok: false, details: 'GEMINI_API_KEY missing' };
+  }
+
+  return { ok: true };
 };
 
 const RESPONSE_SCHEMA = {
@@ -65,4 +75,4 @@ export const getAiSuggestions = async (
   }
 };
 
-export default { getAiSuggestions };
+export default { getAiSuggestions, validateConfig, getModelName };

@@ -27,7 +27,15 @@ const SUGGESTIONS_JSON_SCHEMA = {
   },
 };
 
-const getModelName = (): string => process.env.LLMSTUDIO_MODEL ?? DEFAULT_MODEL_NAME;
+export const getModelName = (): string => process.env.LLMSTUDIO_MODEL ?? DEFAULT_MODEL_NAME;
+
+export const validateConfig = (): { ok: boolean; details?: string } => {
+  if (!process.env.LLMSTUDIO_API_KEY) {
+    return { ok: false, details: 'LLMSTUDIO_API_KEY missing' };
+  }
+
+  return { ok: true };
+};
 
 const buildEndpoint = (path: string): string => {
   const baseUrl = (process.env.LLMSTUDIO_BASE_URL ?? DEFAULT_BASE_URL).replace(/\/+$/, '');
@@ -135,4 +143,4 @@ export const healthCheck = async (): Promise<boolean> => {
   }
 };
 
-export default { getAiSuggestions, healthCheck };
+export default { getAiSuggestions, healthCheck, validateConfig, getModelName };
