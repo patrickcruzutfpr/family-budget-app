@@ -1,10 +1,12 @@
 import React, { Suspense, lazy, useMemo, useState, useEffect } from 'react';
-import { useBudget } from '@/hooks';
+import { useBudget, useColumnVisibility } from '@/hooks';
 import { BudgetTable, Summary, Header, ProfileManager, CategoryManager } from '@/components';
 import { CategoryType } from '@/types';
 import { useI18n } from '@/i18n';
 import { migrateCategoryData, ensureDefaultCategories, migrateCategoriesToIncludeIcons } from '@/utils/categoryMigration';
 import { useProfileCategoriesLanguageSync } from '@/hooks/useProfileCategoriesLanguageSync';
+import { FilterIcon } from '@/assets/icons/FilterIcon';
+import { ColumnVisibilityModal } from '@/components/ui/ColumnVisibilityModal';
 
 const BudgetChart = lazy(async () => {
   const module = await import('@/components/features/BudgetChart');
@@ -19,7 +21,9 @@ const AIFeature = lazy(async () => {
 function App(): React.ReactNode {
   const [showProfileManager, setShowProfileManager] = useState(false);
   const [showCategoryManager, setShowCategoryManager] = useState(false);
+  const [showColumnFilter, setShowColumnFilter] = useState(false);
   const { t, isLoading } = useI18n();
+  const { visibility, isLoaded: isColumnVisibilityLoaded, updateVisibility, resetToDefaults } = useColumnVisibility('page');
   
   // Use the new hook to sync profile categories with language changes
   useProfileCategoriesLanguageSync();
@@ -161,11 +165,23 @@ function App(): React.ReactNode {
         <div className="mt-8 grid grid-cols-1 lg:grid-cols-3 gap-8">
           <div className="lg:col-span-2">
             <div className="bg-white p-6 rounded-2xl shadow-lg shadow-gray-200/50">
-                <h2 className="text-2xl font-bold text-gray-700 mb-4">{t('budget.breakdown', 'Budget Breakdown')}</h2>
+                <div className="flex items-center justify-between mb-4">
+                  <h2 className="text-2xl font-bold text-gray-700">{t('budget.breakdown', 'Budget Breakdown')}</h2>
+                  {isColumnVisibilityLoaded && (
+                    <button
+                      onClick={() => setShowColumnFilter(true)}
+                      className="text-gray-600 hover:text-primary transition-colors duration-200 p-2 rounded hover:bg-gray-100 no-print"
+                      title={t('budget.columnVisibility', 'Column Visibility')}
+                    >
+                      <FilterIcon className="w-5 h-5" />
+                    </button>
+                  )}
+                </div>
                 {incomeCategory && (
                     <div className="mb-8">
                         <h3 className="text-xl font-semibold text-primary mb-3 border-b-2 border-primary/20 pb-2">{t('budget.income', 'Income')}</h3>
                         <BudgetTable
+                            visibility={visibility}
                             categories={[incomeCategory]}
                             updateItemValue={updateItemValue}
                             updateItemName={updateItemName}
@@ -177,6 +193,7 @@ function App(): React.ReactNode {
                 <div>
                     <h3 className="text-xl font-semibold text-primary mb-3 border-b-2 border-primary/20 pb-2">{t('budget.expenses', 'Expenses')}</h3>
                     <BudgetTable
+                        visibility={visibility}
                         categories={expenseCategories}
                         updateItemValue={updateItemValue}
                         updateItemName={updateItemName}
@@ -184,6 +201,14 @@ function App(): React.ReactNode {
                         deleteItem={deleteItem}
                     />
                 </div>
+                {showColumnFilter && (
+                  <ColumnVisibilityModal
+                    visibility={visibility}
+                    onVisibilityChange={updateVisibility}
+                    onClose={() => setShowColumnFilter(false)}
+                    onReset={resetToDefaults}
+                  />
+                )}
             </div>
           </div>
           <div className="space-y-8">

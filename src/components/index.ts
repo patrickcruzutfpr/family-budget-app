@@ -16,3 +16,4 @@ export { CategoryManager } from './features/CategoryManager';
 export { CategoryForm } from './features/CategoryForm';
 export { CategoryModal } from './features/CategoryModal';
 export { DeleteConfirmationModal } from './features/DeleteConfirmationModal';
+export { ColumnVisibilityModal } from './ui/ColumnVisibilityModal';

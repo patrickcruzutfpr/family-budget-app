@@ -1,0 +1,11 @@
+import React from 'react';
+
+export const SettingsIcon: React.FC<React.SVGProps<SVGSVGElement>> = (props) => (
+  <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" {...props}>
+    <circle cx="12" cy="12" r="3"></circle>
+    <path d="M12 1v6m0 6v6"></path>
+    <path d="M4.22 4.22l4.24 4.24m2.96 2.96l4.24 4.24"></path>
+    <path d="M1 12h6m6 0h6"></path>
+    <path d="M4.22 19.78l4.24-4.24m2.96-2.96l4.24-4.24"></path>
+  </svg>
+);

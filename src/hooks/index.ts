@@ -5,3 +5,4 @@ export { useBudgetMessages } from './useBudgetMessages';
 export { useCategoryTranslations } from './useCategoryTranslations';
 export { useFormatters } from './useFormatters';
 export { useCategories } from './useCategories';
+export { useColumnVisibility } from './useColumnVisibility';

@@ -119,6 +119,17 @@ npm run dev:server
 
 For full details, see [docs/architecture/SYSTEM_DESIGN.md](docs/architecture/SYSTEM_DESIGN.md).
 
+## Column Filter (Unified)
+
+- The budget breakdown now has a single page-level filter icon that controls visible columns for all budget tables.
+- The same visibility selection is applied to income and expense tables to keep the view consistent.
+- Preferences are persisted in local storage under a scoped key for the page.
+
+## Test Coverage For Column Filter
+
+- Hook behavior and persistence are covered in [tests/hooks/useColumnVisibility.test.ts](tests/hooks/useColumnVisibility.test.ts).
+- Table rendering with visible/hidden columns is covered in [tests/components/BudgetTable.test.tsx](tests/components/BudgetTable.test.tsx).
+
 ## Documentation Sequence
 
 1. [README.md](README.md)

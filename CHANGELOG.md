@@ -14,10 +14,14 @@ The format is based on Keep a Changelog and this project follows Semantic Versio
 ### Added
 
 - Documentation hierarchy linking from root README to docs indexes and domain documentation.
+- Automated tests for unified column visibility filtering:
+	- Hook tests for storage scope, persistence, and reset behavior.
+	- Table rendering tests for visible and hidden columns.
 
 ### Changed
 
 - Standardized documentation baseline for fullstack architecture, frontend state, backend API, and CI/CD.
+- Column visibility control moved to a single page-level filter icon in the budget breakdown area, applying one shared selection across all tables.
 
 ### Fixed
 

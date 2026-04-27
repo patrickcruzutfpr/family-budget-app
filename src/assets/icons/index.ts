@@ -12,3 +12,5 @@ export { FolderIcon } from './FolderIcon';
 export { SaveIcon } from './SaveIcon';
 export { UploadIcon } from './UploadIcon';
 export { CopyIcon } from './CopyIcon';
+export { SettingsIcon } from './SettingsIcon';
+export { FilterIcon } from './FilterIcon';

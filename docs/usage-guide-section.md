@@ -38,6 +38,12 @@ Follow this order for a clean setup:
 - Totals and balance indicators update as you edit the budget.
 - Charts provide a faster read on category distribution than the table alone.
 
+### Column visibility filter
+
+- Use the filter icon in the Budget Breakdown header to choose which columns are visible.
+- The selection is page-level and affects all budget tables at once.
+- Your column preferences are saved for the next session on the same browser.
+
 ## 4. Managing Profiles
 
 Profiles let you isolate different budgeting contexts such as personal, family, or side-business budgets.
