@@ -42,9 +42,12 @@
   - unavailable/overloaded/quota/network failure -> `AI_UNAVAILABLE`
   - malformed/empty provider payload -> `AI_BAD_RESPONSE`
 
-### External contract 3: Optional Flask API wrapper
-- Base URL: process.env.REACT_APP_API_BASE_URL or http://localhost:5000/api/v1
-- Endpoints in client wrapper:
+### External contract 3: Optional legacy/demo API wrapper
+- Status:
+  - `src/services/apiService.ts` is a legacy/demo client for an optional Flask-style backend.
+  - It is not the authoritative contract for the current Node AI proxy in `server/`.
+- Base URL: `process.env.REACT_APP_API_BASE_URL` or `http://localhost:5000/api/v1`
+- Endpoints in the legacy client wrapper:
   - GET /health
   - GET /users
   - POST /users
@@ -54,8 +57,8 @@
   - Unknown in current client wrapper (no auth headers or token handling).
 
 ## Versioning
-- Current status: no explicit API version strategy for frontend-internal contracts.
-- External API wrapper includes /api/v1 path naming but no contract governance in this repo.
+- Current AI proxy status: no explicit URI version strategy on `/api/ai/*` or `/api/health`.
+- Legacy/demo wrapper status: the optional client uses `/api/v1`, but no governing backend contract is present in this repo.
 
 ## Idempotency and retries
 - Frontend mutation operations are not formally idempotent.
@@ -82,6 +85,6 @@
 - Mock fallback behavior: src/services/geminiServiceMock.ts
 - Backend AI proxy contract: server/app.ts, server/aiProxyService.ts, src/types/api.ts
 - Provider adapters: server/providers/gemini.ts, server/providers/llmstudio.ts, server/providers/index.ts
-- Optional backend API wrapper: src/services/apiService.ts
+- Optional legacy/demo backend API wrapper: src/services/apiService.ts
 - Frontend type contracts: src/types/index.ts
 - Suggestion dedupe logic and persistence: src/hooks/useSavedSuggestions.ts
