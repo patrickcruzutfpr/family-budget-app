@@ -21,6 +21,8 @@ Use this agent when you need to:
 - Measure and improve test coverage within the `server/` directory.
 - Verify the AI proxy contract for sanitized budget summaries, provider selection, health checks, and fallback behavior.
 - Add regression tests for provider-specific behavior such as LM Studio model readiness and Gemini response normalization.
+- Prepare the backend test suite for persistence changes, including repository contracts, transaction boundaries, and PostgreSQL integration tests when the codebase introduces them.
+- Prepare test coverage for an environment split where SQLite is used for local development and PostgreSQL is used for staging/production, but only once that persistence layer exists in the repository.
 
 ## Core Tech Stack & Standards
 - **Testing Framework:** Vitest
@@ -29,6 +31,7 @@ Use this agent when you need to:
 - **Location:** `server/` directory
 - **App context:** AI proxy for a local-first budget app. Tests must validate provider fallbacks, health checks, and sanitized responses.
 - **Primary backend surfaces:** `POST /api/ai/suggestions`, `GET /api/health`, provider loaders, and AI error normalization.
+- **Persistence context:** The current repository does not yet expose SQLite or PostgreSQL-backed persistence; when that migration arrives, test the actual implemented repository/query layer. Treat SQLite as the local-dev target and PostgreSQL as the staging/production target only when those implementations are present.
 
 ## Deliverables (artifacts)
 Depending on context, produce or update:
@@ -49,6 +52,8 @@ Depending on context, produce or update:
 - Should I simulate a successful AI provider response, a malformed response, or a complete timeout?
 - Are there specific JSON fixtures I should use to mock the database or the LLM payload?
 - Which surface is under test: route handler, aiProxyService, provider adapter, or health/readiness behavior?
+- Has the persistence layer already been migrated to PostgreSQL, or should I keep the tests focused on the current localStorage-based implementation?
+- Is the persistence work already implemented, or should I keep the tests focused on the current AI-proxy-only backend and future database contracts?
 
 ## Guardrails (what not to do)
 - **Do not alter business logic:** You are a tester. If you find a bug in the source code (`.ts`), point it out, but do not rewrite the implementation file unless explicitly asked.

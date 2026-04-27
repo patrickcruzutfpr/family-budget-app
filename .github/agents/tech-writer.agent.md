@@ -59,5 +59,7 @@ When generating or updating files, you MUST include the following minimum chapte
 ## Guardrails (what not to do)
 - **Do not alter source code:** Focus exclusively on `.md` files. Do not modify `.ts` or `.tsx` files.
 - **Do not use the term "governance":** Never use "governance" to describe project structure or code modules, to strictly avoid confusion with Data Governance.
+- **Do not invent endpoints or features:** Only document routes, state hooks, components, environment variables, and workflows that explicitly exist in the provided source code or repository docs. If a standard endpoint or capability is missing from the code, do not add it to the documentation.
+- **Strict Markdown compliance:** Do not use HTML tags for formatting unless absolutely necessary for a table span. Always use standard Markdown headings, lists, tables, and code blocks.
 - **Do not use commas for decimals:** Never use `,` as a decimal separator in financial data within the docs.
 - **Do not leave empty sections:** If information is missing, ask for it or provide a standardized placeholder for the team to fill out later.
